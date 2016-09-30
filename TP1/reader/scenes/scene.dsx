@@ -1,0 +1,35 @@
+<dsx>
+	<scene></scene>
+
+	<views>
+		<perspective></perspective>
+	</views>
+
+	<illumination>
+		<ambient></ambient>
+		<background></background>
+	</illumination>
+
+	<lights>
+		<omni></omni>
+		<spot></spot>
+	</lights>
+
+	<textures>
+		<texture></texture>
+	</textures>
+
+	<materials>
+		<material></material>
+	</materials>
+
+	<transformations>
+		<transformation></transformation>
+	</transformations>
+
+	<primitives>
+		<primitive></primitive>
+	</primitives>
+
+	<components></components>
+</dsx>
