@@ -1,35 +1,86 @@
 <dsx>
-	<scene></scene>
+	<scene root="" axis_length="" />
 
-	<views>
-		<perspective></perspective>
+	<views default="">
+		<perspective id="" near="" far="" angle="">
+			<from x="" y="" z="" />
+			<to x="" y="" z="" />
+		</perspective>
 	</views>
 
-	<illumination>
-		<ambient></ambient>
-		<background></background>
+	<illumination doublesided="" local="">
+		<ambient r="" g="" b="" a="" />
+		<background r="" g="" b="" a="" />
 	</illumination>
 
 	<lights>
-		<omni></omni>
-		<spot></spot>
+		<omni id="" enabled="">
+			<location x="" y="" z="" w="" />
+			<ambient r="" g="" b="" a="" />
+			<difuse r="" g="" b="" a="" />
+			<specular r="" g="" b="" a="" />
+		</omni>
+		
+		<spot id="" enabled="" angle="" exponent="">
+			<target x="" y="" z="" />
+			<location x="" y="" z="" />
+			<ambient r="" g="" b="" a="" />
+			<difuse r="" g="" b="" a="" />
+			<specular r="" g="" b="" a="" />
+		</spot>
 	</lights>
 
 	<textures>
-		<texture></texture>
+		<texture id="" file="" length_s="" length_t="" />
 	</textures>
 
 	<materials>
-		<material></material>
+		<material id="" >
+			<emission r="" g="" b="" a="" />
+			<ambient r="" g="" b="" a="" />
+			<difuse r="" g="" b="" a="" />
+			<specular r="" g="" b="" a="" />
+			<shinine value="" />
+		</material>
 	</materials>
 
 	<transformations>
-		<transformation></transformation>
+		<transformation id="">
+			<translate x="" y="" z="" />
+			<rotate axis="cc" angle="" />
+			<scale x="" y="" z="" />
+		</transformation>
 	</transformations>
 
 	<primitives>
-		<primitive></primitive>
+		<primitive id="">
+			<rectangle x1="" y1="" x2="" y2="" />
+			<triangle x1="" y1="" z1="" x2="" y2="" z2="" x3="" y3="" z3="" />
+			<cylinder base="" top="" height="" slices="" stacks="" />
+			<sphere radius="" slices="" stacks="" />
+			<torus inner="" outer="" slices="" loops="" />
+		</primitive>
 	</primitives>
 
-	<components></components>
+	<components>
+		<component id="">
+			<transformation>
+				<transformationref id="" />
+				<translate x="" y="" z="" />
+				<rotate axis="" angle="" />
+				<scale x="" y="" z="" />
+			</transformation>
+
+			<materials>
+				<material id="" />
+			</materials>
+
+			<texture id="" />
+
+			<children>
+				<componentref id="" />
+				<primitiveref id="" />
+			</children>
+		</component>
+	</components>
 </dsx>

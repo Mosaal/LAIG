@@ -5,7 +5,7 @@ function MySceneGraph(filename, scene) {
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
 	scene.graph=this;
-		
+
 	// File reading 
 	this.reader = new CGFXMLreader();
 
@@ -15,19 +15,19 @@ function MySceneGraph(filename, scene) {
 	 * If any error occurs, the reader calls onXMLError on this object, with an error message
 	 */
 	 
-	this.reader.open('scenes/'+filename, this);  
+	 this.reader.open('scenes/'+filename, this);  
 }
 
 /*
  * Callback to be executed after successful reading
  */
-MySceneGraph.prototype.onXMLReady=function() 
-{
-	console.log("XML Loading finished.");
-	var rootElement = this.reader.xmlDoc.documentElement;
-	
+MySceneGraph.prototype.onXMLReady = function() {
+ 	console.log("XML Loading finished.");
+ 	var rootElement = this.reader.xmlDoc.documentElement;
+
 	// Here should go the calls for different functions to parse the various blocks
 	var error = this.parseGlobalsExample(rootElement);
+	// var error = this.parseDSX(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -40,21 +40,45 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.scene.onGraphLoaded();
 };
 
+MySceneGraph.prototype.parseDSX = function(rootElement) {
+	// var i = 0;
+	var error;
+	// var errors[];
 
+	error = this.parseScene(rootElement);
+	// error = this.parseViews(rootElement);
+	// error = this.parseIllumination(rootElement);
+	// error = this.parseLights(rootElement);
+	// error = this.parseTextures(rootElement);
+	// error = this.parseMaterials(rootElement);
+	// error = this.parseTransformations(rootElement);
+	// error = this.parsePrimitives(rootElement);
+	// error = this.parseComponents(rootElement);
+
+	// if (error != null) {
+	// 	errors[i] = error;
+	// 	i++;
+	// }
+};
+
+MySceneGraph.prototype.parseScene = function(rootElement) {
+	var elems = rootElement.getElementsByTagName('scene');
+	if (elems == null)
+		return "scene element is missing."
+}
 
 /*
  * Example of method that parses elements of one block and stores information in a specific data structure
  */
-MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
-	
-	var elems =  rootElement.getElementsByTagName('globals');
-	if (elems == null) {
-		return "globals element is missing.";
-	}
+MySceneGraph.prototype.parseGlobalsExample = function(rootElement) {
+ 	var elems =  rootElement.getElementsByTagName('globals');
+ 	if (elems == null) {
+ 		return "globals element is missing.";
+ 	}
 
-	if (elems.length != 1) {
-		return "either zero or more than one 'globals' element found.";
-	}
+ 	if (elems.length != 1) {
+ 		return "either zero or more than one 'globals' element found.";
+ 	}
 
 	// various examples of different types of access
 	var globals = elems[0];
@@ -84,14 +108,13 @@ MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
 	};
 
 };
-	
+
 /*
  * Callback to be executed on any read error
  */
- 
-MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("XML Loading Error: "+message);	
-	this.loadedOk=false;
+MySceneGraph.prototype.onXMLError = function(message) {
+ 	console.error("XML Loading Error: " + message);	
+ 	this.loadedOk=false;
 };
 
 
