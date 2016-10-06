@@ -26,8 +26,8 @@ MySceneGraph.prototype.onXMLReady = function() {
  	var rootElement = this.reader.xmlDoc.documentElement;
 
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseGlobalsExample(rootElement);
-	// var error = this.parseDSX(rootElement);
+	// var error = this.parseGlobalsExample(rootElement);
+	var error = this.parseDSX(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -62,9 +62,24 @@ MySceneGraph.prototype.parseDSX = function(rootElement) {
 };
 
 MySceneGraph.prototype.parseScene = function(rootElement) {
-	var elems = rootElement.getElementsByTagName('scene');
-	if (elems == null)
-		return "scene element is missing."
+	var i = 0;
+	var elems = new Array();
+
+	elems[i++] = rootElement.getElementsByTagName('scene');
+	elems[i++] = rootElement.getElementsByTagName('views');
+	elems[i++] = rootElement.getElementsByTagName('illumination');
+	elems[i++] = rootElement.getElementsByTagName('lights');
+	elems[i++] = rootElement.getElementsByTagName('textures');
+	elems[i++] = rootElement.getElementsByTagName('materials');
+	elems[i++] = rootElement.getElementsByTagName('transformations');
+	elems[i++] = rootElement.getElementsByTagName('primitives');
+	elems[i++] = rootElement.getElementsByTagName('components');
+
+	for (var j = 0; j < i; j++)
+		console.log("Elem #" + j + ": " + elems[j]);
+
+	// if (elems == null)
+	// 	return "scene element is missing."
 }
 
 /*
