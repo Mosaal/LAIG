@@ -1,4 +1,3 @@
-
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -66,6 +65,9 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 	var elems = new Array();
 
 	elems[i++] = rootElement.getElementsByTagName('scene');
+	var scenes = elems[0];
+	console.log(scenes[0].attributes.getNamedItem('root').value);
+
 	elems[i++] = rootElement.getElementsByTagName('views');
 	elems[i++] = rootElement.getElementsByTagName('illumination');
 	elems[i++] = rootElement.getElementsByTagName('lights');
@@ -131,5 +133,3 @@ MySceneGraph.prototype.onXMLError = function(message) {
  	console.error("XML Loading Error: " + message);	
  	this.loadedOk=false;
 };
-
-
