@@ -1,23 +1,61 @@
 <dsx>
-	<!-- deve definir-se um objeto para raiz do grafo , assim -->
-	<!-- como o comprimento dos tres eixos (cilindros) -->
-	<scene root="ss" axis_length="0.0" />
+	<scene root="root" axis_length="0.0" />
 
-	<views default="ss">
-		<!-- declaracao obrigatoria de pelo menos uma vista; -->
-		<!-- se varias vistas declaradas, o default e' a -->
-		<!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
-		<!-- a vista muda para a proxima da lista; da --> 
-		<!-- ultima vista da lista volta 'a primeira -->
-		<!-- <perspective id="top" near="0.1" far="1000.0" angle="ff">
+	<views default="main">
+		<perspective id="main" near="ff" far="ff" angle="ff">
 			<from x="ff" y="ff" z="ff" />
 			<to x="ff" y="ff" z="ff" />
 		</perspective>
 
-		<perspective id="angle" near="0.1" far="1000.0" angle="ff">
+		<perspective id="angle" near="ff" far="ff" angle="ff">
 			<from x="ff" y="ff" z="ff" />
 			<to x="ff" y="ff" z="ff" />
-		</perspective> -->
+		</perspective>
+
+		<perspective id="sun" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="mercury" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="venus" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="earth" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="mars" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="jupiter" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="saturn" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="uranus" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
+
+		<perspective id="neptune" near="ff" far="ff" angle="ff">
+			<from x="ff" y="ff" z="ff" />
+			<to x="ff" y="ff" z="ff" />
+		</perspective>
 	</views>
 
 	<illumination doublesided="tt" local="tt">
@@ -26,8 +64,6 @@
 	</illumination>
 
 	<lights>
-		<!-- Deve existir um ou mais blocos "omni" ou "spot" -->
-		<!-- Os identificadores "id" nao podem ser repetidos -->
 		<omni id="light0" enabled="1">
 			<location x="400.0" y="0.0" z="0.0" w="1.0" />
 			<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -72,18 +108,6 @@
 	</lights>
 
 	<textures>
-		<!-- Deve existir um ou mais blocos "texture" -->
-		<!-- Os identificadores "id" nao podem ser repetidos -->
-		<!-- length_s e length_t sao fatores de escala de textura:-->
-		<!-- Exemplo length_s=3.0: uma ocorrencia da textura, em -->
-		<!-- comprimento, deve cobrir um comprimento igual -->
-		<!-- a 3 unidades;  -->
-		<!-- Exemplo length_t=0.4, uma ocorrencia da textura, em -->
-		<!-- largura, deve cobrir uma largura igual a 0.4 unidades.  -->
-		<!-- Transf. Geometr. do tipo escalamento sobre os -->
-		<!-- objetos respetivos podem a violar esta regra.         -->
-		<!-- Nao necessario aplicar fatores de escala em  -->
-		<!-- quadricas (esfera, ciclindro...) -->
 		<texture id="sun" file="sun.png" length_s="ff" length_t="ff" />
 		<texture id="mercury" file="mercury.png" length_s="ff" length_t="ff" />
 		<texture id="venus" file="venus.png" length_s="ff" length_t="ff" />
@@ -92,14 +116,29 @@
 		<texture id="mars" file="mars.png" length_s="ff" length_t="ff" />
 		<texture id="jupiter" file="jupiter.png" length_s="ff" length_t="ff" />
 		<texture id="saturn" file="saturn.png" length_s="ff" length_t="ff" />
+		<texture id="saturnRing" file="saturnRing.png" length_s="ff" length_t="ff" />
 		<texture id="uranus" file="uranus.png" length_s="ff" length_t="ff" />
 		<texture id="neptune" file="neptune.png" length_s="ff" length_t="ff" />
 	</textures>
 
 	<materials>
-		<!-- Deve existir um ou mais blocos "material" -->
-		<!-- Os identificadores "id" nao podem ser repetidos -->
-		<material id="ss">
+		<material id="star">
+			<emission r="ff" g="ff" b="ff" a="ff" />
+			<ambient r="ff" g="ff" b="ff" a="ff" />
+			<diffuse r="ff" g="ff" b="ff" a="ff" />
+			<specular r="ff" g="ff" b="ff" a="ff" />
+			<shininess value="ff" />
+		</material>
+
+		<material id="planet">
+			<emission r="ff" g="ff" b="ff" a="ff" />
+			<ambient r="ff" g="ff" b="ff" a="ff" />
+			<diffuse r="ff" g="ff" b="ff" a="ff" />
+			<specular r="ff" g="ff" b="ff" a="ff" />
+			<shininess value="ff" />
+		</material>
+
+		<material id="ring">
 			<emission r="ff" g="ff" b="ff" a="ff" />
 			<ambient r="ff" g="ff" b="ff" a="ff" />
 			<diffuse r="ff" g="ff" b="ff" a="ff" />
@@ -109,16 +148,6 @@
 	</materials>
 
 	<transformations>
-		<!-- Deve existir um ou mais blocos "transformation" -->
-		<!-- Os identificadores "id" nao podem ser repetidos -->
-		<!-- <transformation id="ss"> -->
-			<!-- instrucoes a usar sem limite nem ordem -->
-			<!-- deve existir pelo menos uma transformacao -->
-			<!-- <translate x="ff" y="ff" z="ff" />
-			<rotate axis="cc" angle="ff" />
-			<scale x="ff" y="ff" z="ff" />
-		</transformation> -->
-
 		<transformation id="sun">
 			<rotate axis="x" angle="90.0" />
 			<scale x="110.0" y="110.0" z="110.0" />
@@ -167,6 +196,12 @@
 			<translate x="225.0" y="0.0" z="0.0" />
 		</transformation>
 
+		<transformation id="saturnRing">
+			<rotate axis="x" angle="90.0" />
+			<scale x="65.0" y="65.0" z="0.1" />
+			<translate x="225.0" y="0.0" z="0.0" />
+		</transformation>
+
 		<transformation id="uranus">
 			<rotate axis="x" angle="90.0" />
 			<scale x="4.0" y="4.0" z="4.0" />
@@ -187,22 +222,12 @@
 	</transformations>
 
 	<primitives>
-		<!-- Deve existir um ou mais blocos "primitive" -->
-		<!-- Os identificadores "id" nao podem ser repetidos -->
-		<primitive id="ss">
-			<!-- apenas pode existir UMA das seguintes tags: -->
-			<!--     rectangle, triangle, cylinder, sphere, torus -->
-			<!-- os parametros devem ser interpretados, genericamente como-->
-			<!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
-			<rectangle x1="ff" y1="ff" x2="ff" y2="ff" />
-			<triangle x1="ff" y1="ff" z1="ff" x2="ff" y2="ff" z2="ff" x3="ff" y3="ff" z3="ff" />
-			<cylinder base="ff" top="ff" height="ff" slices="ii" stacks="ii" />
-			<sphere radius="ff" slices="ii" stacks="ii" />
-			<torus inner="ff" outer="ff" slices="ii" loops="ii" />
-		</primitive>
-
 		<primitive id="sphere">
 			<sphere radius="1.0" slices="100" stacks="100" />
+		</primitive>
+
+		<primitive id="torus">
+			<torus inner="0.1" outer="0.2" slices="100" loops="100" />
 		</primitive>
 	</primitives>
 
@@ -335,6 +360,22 @@
 			</children>
 		</component>
 
+		<component id="saturnRing">
+			<transformation>
+				<transformationref id="saturnRing" />
+			</transformation>
+
+			<materials>
+				<material id="" />
+			</materials>
+
+			<texture id="saturnRing" />
+
+			<children>
+				<primitiveref id="torus" />
+			</children>
+		</component>
+
 		<component id="uranus">
 			<transformation>
 				<transformationref id="uranus" />
@@ -380,48 +421,6 @@
 
 			<children>
 				<primitiveref id="sphere" />
-			</children>
-		</component>
-
-		<component id="ss">
-			<!-- bloco "transformation" obrigatorio -->
-			<transformation>
-				<!-- deve conter uma referencia a uma das "transformation" -->
-				<!-- declaradas anteriormente -->
-				<transformationref id="ss" />
-				<!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
-				<!-- usando zero ou mais das instrucoes seguintes, sem -->
-				<!-- limite nem ordem -->
-				<!-- ex: bloco transformation pode ficar sem conteudo -->
-				<translate x="ff" y="ff" z="ff" />
-				<rotate axis="cc" angle="ff" />
-				<scale x="ff" y="ff" z="ff" />
-			</transformation>
-
-			<!-- declaracao obrigatoria de pelo menos um material; -->
-			<!-- o material id="inherit", mantem (herda) material do "pai" -->
-			<!-- se varios materiais declarados, o default e' o -->
-			<!-- primeiro material; de cada vez que se pressione a tecla m/M, -->
-			<!-- o material muda para o proximo material da lista; do --> 
-			<!-- ultimo material da lista volta ao primeiro -->
-			<materials>
-				<material id="ss" />
-			</materials>
-
-			<!-- declaracao obrigatoria de texture -->
-			<!-- id="inherit" mantem (herda) a textura do objecto "pai" -->
-			<!-- id="none" remove a textura recebida do pai -->
-			<!-- a textura declarada sobrepoe a textura recebida do -->
-			<!-- objecto "pai" -->
-			<texture id="ss" />
-
-			<!-- bloco "children" obrigatorio num "component" -->
-			<children>
-				<!-- deve existir uma ou mais tags "componentref" e/ou -->
-				<!-- "primitiveref", identificando outros -->
-				<!-- componentes ou primitivas -->
-				<componentref id="ss" />
-				<primitiveref id="ss" />
 			</children>
 		</component>
 	</components>
