@@ -16,6 +16,7 @@ serialInclude([
 	'MyCircle.js',
 	'MyClockHand.js',
 	'MySphere.js',
+	'MyTorus.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);
@@ -31,5 +32,4 @@ serialInclude([
 
 		app.run();
 	}
-
-	]);
+]);

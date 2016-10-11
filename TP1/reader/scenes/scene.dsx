@@ -1,64 +1,74 @@
 <dsx>
-	<scene root="root" axis_length="0.0" />
+	<scene root="rootNode" axis_length="0.0" />
 
 	<views default="main">
-		<perspective id="main" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="main" near="0.01" far="1000.0" angle="1.0">
+			<from x="0.0" y="0.0" z="400.0" />
+			<to x="0.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="angle" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="sun" near="0.01" far="1000.0" angle="1.0">
+			<from x="-195.0" y="0.0" z="250.0" />
+			<to x="-195.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="sun" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="mercury" near="0.01" far="1000.0" angle="1.0">
+			<from x="-45.0" y="0.0" z="2.0" />
+			<to x="-45.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="mercury" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="venus" near="0.01" far="1000.0" angle="1.0">
+			<from x="5.0" y="0.0" z="4.0" />
+			<to x="5.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="venus" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="earth" near="0.01" far="1000.0" angle="1.0">
+			<from x="55.0" y="0.0" z="4.0" />
+			<to x="55.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="earth" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="moon" near="0.01" far="1000.0" angle="1.0">
+			<from x="60.0" y="0.0" z="1.0" />
+			<to x="60.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="mars" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="mars" near="0.01" far="1000.0" angle="1.0">
+			<from x="105.0" y="0.0" z="2.0" />
+			<to x="105.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="jupiter" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="jupiter" near="0.01" far="1000.0" angle="1.0">
+			<from x="155.0" y="0.0" z="30.0" />
+			<to x="155.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="saturn" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="saturn" near="0.01" far="1000.0" angle="1.0">
+			<from x="205.0" y="0.0" z="30.0" />
+			<to x="205.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="uranus" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="uranus" near="0.01" far="1000.0" angle="1.0">
+			<from x="255.0" y="0.0" z="15.0" />
+			<to x="255.0" y="0.0" z="0.0" />
 		</perspective>
 
-		<perspective id="neptune" near="ff" far="ff" angle="ff">
-			<from x="ff" y="ff" z="ff" />
-			<to x="ff" y="ff" z="ff" />
+		<perspective id="neptune" near="0.01" far="1000.0" angle="1.0">
+			<from x="305.0" y="0.0" z="15.0" />
+			<to x="305.0" y="0.0" z="0.0" />
+		</perspective>
+
+		<perspective id="pluto" near="0.01" far="1000.0" angle="1.0">
+			<from x="355.0" y="0.0" z="1.0" />
+			<to x="355.0" y="0.0" z="0.0" />
+		</perspective>
+
+		<perspective id="angle" near="0.01" far="1000.0" angle="1.0">
+			<from x="450.0" y="100.0" z="200.0" />
+			<to x="0.0" y="0.0" z="0.0" />
 		</perspective>
 	</views>
 
-	<illumination doublesided="tt" local="tt">
+	<illumination doublesided="0" local="0">
 		<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
 		<background r="0.1" g="0.1" b="0.1" a="1.0" />
 	</illumination>
@@ -86,7 +96,7 @@
 		</omni>
 
 		<omni id="light3" enabled="1">
-			<location x="-200.0" y="0.0" z="0.0" w="1.0" />
+			<location x="-400.0" y="0.0" z="0.0" w="1.0" />
 			<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
 			<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
 			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -119,31 +129,16 @@
 		<texture id="saturnRing" file="saturnRing.png" length_s="ff" length_t="ff" />
 		<texture id="uranus" file="uranus.png" length_s="ff" length_t="ff" />
 		<texture id="neptune" file="neptune.png" length_s="ff" length_t="ff" />
+		<texture id="pluto" file="pluto.png" length_s="ff" length_t="ff" />
 	</textures>
 
 	<materials>
-		<material id="star">
-			<emission r="ff" g="ff" b="ff" a="ff" />
-			<ambient r="ff" g="ff" b="ff" a="ff" />
-			<diffuse r="ff" g="ff" b="ff" a="ff" />
-			<specular r="ff" g="ff" b="ff" a="ff" />
-			<shininess value="ff" />
-		</material>
-
-		<material id="planet">
-			<emission r="ff" g="ff" b="ff" a="ff" />
-			<ambient r="ff" g="ff" b="ff" a="ff" />
-			<diffuse r="ff" g="ff" b="ff" a="ff" />
-			<specular r="ff" g="ff" b="ff" a="ff" />
-			<shininess value="ff" />
-		</material>
-
-		<material id="ring">
-			<emission r="ff" g="ff" b="ff" a="ff" />
-			<ambient r="ff" g="ff" b="ff" a="ff" />
-			<diffuse r="ff" g="ff" b="ff" a="ff" />
-			<specular r="ff" g="ff" b="ff" a="ff" />
-			<shininess value="ff" />
+		<material id="solarSystemMat">
+			<emission r="1.0" g="1.0" b="1.0" a="1.0" />
+			<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+			<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+			<shininess value="100" />
 		</material>
 	</materials>
 
@@ -151,73 +146,73 @@
 		<transformation id="sun">
 			<rotate axis="x" angle="90.0" />
 			<scale x="110.0" y="110.0" z="110.0" />
-			<translate x="-175.0" y="0.0" z="0.0" />
+			<translate x="-195.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="mercury">
 			<rotate axis="x" angle="90.0" />
 			<scale x="0.4" y="0.4" z="0.4" />
-			<translate x="-25.0" y="0.0" z="0.0" />
+			<translate x="-45.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="venus">
 			<rotate axis="x" angle="90.0" />
 			<scale x="0.95" y="0.95" z="0.95" />
-			<translate x="25.0" y="0.0" z="0.0" />
+			<translate x="5.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="earth">
 			<rotate axis="x" angle="90.0" />
 			<scale x="1.0" y="1.0" z="1.0" />
-			<translate x="75.0" y="0.0" z="0.0" />
+			<translate x="55.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="moon">
 			<rotate axis="x" angle="90.0" />
 			<scale x="0.3" y="0.3" z="0.3" />
-			<translate x="80.0" y="0.0" z="0.0" />
+			<translate x="60.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="mars">
 			<rotate axis="x" angle="90.0" />
 			<scale x="0.5" y="0.5" z="0.5" />
-			<translate x="125.0" y="0.0" z="0.0" />
+			<translate x="105.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="jupiter">
 			<rotate axis="x" angle="90.0" />
 			<scale x="11.0" y="11.0" z="11.0" />
-			<translate x="175.0" y="0.0" z="0.0" />
+			<translate x="155.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="saturn">
 			<rotate axis="x" angle="90.0" />
 			<scale x="9.5" y="9.5" z="9.5" />
-			<translate x="225.0" y="0.0" z="0.0" />
+			<translate x="205.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="saturnRing">
 			<rotate axis="x" angle="90.0" />
-			<scale x="65.0" y="65.0" z="0.1" />
-			<translate x="225.0" y="0.0" z="0.0" />
+			<scale x="12.0" y="12.0" z="0.1" />
+			<translate x="205.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="uranus">
 			<rotate axis="x" angle="90.0" />
 			<scale x="4.0" y="4.0" z="4.0" />
-			<translate x="275.0" y="0.0" z="0.0" />
+			<translate x="255.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="neptune">
 			<rotate axis="x" angle="90.0" />
 			<scale x="3.9" y="3.9" z="3.9" />
-			<translate x="325.0" y="0.0" z="0.0" />
+			<translate x="305.0" y="0.0" z="0.0" />
 		</transformation>
 
 		<transformation id="pluto">
 			<rotate axis="x" angle="90.0" />
 			<scale x="0.2" y="0.2" z="0.2" />
-			<translate x="375.0" y="0.0" z="0.0" />
+			<translate x="355.0" y="0.0" z="0.0" />
 		</transformation>
 	</transformations>
 
@@ -227,7 +222,7 @@
 		</primitive>
 
 		<primitive id="torus">
-			<torus inner="0.1" outer="0.2" slices="100" loops="100" />
+			<torus inner="0.15" outer="1.0" slices="100" loops="100" />
 		</primitive>
 	</primitives>
 
@@ -238,7 +233,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="sun" />
@@ -254,7 +249,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="mercury" />
@@ -270,7 +265,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="venus" />
@@ -286,7 +281,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="earth" />
@@ -302,7 +297,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="moon" />
@@ -318,7 +313,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="mars" />
@@ -334,7 +329,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="jupiter" />
@@ -350,7 +345,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="saturn" />
@@ -366,7 +361,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="saturnRing" />
@@ -382,7 +377,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="uranus" />
@@ -398,7 +393,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="neptune" />
@@ -414,7 +409,7 @@
 			</transformation>
 
 			<materials>
-				<material id="" />
+				<material id="solarSystemMat" />
 			</materials>
 
 			<texture id="pluto" />

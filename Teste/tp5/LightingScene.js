@@ -57,11 +57,17 @@ LightingScene.prototype.init = function(application) {
 	this.saturnAppearance = new CGFappearance(this);
 	this.saturnAppearance.loadTexture("resources/images/saturn.png");
 
+	this.saturnRingAppearance = new CGFappearance(this);
+	this.saturnRingAppearance.loadTexture("resources/images/saturnRing.png");
+
 	this.uranusAppearance = new CGFappearance(this);
 	this.uranusAppearance.loadTexture("resources/images/uranus.png");
 
 	this.neptuneAppearance = new CGFappearance(this);
 	this.neptuneAppearance.loadTexture("resources/images/neptune.png");
+
+	this.plutoAppearance = new CGFappearance(this);
+	this.plutoAppearance.loadTexture("resources/images/pluto.png");
 
 	// this.floorAppearance = new CGFappearance(this);
 	// this.floorAppearance.loadTexture("resources/images/Oval.jpg");
@@ -100,17 +106,20 @@ LightingScene.prototype.init = function(application) {
 	this.mars = new MySphere(this, 1, 100, 100);
 	this.jupiter = new MySphere(this, 1, 100, 100);
 	this.saturn = new MySphere(this, 1, 100, 100);
+	this.saturnRing = new MyTorus(this, 0.15, 1, 100, 100);
 	this.uranus = new MySphere(this, 1, 100, 100);
 	this.neptune = new MySphere(this, 1, 100, 100);
+	this.pluto = new MySphere(this, 1, 100, 100);
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
 	
-	// this.materialA = new CGFappearance(this);
-	// this.materialA.setAmbient(0.3,0.3,0.3,1);
-	// this.materialA.setDiffuse(0.6,0.6,0.6,1);
-	// this.materialA.setSpecular(0,0,0.8,1);
-	// this.materialA.setShininess(120);
+	this.materialA = new CGFappearance(this);
+	this.materialA.setAmbient(1.0, 1.0, 1.0, 1.0);
+	this.materialA.setDiffuse(1.0, 1.0, 0.0, 1.0);
+	this.materialA.setSpecular(1.0, 1.0, 1.0, 1.0);
+	this.materialA.setEmission(1.0, 1.0, 1.0, 1.0);
+	this.materialA.setShininess(100);
 
 	// this.materialB = new CGFappearance(this);
 	// this.materialB.setAmbient(0.3,0.3,0.3,1);
@@ -137,18 +146,30 @@ LightingScene.prototype.init = function(application) {
 	// this.slidesAppearance.setShininess(20);
 	// this.slidesAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
-	// this.boardAppearance = new CGFappearance(this);
-	// this.boardAppearance.loadTexture("resources/images/board.png");
-	// this.boardAppearance.setDiffuse(0.7, 0.7, 0.7, 1);
-	// this.boardAppearance.setSpecular(0.5, 0.5, 0.5, 1);	
-	// this.boardAppearance.setShininess(130);
-	// this.boardAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
+	// this.earthAppearance = new CGFappearance(this);
+	// this.earthAppearance.loadTexture("resources/images/earth.png");
+	// this.earthAppearance.setDiffuse(0.7, 0.7, 0.7, 1);
+	// this.earthAppearance.setSpecular(0.5, 0.5, 0.5, 1);	
+	// this.earthAppearance.setShininess(130);
+	// this.earthAppearance.setTextureWrap("CLAMP_TO_EDGE", "CLAMP_TO_EDGE");
 
 	// this.setUpdatePeriod(100);
 };
 
 LightingScene.prototype.initCameras = function() {
-	this.camera = new CGFcamera(1.0, 0.1, 1000, vec3.fromValues(0, 0, 500), vec3.fromValues(0, 0, 0));
+	this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(0, 0, 400), vec3.fromValues(0, 0, 0)); // main
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-195, 0, 250), vec3.fromValues(-195, 0, 0)); // sun
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-45, 0, 2), vec3.fromValues(-45, 0, 0)); // mercury
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(5, 0, 4), vec3.fromValues(5, 0, 0)); // venus
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(55, 0, 4), vec3.fromValues(55, 0, 0)); // earth
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(60, 0, 1), vec3.fromValues(60, 0, 0)); // moon
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(105, 0, 2), vec3.fromValues(105, 0, 0)); // mars
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(155, 0, 30), vec3.fromValues(155, 0, 0)); // jupiter
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(205, 0, 30), vec3.fromValues(205, 0, 0)); // saturn
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(255, 0, 15), vec3.fromValues(255, 0, 0)); // uranus
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(305, 0, 15), vec3.fromValues(305, 0, 0)); // neptune
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(355, 0, 1), vec3.fromValues(355, 0, 0)); // pluto
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(450, 100, 200), vec3.fromValues(0, 0, 0)); // angle
 };
 
 LightingScene.prototype.initLights = function() {
@@ -156,11 +177,11 @@ LightingScene.prototype.initLights = function() {
 
 	// this.shader.bind();
 	
-	// Positions for four lights
+	// Positions for six lights
 	this.lights[0].setPosition(400, 0, 0, 1.0);
 	this.lights[1].setPosition(0, 150, 0, 1.0);
 	this.lights[2].setPosition(0, 0, 150, 1.0);
-	this.lights[3].setPosition(-200, 0, 0, 1.0);
+	this.lights[3].setPosition(-400, 0, 0, 1.0);
 	this.lights[4].setPosition(0, -150, 0, 1.0);
 	this.lights[5].setPosition(0, 0, -150, 1.0);
 
@@ -250,7 +271,7 @@ LightingScene.prototype.display = function() {
 	// Sun
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(-175, 0, 0);
+		this.translate(-195, 0, 0);
 		this.scale(100, 100, 100);
 		this.sunAppearance.apply();
 		this.sun.display();
@@ -259,7 +280,7 @@ LightingScene.prototype.display = function() {
 	// Mercury
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(-25, 0, 0);
+		this.translate(-45, 0, 0);
 		this.scale(0.4, 0.4, 0.4);
 		this.mercuryAppearance.apply();
 		this.mercury.display();
@@ -268,7 +289,7 @@ LightingScene.prototype.display = function() {
 	// Venus
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(25, 0, 0);
+		this.translate(5, 0, 0);
 		this.scale(0.95, 0.95, 0.95);
 		this.venusAppearance.apply();
 		this.venus.display();
@@ -277,7 +298,7 @@ LightingScene.prototype.display = function() {
 	// Earth
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(75, 0, 0);
+		this.translate(55, 0, 0);
 		this.scale(EARTH_SIZE, EARTH_SIZE, EARTH_SIZE);
 		this.earthAppearance.apply();
 		this.earth.display();
@@ -286,7 +307,7 @@ LightingScene.prototype.display = function() {
 	// Moon
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(80, 0, 0);
+		this.translate(60, 0, 0);
 		this.scale(0.3, 0.3, 0.3);
 		this.moonAppearance.apply();
 		this.moon.display();
@@ -295,7 +316,7 @@ LightingScene.prototype.display = function() {
 	// Mars
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(125, 0, 0);
+		this.translate(105, 0, 0);
 		this.scale(0.5, 0.5, 0.5);
 		this.marsAppearance.apply();
 		this.mars.display();
@@ -304,7 +325,7 @@ LightingScene.prototype.display = function() {
 	// Jupiter
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(175, 0, 0);
+		this.translate(155, 0, 0);
 		this.scale(11, 11, 11);
 		this.jupiterAppearance.apply();
 		this.jupiter.display();
@@ -313,16 +334,24 @@ LightingScene.prototype.display = function() {
 	// Saturn
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(225, 0, 0);
+		this.translate(205, 0, 0);
 		this.scale(9.5, 9.5, 9.5);
 		this.saturnAppearance.apply();
 		this.saturn.display();
 	this.popMatrix();
 
+	this.pushMatrix();
+		this.rotate(90 * degToRad, 1, 0, 0);
+		this.translate(205, 0, 0);
+		this.scale(12, 12, 0.1);
+		this.saturnRingAppearance.apply();
+		this.saturnRing.display();
+	this.popMatrix();
+
 	// Uranus
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(275, 0, 0);
+		this.translate(255, 0, 0);
 		this.scale(4, 4, 4);
 		this.uranusAppearance.apply();
 		this.uranus.display();
@@ -331,10 +360,19 @@ LightingScene.prototype.display = function() {
 	// Neptune
 	this.pushMatrix();
 		this.rotate(90 * degToRad, 1, 0, 0);
-		this.translate(325, 0, 0);
+		this.translate(305, 0, 0);
 		this.scale(3.9, 3.9, 3.9);
 		this.neptuneAppearance.apply();
 		this.neptune.display();
+	this.popMatrix();
+
+	// Pluto
+	this.pushMatrix();
+		this.rotate(90 * degToRad, 1, 0, 0);
+		this.translate(355, 0, 0);
+		this.scale(0.2, 0.2, 0.2);
+		this.plutoAppearance.apply();
+		this.pluto.display();
 	this.popMatrix();
 
 	// ---- END Background, camera and axis setup
