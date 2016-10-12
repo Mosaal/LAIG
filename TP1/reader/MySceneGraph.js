@@ -90,8 +90,8 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 	if (elems == null)
 		return "The 'scene' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'scene' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'scene' element found.";
 
 	var scene = elems[0];
 	this.root = this.reader.getString(scene, 'root', true);
@@ -105,8 +105,8 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	if (elems == null)
 		return "The 'views' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'views' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'views' element found.";
 
 	var views = elems[0];
 	this.defaultView = this.reader.getString(views, 'default', true);
@@ -128,12 +128,18 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		temp['from'] = new Array(3);
 		var from = perspectives[i].getElementsByTagName('from');
+		if (from.length != 1)
+			return "There must be exactly one 'from' and one 'to' elements inside a 'perspective' element.";
+
 		temp['from']['x'] = this.reader.getFloat(from[0], 'x', true);
 		temp['from']['y'] = this.reader.getFloat(from[0], 'y', true);
 		temp['from']['z'] = this.reader.getFloat(from[0], 'z', true);
 
 		temp['to'] = new Array(3);
 		var to = perspectives[i].getElementsByTagName('to');
+		if (to.length != 1)
+			return "There must be exactly one 'from' and one 'to' elements inside a 'perspective' element.";
+
 		temp['to']['x'] = this.reader.getFloat(to[0], 'x', true);
 		temp['to']['y'] = this.reader.getFloat(to[0], 'y', true);
 		temp['to']['z'] = this.reader.getFloat(to[0], 'z', true);
@@ -154,40 +160,38 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	if (elems == null)
 		return "The 'illumination' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'illumination' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'illumination' element found.";
 
 	var illumination = elems[0];
 	this.doublesided = this.reader.getBoolean(illumination, 'doublesided', true);
 	this.local = this.reader.getBoolean(illumination, 'local', true);
 
-	elems = illumination.getElementsByTagName('ambient');
-	if (elems == null)
+	var ambient = illumination.getElementsByTagName('ambient');
+	if (ambient == null)
 		return "The 'ambient' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'ambient' element found.";
+	if (ambient.length != 1)
+		return "Zero or more than one 'ambient' element found.";
 
 	this.ambient = [];
-	var ambient = elems[0];
-	this.ambient['r'] = this.reader.getFloat(ambient, 'r', true);
-	this.ambient['g'] = this.reader.getFloat(ambient, 'g', true);
-	this.ambient['b'] = this.reader.getFloat(ambient, 'b', true);
-	this.ambient['a'] = this.reader.getFloat(ambient, 'a', true);
+	this.ambient['r'] = this.reader.getFloat(ambient[0], 'r', true);
+	this.ambient['g'] = this.reader.getFloat(ambient[0], 'g', true);
+	this.ambient['b'] = this.reader.getFloat(ambient[0], 'b', true);
+	this.ambient['a'] = this.reader.getFloat(ambient[0], 'a', true);
 
-	elems = illumination.getElementsByTagName('background');
-	if (elems == null)
+	var background = illumination.getElementsByTagName('background');
+	if (background == null)
 		return "The 'background' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'background' element found.";
+	if (background.length != 1)
+		return "Zero or more than one 'background' element found.";
 
 	this.background = [];
-	var background = elems[0];
-	this.background['r'] = this.reader.getFloat(background, 'r', true);
-	this.background['g'] = this.reader.getFloat(background, 'g', true);
-	this.background['b'] = this.reader.getFloat(background, 'b', true);
-	this.background['a'] = this.reader.getFloat(background, 'a', true);
+	this.background['r'] = this.reader.getFloat(background[0], 'r', true);
+	this.background['g'] = this.reader.getFloat(background[0], 'g', true);
+	this.background['b'] = this.reader.getFloat(background[0], 'b', true);
+	this.background['a'] = this.reader.getFloat(background[0], 'a', true);
 
 	console.log("illumination: { doublesided = " + this.doublesided + ", local = " + this.local + " }");
 	console.log("\tambient: { r = " + this.ambient['r'] + ", g = " + this.ambient['g'] + ", b = " + this.ambient['b'] + ", a = " + this.ambient['a'] + " }");
@@ -199,13 +203,13 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	if (elems == null)
 		return "The 'lights' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'lights' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'lights' element found.";
 
 	var omnis = elems[0].getElementsByTagName('omni');
 	var spots = elems[0].getElementsByTagName('spot');
-	if (omnis == null && spots == null)
-		return "Both 'omni' and 'spot' elements are missing. There must be at least on 'omni' or 'spot' element.";
+	if (omnis.length == 0 && spots.length == 0)
+		return "Both 'omni' and 'spot' elements are missing. There must be at least one 'omni' or 'spot' element.";
 
 	this.omnis = [];
 	for (var i = 0; i < omnis.length; i++) {
@@ -213,29 +217,33 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		temp['id'] = this.reader.getString(omnis[i], 'id', true);
 		temp['enabled'] = this.reader.getBoolean(omnis[i], 'enabled', true);
 
-		temp['location'] = new Array(4);
 		var location = omnis[i].getElementsByTagName('location');
+		var ambient = omnis[i].getElementsByTagName('ambient');
+		var diffuse = omnis[i].getElementsByTagName('diffuse');
+		var specular = omnis[i].getElementsByTagName('specular');
+
+		if (location.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1)
+			return "There must be exactly one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'omni' element.";
+
+		temp['location'] = new Array(4);
 		temp['location']['x'] = this.reader.getFloat(location[0], 'x', true);
 		temp['location']['y'] = this.reader.getFloat(location[0], 'y', true);
 		temp['location']['z'] = this.reader.getFloat(location[0], 'z', true);
 		temp['location']['w'] = this.reader.getFloat(location[0], 'w', true);
 
 		temp['ambient'] = new Array(4);
-		var ambient = omnis[i].getElementsByTagName('ambient');
 		temp['ambient']['r'] = this.reader.getFloat(ambient[0], 'r', true);
 		temp['ambient']['g'] = this.reader.getFloat(ambient[0], 'g', true);
 		temp['ambient']['b'] = this.reader.getFloat(ambient[0], 'b', true);
 		temp['ambient']['a'] = this.reader.getFloat(ambient[0], 'a', true);
 
 		temp['diffuse'] = new Array(4);
-		var diffuse = omnis[i].getElementsByTagName('diffuse');
 		temp['diffuse']['r'] = this.reader.getFloat(diffuse[0], 'r', true);
 		temp['diffuse']['g'] = this.reader.getFloat(diffuse[0], 'g', true);
 		temp['diffuse']['b'] = this.reader.getFloat(diffuse[0], 'b', true);
 		temp['diffuse']['a'] = this.reader.getFloat(diffuse[0], 'a', true);
 
 		temp['specular'] = new Array(4);
-		var specular = omnis[i].getElementsByTagName('specular');
 		temp['specular']['r'] = this.reader.getFloat(specular[0], 'r', true);
 		temp['specular']['g'] = this.reader.getFloat(specular[0], 'g', true);
 		temp['specular']['b'] = this.reader.getFloat(specular[0], 'b', true);
@@ -252,34 +260,38 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		temp['angle'] = this.reader.getFloat(spots[i], 'angle', true);
 		temp['exponent'] = this.reader.getFloat(spots[i], 'exponent', true);
 
-		temp['target'] = new Array(3);
 		var target = spots[i].getElementsByTagName('target');
+		var location = spots[i].getElementsByTagName('location');
+		var ambient = spots[i].getElementsByTagName('ambient');
+		var diffuse = spots[i].getElementsByTagName('diffuse');
+		var specular = spots[i].getElementsByTagName('specular');
+
+		if (target.length != 1 || location.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1)
+			return "There must be exactly one 'target', one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'spot' element.";
+
+		temp['target'] = new Array(3);
 		temp['target']['x'] = this.reader.getFloat(target[0], 'x', true);
 		temp['target']['y'] = this.reader.getFloat(target[0], 'y', true);
 		temp['target']['z'] = this.reader.getFloat(target[0], 'z', true);
 
 		temp['location'] = new Array(3);
-		var location = spots[i].getElementsByTagName('location');
 		temp['location']['x'] = this.reader.getFloat(location[0], 'x', true);
 		temp['location']['y'] = this.reader.getFloat(location[0], 'y', true);
 		temp['location']['z'] = this.reader.getFloat(location[0], 'z', true);
 
 		temp['ambient'] = new Array(4);
-		var ambient = spots[i].getElementsByTagName('ambient');
 		temp['ambient']['r'] = this.reader.getFloat(ambient[0], 'r', true);
 		temp['ambient']['g'] = this.reader.getFloat(ambient[0], 'g', true);
 		temp['ambient']['b'] = this.reader.getFloat(ambient[0], 'b', true);
 		temp['ambient']['a'] = this.reader.getFloat(ambient[0], 'a', true);
 
 		temp['diffuse'] = new Array(4);
-		var diffuse = spots[i].getElementsByTagName('diffuse');
 		temp['diffuse']['r'] = this.reader.getFloat(diffuse[0], 'r', true);
 		temp['diffuse']['g'] = this.reader.getFloat(diffuse[0], 'g', true);
 		temp['diffuse']['b'] = this.reader.getFloat(diffuse[0], 'b', true);
 		temp['diffuse']['a'] = this.reader.getFloat(diffuse[0], 'a', true);
 
 		temp['specular'] = new Array(4);
-		var specular = spots[i].getElementsByTagName('specular');
 		temp['specular']['r'] = this.reader.getFloat(specular[0], 'r', true);
 		temp['specular']['g'] = this.reader.getFloat(specular[0], 'g', true);
 		temp['specular']['b'] = this.reader.getFloat(specular[0], 'b', true);
@@ -312,14 +324,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	if (elems == null)
 		return "The 'textures' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'textures' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'textures' element found.";
 
 	var textures = elems[0].getElementsByTagName('texture');
-	if (textures == null)
-		return "The 'texture' element is missing.";
-
-	if (textures.length < 1)
+	if (textures.length == 0)
 		return "There must be at least one 'texture' element.";
 
 	this.textures = [];
@@ -344,7 +353,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		return "The 'materials' element is missing.";
 
 	var materials = elems[0].getElementsByTagName('material');
-	if (elems == null)
+	if (materials == null)
 		return "The 'material' element is missing.";
 
 	if (materials.length < 1)
@@ -355,35 +364,39 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		var temp = [];
 		temp['id'] = this.reader.getString(materials[i], 'id', true);
 
-		temp['emission'] = new Array(4);
 		var emission = materials[i].getElementsByTagName('emission');
+		var ambient = materials[i].getElementsByTagName('ambient');
+		var diffuse = materials[i].getElementsByTagName('diffuse');
+		var specular = materials[i].getElementsByTagName('specular');
+		var shininess = materials[i].getElementsByTagName('shininess');
+
+		if (emission.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1 || shininess.length != 1)
+			return "There must be exactly one 'emission', one 'ambient', one 'diffuse', one 'specular' and one 'shininess' elements inside a 'material' element.";
+
+		temp['emission'] = new Array(4);
 		temp['emission']['r'] = this.reader.getFloat(emission[0], 'r', true);
 		temp['emission']['g'] = this.reader.getFloat(emission[0], 'g', true);
 		temp['emission']['b'] = this.reader.getFloat(emission[0], 'b', true);
 		temp['emission']['a'] = this.reader.getFloat(emission[0], 'a', true);
 
 		temp['ambient'] = new Array(4);
-		var ambient = materials[i].getElementsByTagName('ambient');
 		temp['ambient']['r'] = this.reader.getFloat(ambient[0], 'r', true);
 		temp['ambient']['g'] = this.reader.getFloat(ambient[0], 'g', true);
 		temp['ambient']['b'] = this.reader.getFloat(ambient[0], 'b', true);
 		temp['ambient']['a'] = this.reader.getFloat(ambient[0], 'a', true);
 
 		temp['diffuse'] = new Array(4);
-		var diffuse = materials[i].getElementsByTagName('diffuse');
 		temp['diffuse']['r'] = this.reader.getFloat(diffuse[0], 'r', true);
 		temp['diffuse']['g'] = this.reader.getFloat(diffuse[0], 'g', true);
 		temp['diffuse']['b'] = this.reader.getFloat(diffuse[0], 'b', true);
 		temp['diffuse']['a'] = this.reader.getFloat(diffuse[0], 'a', true);
 
 		temp['specular'] = new Array(4);
-		var specular = materials[i].getElementsByTagName('specular');
 		temp['specular']['r'] = this.reader.getFloat(specular[0], 'r', true);
 		temp['specular']['g'] = this.reader.getFloat(specular[0], 'g', true);
 		temp['specular']['b'] = this.reader.getFloat(specular[0], 'b', true);
 		temp['specular']['a'] = this.reader.getFloat(specular[0], 'a', true);
 
-		var shininess = materials[i].getElementsByTagName('shininess');
 		temp['shininessValue'] = this.reader.getFloat(shininess[0], 'value', true);
 
 		this.materials.push(temp);
@@ -405,8 +418,8 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	if (elems == null)
 		return "The 'transformations' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'transformations' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'transformations' element found.";
 
 	var transformations = elems[0].getElementsByTagName('transformation');
 	if (transformations == null)
@@ -421,6 +434,12 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		temp['id'] = this.reader.getString(transformations[i], 'id', true);
 
 		var rotate = transformations[i].getElementsByTagName('rotate');
+		var scale = transformations[i].getElementsByTagName('scale');
+		var translate = transformations[i].getElementsByTagName('translate');
+
+		if (rotate.length == 0 && scale.length == 0 && translate.length == 0)
+			return "There must be at least one 'rotate', one 'scale' or one 'translate' element inside a 'transformation' element.";
+
 		if (rotate != null) {
 			for (var j = 0; j < rotate.length; j++) {
 				temp['rotate#' + j] = new Array(2);
@@ -429,7 +448,6 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			}
 		}
 
-		var scale = transformations[i].getElementsByTagName('scale');
 		if (scale != null) {
 			for (var j = 0; j < scale.length; j++) {
 				temp['scale#' + j] = new Array(3);
@@ -439,7 +457,6 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			}
 		}
 
-		var translate = transformations[i].getElementsByTagName('translate');
 		if (translate != null) {
 			for (var j = 0; j < translate.length; j++) {
 				temp['translate#' + j] = new Array(3);
@@ -473,8 +490,8 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	if (elems == null)
 		return "The 'primitives' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'primitives' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'primitives' element found.";
 
 	var primitives = elems[0].getElementsByTagName('primitive');
 	if (primitives == null)
@@ -534,6 +551,8 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			temp['outer'] = this.reader.getFloat(primitives[i].children[0], 'outer', true);
 			temp['slices'] = this.reader.getInteger(primitives[i].children[0], 'slices', true);
 			temp['loops'] = this.reader.getInteger(primitives[i].children[0], 'loops', true);
+		} else {
+			return "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 		}
 
 		this.primitives.push(temp);
@@ -560,8 +579,8 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	if (elems == null)
 		return "The 'components' element is missing.";
 
-	if (elems.length > 1)
-		return "More than one 'components' element found.";
+	if (elems.length != 1)
+		return "Zero or more than one 'components' element found.";
 
 	var components = elems[0].getElementsByTagName('component');
 	if (components == null)
@@ -576,24 +595,50 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		temp['id'] = this.reader.getString(components[i], 'id', true);
 
 		var texture = components[i].getElementsByTagName('texture');
+		var transformation = components[i].getElementsByTagName('transformation');
+		var materials = components[i].getElementsByTagName('materials');
+		var children = components[i].getElementsByTagName('children');
+
+		if (texture.length != 1 || transformation.length != 1 || materials.length != 1 || children.length != 1)
+			return "There must be exactly one 'transformation', one 'materials', one 'texture' and one 'children' elements inside a 'component' element.";
+
 		temp['textureId'] = this.reader.getString(texture[0], 'id', true);
 
 		var aux;
-		var transformation = components[i].getElementsByTagName('transformation');
 		aux = new Array(transformation[0].children.length);
 		for (var j = 0; j < transformation[0].children.length; j++) {
-			aux['id#' + j] = this.reader.getString(transformation[0].children[j], 'id', true);
+			if (transformation[0].children[j].tagName == 'transformationref') {
+				aux['id#' + j] = this.reader.getString(transformation[0].children[j], 'id', true);
+			} else if (transformation[0].children[j].tagName == 'rotate') {
+				aux['rotate#' + j] = new Array(2);
+				aux['rotate#' + j]['axis'] = this.reader.getItem(transformation[0].children[j], 'axis', [ 'x', 'y', 'z' ], true);
+				aux['rotate#' + j]['angle'] = this.reader.getFloat(transformation[0].children[j], 'angle', true);
+			} else if (transformation[0].children[j].tagName == 'scale') {
+				aux['scale#' + j] = new Array(3);
+				aux['scale#' + j]['x'] = this.reader.getFloat(transformation[0].children[j], 'x', true);
+				aux['scale#' + j]['y'] = this.reader.getFloat(transformation[0].children[j], 'y', true);
+				aux['scale#' + j]['z'] = this.reader.getFloat(transformation[0].children[j], 'z', true);
+			} else if (transformation[0].children[j].tagName == 'translate') {
+				aux['translate#' + j] = new Array(3);
+				aux['translate#' + j]['x'] = this.reader.getFloat(transformation[0].children[j], 'x', true);
+				aux['translate#' + j]['y'] = this.reader.getFloat(transformation[0].children[j], 'y', true);
+				aux['translate#' + j]['z'] = this.reader.getFloat(transformation[0].children[j], 'z', true);
+			}
 		}
 		temp['transformation'] = aux;
 
-		var materials = components[i].getElementsByTagName('materials');
+		if (materials[0].children.length == 0)
+			return "There must be at least one 'material' element inside the 'materials' element of each 'component' element.";
+
 		aux = new Array(materials[0].children.length);
 		for (var j = 0; j < materials[0].children.length; j++) {
 			aux['id#' + j] = this.reader.getString(materials[0].children[j], 'id', true);
 		}
 		temp['materials'] = aux;
 
-		var children = components[i].getElementsByTagName('children');
+		if (children[0].children.length == 0)
+			return "There must be at least one 'componentref' and/or 'primitiveref' inside the 'children' element.";
+
 		aux = new Array(children[0].children.length * 2);
 		for (var j = 0; j < children[0].children.length; j++) {
 			aux['id#' + j] = this.reader.getString(children[0].children[j], 'id', true);
@@ -613,8 +658,19 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		console.log("\tcomponent: { id = " + this.components[k]['id'] + " }");
 
 		console.log("\t\ttransformation")
-		for (var l = 0; l < this.components[k]['transformation'].length; l++)
-			console.log("\t\t\ttransformationref: { id = " + this.components[k]['transformation']['id#' + l] + " }");
+		for (var l = 0; l < this.components[k]['transformation'].length; l++) {
+			if (this.components[k]['transformation']['id#' + l] != null)
+				console.log("\t\t\ttransformationref: { id = " + this.components[k]['transformation']['id#' + l] + " }");
+			
+			if (this.components[k]['transformation']['rotate#' + l] != null)
+				console.log("\t\t\trotate: { axis = " + this.components[k]['transformation']['rotate#' + l]['axis'] + ", angle = " + this.components[k]['transformation']['rotate#' + l]['angle'] + " }");
+			
+			if (this.components[k]['transformation']['scale#' + l] != null)
+				console.log("\t\t\tscale: { x = " + this.components[k]['transformation']['scale#' + l]['x'] + ", y = " + this.components[k]['transformation']['scale#' + l]['y'] + ", z = " + this.components[k]['transformation']['scale#' + l]['z'] + " }");
+			
+			if (this.components[k]['transformation']['translate#' + l] != null)
+				console.log("\t\t\ttranslate: { x = " + this.components[k]['transformation']['translate#' + l]['x'] + ", y = " + this.components[k]['transformation']['translate#' + l]['y'] + ", z = " + this.components[k]['transformation']['translate#' + l]['z'] + " }");
+		}
 
 		console.log("\t\tmaterials")
 		for (var l = 0; l < this.components[k]['materials'].length; l++)
@@ -630,47 +686,6 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 				console.log("\t\t\tcomponentref: { id = " + this.components[k]['children']['id#' + l] + " }");
 		}
 	}
-};
-
-/*
- * Example of method that parses elements of one block and stores information in a specific data structure
- */
-MySceneGraph.prototype.parseGlobalsExample = function(rootElement) {
- 	var elems =  rootElement.getElementsByTagName('globals');
- 	if (elems == null) {
- 		return "globals element is missing.";
- 	}
-
- 	if (elems.length != 1) {
- 		return "either zero or more than one 'globals' element found.";
- 	}
-
-	// various examples of different types of access
-	var globals = elems[0];
-	this.background = this.reader.getRGBA(globals, 'background');
-	this.drawmode = this.reader.getItem(globals, 'drawmode', ["fill","line","point"]);
-	this.cullface = this.reader.getItem(globals, 'cullface', ["back","front","none", "frontandback"]);
-	this.cullorder = this.reader.getItem(globals, 'cullorder', ["ccw","cw"]);
-
-	console.log("Globals read from file: {background=" + this.background + ", drawmode=" + this.drawmode + ", cullface=" + this.cullface + ", cullorder=" + this.cullorder + "}");
-
-	var tempList=rootElement.getElementsByTagName('list');
-
-	if (tempList == null  || tempList.length==0) {
-		return "list element is missing.";
-	}
-	
-	this.list=[];
-	// iterate over every element
-	var nnodes=tempList[0].children.length;
-	for (var i=0; i< nnodes; i++)
-	{
-		var e=tempList[0].children[i];
-
-		// process each element and store its information
-		this.list[e.id]=e.attributes.getNamedItem("coords").value;
-		console.log("Read list item id "+ e.id+" with value "+this.list[e.id]);
-	};
 };
 
 /*
