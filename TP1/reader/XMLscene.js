@@ -23,7 +23,6 @@ XMLscene.prototype.init = function (application) {
 };
 
 XMLscene.prototype.initLights = function () {
-
 	this.lights[0].setPosition(2, 3, 3, 1);
 	this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
 	this.lights[0].update();
@@ -43,9 +42,9 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () {
-	// this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	// this.lights[0].setVisible(true);
-	// this.lights[0].enable();
+	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
+	this.lights[0].setVisible(true);
+	this.lights[0].enable();
 };
 
 XMLscene.prototype.display = function () {
@@ -64,6 +63,13 @@ XMLscene.prototype.display = function () {
 
 	// Draw axis
 	this.axis.display();
+
+	// this.rect = new Rectangle(this, 0, 0, 1, 1);
+	// this.tri = new Triangle(this, 0, 0, 0, 2, 0, 0, 0, 2, 0);
+	// this.circle = new Circle(this, 2, 50);
+	// this.cyl = new Cylinder(this, 1, 2, 2, 50, 50);
+	// this.sphere = new Sphere(this, 1, 50, 50);
+	// this.torus = new Torus(this, 1, 2, 50, 50);
 
 	this.setDefaultAppearance();
 	
