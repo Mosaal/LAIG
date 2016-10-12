@@ -1,5 +1,5 @@
 <dsx>
-	<scene root="rootNode" axis_length="0.0" />
+	<scene root="root" axis_length="0.0" />
 
 	<views default="main">
 		<perspective id="main" near="0.01" far="1000.0" angle="1.0">
@@ -118,18 +118,18 @@
 	</lights>
 
 	<textures>
-		<texture id="sun" file="sun.png" length_s="ff" length_t="ff" />
-		<texture id="mercury" file="mercury.png" length_s="ff" length_t="ff" />
-		<texture id="venus" file="venus.png" length_s="ff" length_t="ff" />
-		<texture id="earth" file="earth.png" length_s="ff" length_t="ff" />
-		<texture id="moon" file="moon.png" length_s="ff" length_t="ff" />
-		<texture id="mars" file="mars.png" length_s="ff" length_t="ff" />
-		<texture id="jupiter" file="jupiter.png" length_s="ff" length_t="ff" />
-		<texture id="saturn" file="saturn.png" length_s="ff" length_t="ff" />
-		<texture id="saturnRing" file="saturnRing.png" length_s="ff" length_t="ff" />
-		<texture id="uranus" file="uranus.png" length_s="ff" length_t="ff" />
-		<texture id="neptune" file="neptune.png" length_s="ff" length_t="ff" />
-		<texture id="pluto" file="pluto.png" length_s="ff" length_t="ff" />
+		<texture id="sun" file="images/sun.png" length_s="1.0" length_t="1.0" />
+		<texture id="mercury" file="images/mercury.png" length_s="1.0" length_t="1.0" />
+		<texture id="venus" file="images/venus.png" length_s="1.0" length_t="1.0" />
+		<texture id="earth" file="images/earth.png" length_s="1.0" length_t="1.0" />
+		<texture id="moon" file="images/moon.png" length_s="1.0" length_t="1.0" />
+		<texture id="mars" file="images/mars.png" length_s="1.0" length_t="1.0" />
+		<texture id="jupiter" file="images/jupiter.png" length_s="1.0" length_t="1.0" />
+		<texture id="saturn" file="images/saturn.png" length_s="1.0" length_t="1.0" />
+		<texture id="saturnRing" file="images/saturnRing.png" length_s="1.0" length_t="1.0" />
+		<texture id="uranus" file="images/uranus.png" length_s="1.0" length_t="1.0" />
+		<texture id="neptune" file="images/neptune.png" length_s="1.0" length_t="1.0" />
+		<texture id="pluto" file="images/pluto.png" length_s="1.0" length_t="1.0" />
 	</textures>
 
 	<materials>
