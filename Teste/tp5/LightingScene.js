@@ -34,40 +34,40 @@ LightingScene.prototype.init = function(application) {
 	//Texturas
 	this.enableTextures(true);
 	this.sunAppearance = new CGFappearance(this);
-	this.sunAppearance.loadTexture("resources/images/sun.png");
+	this.sunAppearance.loadTexture("resources/images/sun.jpg");
 
 	this.mercuryAppearance = new CGFappearance(this);
-	this.mercuryAppearance.loadTexture("resources/images/mercury.png");
+	this.mercuryAppearance.loadTexture("resources/images/mercury.jpg");
 
 	this.venusAppearance = new CGFappearance(this);
-	this.venusAppearance.loadTexture("resources/images/venus.png");
+	this.venusAppearance.loadTexture("resources/images/venus.jpg");
 
 	this.earthAppearance = new CGFappearance(this);
-	this.earthAppearance.loadTexture("resources/images/blue.png");
+	this.earthAppearance.loadTexture("resources/images/earth.jpg");
 
 	this.moonAppearance = new CGFappearance(this);
-	this.moonAppearance.loadTexture("resources/images/moon.png");
+	this.moonAppearance.loadTexture("resources/images/moon.jpg");
 
 	this.marsAppearance = new CGFappearance(this);
-	this.marsAppearance.loadTexture("resources/images/mars.png");
+	this.marsAppearance.loadTexture("resources/images/mars.jpg");
 
 	this.jupiterAppearance = new CGFappearance(this);
-	this.jupiterAppearance.loadTexture("resources/images/jupiter.png");
+	this.jupiterAppearance.loadTexture("resources/images/jupiter.jpg");
 
 	this.saturnAppearance = new CGFappearance(this);
-	this.saturnAppearance.loadTexture("resources/images/saturn.png");
+	this.saturnAppearance.loadTexture("resources/images/saturn.jpg");
 
 	this.saturnRingAppearance = new CGFappearance(this);
-	this.saturnRingAppearance.loadTexture("resources/images/saturnRing.png");
+	this.saturnRingAppearance.loadTexture("resources/images/saturnRing.jpg");
 
 	this.uranusAppearance = new CGFappearance(this);
-	this.uranusAppearance.loadTexture("resources/images/uranus.png");
+	this.uranusAppearance.loadTexture("resources/images/uranus.jpg");
 
 	this.neptuneAppearance = new CGFappearance(this);
-	this.neptuneAppearance.loadTexture("resources/images/neptune.png");
+	this.neptuneAppearance.loadTexture("resources/images/neptune.jpg");
 
 	this.plutoAppearance = new CGFappearance(this);
-	this.plutoAppearance.loadTexture("resources/images/pluto.png");
+	this.plutoAppearance.loadTexture("resources/images/pluto.jpg");
 
 	// this.floorAppearance = new CGFappearance(this);
 	// this.floorAppearance.loadTexture("resources/images/Oval.jpg");
@@ -114,12 +114,12 @@ LightingScene.prototype.init = function(application) {
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
 	
-	this.materialA = new CGFappearance(this);
-	this.materialA.setAmbient(1.0, 1.0, 1.0, 1.0);
-	this.materialA.setDiffuse(1.0, 1.0, 0.0, 1.0);
-	this.materialA.setSpecular(1.0, 1.0, 1.0, 1.0);
-	this.materialA.setEmission(1.0, 1.0, 1.0, 1.0);
-	this.materialA.setShininess(100);
+	// this.materialA = new CGFappearance(this);
+	// this.materialA.setAmbient(1.0, 1.0, 1.0, 1.0);
+	// this.materialA.setDiffuse(1.0, 1.0, 0.0, 1.0);
+	// this.materialA.setSpecular(1.0, 1.0, 1.0, 1.0);
+	// this.materialA.setEmission(1.0, 1.0, 1.0, 1.0);
+	// this.materialA.setShininess(100);
 
 	// this.materialB = new CGFappearance(this);
 	// this.materialB.setAmbient(0.3,0.3,0.3,1);
@@ -148,9 +148,10 @@ LightingScene.prototype.init = function(application) {
 
 	// this.earthAppearance = new CGFappearance(this);
 	// this.earthAppearance.loadTexture("resources/images/earth.png");
-	// this.earthAppearance.setDiffuse(0.7, 0.7, 0.7, 1);
-	// this.earthAppearance.setSpecular(0.5, 0.5, 0.5, 1);	
-	// this.earthAppearance.setShininess(130);
+	// this.earthAppearance.setAmbient(1.0, 1.0, 1.0, 1.0);
+	// this.earthAppearance.setDiffuse(1.0, 1.0, 1.0, 1.0);
+	// this.earthAppearance.setSpecular(1.0, 1.0, 1.0, 1.0);	
+	// this.earthAppearance.setShininess(120);
 	// this.earthAppearance.setTextureWrap("CLAMP_TO_EDGE", "CLAMP_TO_EDGE");
 
 	// this.setUpdatePeriod(100);
@@ -267,6 +268,13 @@ LightingScene.prototype.display = function() {
 	this.axis.display();
 
 	// this.materialDefault.apply();
+
+	// cycle that draws everything on screen
+	// pushMatrix
+	//     transform
+	//     apply appearance
+	//     display
+	// popMatrix
 
 	// Sun
 	this.pushMatrix();
