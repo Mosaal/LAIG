@@ -33,6 +33,9 @@ LightingScene.prototype.init = function(application) {
 
 	//Texturas
 	this.enableTextures(true);
+	// this.universeAppearance = new CGFappearance(this);
+	// this.universeAppearance.loadTexture("resources/images/universe.jpg");
+
 	this.sunAppearance = new CGFappearance(this);
 	this.sunAppearance.loadTexture("resources/images/sun.jpg");
 
@@ -98,6 +101,7 @@ LightingScene.prototype.init = function(application) {
 	// this.cylinder = new MyCylinder(this, 10, 8);
 
 	// Scene elements - TEMP
+	// this.universe = new MySphere(this, 1, 100, 100);
 	this.sun = new MySphere(this, 1, 100, 100);
 	this.mercury = new MySphere(this, 1, 100, 100);
 	this.venus = new MySphere(this, 1, 100, 100);
@@ -158,12 +162,12 @@ LightingScene.prototype.init = function(application) {
 };
 
 LightingScene.prototype.initCameras = function() {
-	this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(0, 0, 400), vec3.fromValues(0, 0, 0)); // main
+	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(0, 0, 400), vec3.fromValues(0, 0, 0)); // main
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-195, 0, 250), vec3.fromValues(-195, 0, 0)); // sun
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-45, 0, 2), vec3.fromValues(-45, 0, 0)); // mercury
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(5, 0, 4), vec3.fromValues(5, 0, 0)); // venus
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(55, 0, 4), vec3.fromValues(55, 0, 0)); // earth
-	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(60, 0, 1), vec3.fromValues(60, 0, 0)); // moon
+	this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(60, 0, 1), vec3.fromValues(60, 0, 0)); // moon
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(105, 0, 2), vec3.fromValues(105, 0, 0)); // mars
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(155, 0, 30), vec3.fromValues(155, 0, 0)); // jupiter
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(205, 0, 30), vec3.fromValues(205, 0, 0)); // saturn
@@ -275,6 +279,14 @@ LightingScene.prototype.display = function() {
 	//     apply appearance
 	//     display
 	// popMatrix
+
+	// Universe
+	// this.pushMatrix();
+	// 	this.rotate(90 * degToRad, 1, 0, 0);
+	// 	this.scale(600, 600, 600);
+	// 	this.universeAppearance.apply();
+	// 	this.universe.display();
+	// this.popMatrix();
 
 	// Sun
 	this.pushMatrix();
