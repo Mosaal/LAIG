@@ -22,6 +22,7 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 	this.viewIndex = 0;
+	this.components = {};
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -98,12 +99,18 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
+	this.interface.setActiveCamera(this.camera);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
 		this.interface.addLight(this.lights[i], this.graph.omnis[i].id, 'Omni');
 
 	for (var j = 0; j < this.graph.spots.length; j++)
 		this.interface.addLight(this.lights[i + j], this.graph.omnis[i + j].id, 'Spot');
+};
+
+XMLscene.prototype.initComponentsObject = function() {
+	for (var i = 0; i < this.graph.components.length; i++)
+		this.components[this.graph.components[i].id] = this.graph.components[i];
 };
 
 // Handler called when the graph is finally loaded. 
@@ -116,6 +123,17 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.initInterfaceOnGraphLoaded();
 	// this.initTexturesOnGraphLoaded();
 	// this.initMaterialsOnGraphLoaded();
+	this.initComponentsObject();
+};
+
+XMLscene.prototype.displayComponent = function(component) {
+	for (var i = 0; i < component.children.length; i++) {
+		if (component.children[i]['type'] == 'component') {
+			return this.displayComponent(this.components[component.children[i]['id']]);
+		} else if (component.children[i]['type'] == 'primitive') {
+			return 'prim';
+		}
+	}
 };
 
 XMLscene.prototype.display = function() {
@@ -150,8 +168,7 @@ XMLscene.prototype.display = function() {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 	if (this.graph.loadedOk == true) {
-		// start drawing from the root
-		this.lights[0].update();
+		// console.log(this.displayComponent(this.components[this.graph.root]));
 	};	
 };
 
