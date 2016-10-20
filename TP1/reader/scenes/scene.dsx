@@ -69,7 +69,7 @@
 	</views>
 
 	<illumination doublesided="0" local="0">
-		<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.1" g="0.1" b="0.1" a="1.0" />
 	</illumination>
 
@@ -134,8 +134,8 @@
 
 	<materials>
 		<material id="solarSystemMat">
-			<emission r="1.0" g="1.0" b="1.0" a="1.0" />
-			<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+			<emission r="0.5" g="0.5" b="0.5" a="1.0" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 			<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
 			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
 			<shininess value="100" />

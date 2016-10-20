@@ -117,6 +117,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	if (perspectives.length < 1)
 		return "There must be at least one 'perspective' element.";
 
+	this.viewsIndex = [];
 	this.perspectives = [];
 	for (var i = 0; i < perspectives.length; i++) {
 		var from = [], to = [];
@@ -139,6 +140,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		var camera = new CGFcamera(angle, near, far, vec3.fromValues(from['x'], from['y'], from['z']), vec3.fromValues(to['x'], to['y'], to['z']));
 		this.perspectives[id] = camera;
+		this.viewsIndex.push(id);
 	}
 };
 

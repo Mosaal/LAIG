@@ -51,6 +51,13 @@ XMLscene.prototype.initAxisOnGraphLoaded = function() {
 
 XMLscene.prototype.initCameraOnGraphLoaded = function() {
 	this.camera = this.graph.perspectives[this.graph.defaultView];
+
+	for (var i = 0; i < this.graph.viewsIndex.length; i++) {
+		if (this.graph.viewsIndex[i] == this.graph.defaultView) {
+			this.viewIndex = i;
+			break;
+		}
+	}
 };
 
 XMLscene.prototype.initIlluminationOnGraphLoaded = function() {
