@@ -3,7 +3,8 @@ function MySceneGraph(filename, scene) {
 	
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
-	scene.graph=this;
+	scene.graph = this;
+	this.toRad = Math.PI / 180;
 
 	// File reading 
 	this.reader = new CGFXMLreader();
@@ -13,8 +14,7 @@ function MySceneGraph(filename, scene) {
 	 * After the file is read, the reader calls onXMLReady on this object.
 	 * If any error occurs, the reader calls onXMLError on this object, with an error message
 	 */
-	 
-	 this.reader.open('scenes/' + filename, this);
+	this.reader.open('scenes/' + filename, this);
 }
 
 /*
@@ -82,7 +82,6 @@ MySceneGraph.prototype.onXMLReady = function() {
 	// this.printGraphInfo();
 
 	this.loadedOk = true;
-	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 	this.scene.onGraphLoaded();
 };
@@ -120,28 +119,26 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 	this.perspectives = [];
 	for (var i = 0; i < perspectives.length; i++) {
-		var perspective = new Perspective(this.reader.getString(perspectives[i], 'id', true),
-										  this.reader.getFloat(perspectives[i], 'near', true),
-										  this.reader.getFloat(perspectives[i], 'far', true),
-										  this.reader.getFloat(perspectives[i], 'angle', true));
+		var from = [], to = [];
+		var id, near, far, angle;
+		var fromTag = perspectives[i].getElementsByTagName('from');
+		var toTag = perspectives[i].getElementsByTagName('to');
 
-		var from = perspectives[i].getElementsByTagName('from');
-		if (from.length != 1)
-			return "There must be exactly one 'from' and one 'to' elements inside a 'perspective' element.";
-		
-		perspective.from['x'] = this.reader.getFloat(from[0], 'x', true);
-		perspective.from['y'] = this.reader.getFloat(from[0], 'y', true);
-		perspective.from['z'] = this.reader.getFloat(from[0], 'z', true);
+		id = this.reader.getString(perspectives[i], 'id', true);
+		near = this.reader.getFloat(perspectives[i], 'near', true);
+		far = this.reader.getFloat(perspectives[i], 'far', true);
+		angle = this.reader.getFloat(perspectives[i], 'angle', true);
 
-		var to = perspectives[i].getElementsByTagName('to');
-		if (to.length != 1)
-			return "There must be exactly one 'from' and one 'to' elements inside a 'perspective' element.";
+		from['x'] = this.reader.getFloat(fromTag[0], 'x', true);
+		from['y'] = this.reader.getFloat(fromTag[0], 'y', true);
+		from['z'] = this.reader.getFloat(fromTag[0], 'z', true);
 
-		perspective.to['x'] = this.reader.getFloat(to[0], 'x', true);
-		perspective.to['y'] = this.reader.getFloat(to[0], 'y', true);
-		perspective.to['z'] = this.reader.getFloat(to[0], 'z', true);
+		to['x'] = this.reader.getFloat(toTag[0], 'x', true);
+		to['y'] = this.reader.getFloat(toTag[0], 'y', true);
+		to['z'] = this.reader.getFloat(toTag[0], 'z', true);
 
-		this.perspectives.push(perspective);
+		var camera = new CGFcamera(angle, near, far, vec3.fromValues(from['x'], from['y'], from['z']), vec3.fromValues(to['x'], to['y'], to['z']));
+		this.perspectives[id] = camera;
 	}
 };
 
@@ -293,7 +290,8 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 								  this.reader.getString(textures[i], 'file', true),
 								  this.reader.getFloat(textures[i], 'length_s', true),
 								  this.reader.getFloat(textures[i], 'length_t', true));
-		this.textures.push(texture);
+		texture.texFile = new CGFtexture(this.scene, texture.file);
+		this.textures[this.reader.getString(textures[i], 'id', true)] = texture;
 	}
 };
 
@@ -311,39 +309,48 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 	this.materials = [];
 	for (var i = 0; i < materials.length; i++) {
-		var shininess = materials[i].getElementsByTagName('shininess');
-		var material = new Material(this.reader.getString(materials[i], 'id', true), this.reader.getFloat(shininess[0], 'value', true));
+		var material = new CGFappearance(this.scene);
 
-		var emission = materials[i].getElementsByTagName('emission');
-		var ambient = materials[i].getElementsByTagName('ambient');
-		var diffuse = materials[i].getElementsByTagName('diffuse');
-		var specular = materials[i].getElementsByTagName('specular');
-		var shininess = materials[i].getElementsByTagName('shininess');
+		var id, shininess;
+		var emission = [], ambient = [], diffuse = [], specular = [];
 
-		if (emission.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1 || shininess.length != 1)
-			return "There must be exactly one 'emission', one 'ambient', one 'diffuse', one 'specular' and one 'shininess' elements inside a 'material' element.";
+		var emissionTag = materials[i].getElementsByTagName('emission');
+		var ambientTag = materials[i].getElementsByTagName('ambient');
+		var diffuseTag = materials[i].getElementsByTagName('diffuse');
+		var specularTag = materials[i].getElementsByTagName('specular');
+		var shininessTag = materials[i].getElementsByTagName('shininess');
 
-		material.emission['r'] = this.reader.getFloat(emission[0], 'r', true);
-		material.emission['g'] = this.reader.getFloat(emission[0], 'g', true);
-		material.emission['b'] = this.reader.getFloat(emission[0], 'b', true);
-		material.emission['a'] = this.reader.getFloat(emission[0], 'a', true);
+		id = this.reader.getString(materials[i], 'id', true);
 
-		material.ambient['r'] = this.reader.getFloat(ambient[0], 'r', true);
-		material.ambient['g'] = this.reader.getFloat(ambient[0], 'g', true);
-		material.ambient['b'] = this.reader.getFloat(ambient[0], 'b', true);
-		material.ambient['a'] = this.reader.getFloat(ambient[0], 'a', true);
+		emission['r'] = this.reader.getFloat(emissionTag[0], 'r', true);
+		emission['g'] = this.reader.getFloat(emissionTag[0], 'g', true);
+		emission['b'] = this.reader.getFloat(emissionTag[0], 'b', true);
+		emission['a'] = this.reader.getFloat(emissionTag[0], 'a', true);
 
-		material.diffuse['r'] = this.reader.getFloat(diffuse[0], 'r', true);
-		material.diffuse['g'] = this.reader.getFloat(diffuse[0], 'g', true);
-		material.diffuse['b'] = this.reader.getFloat(diffuse[0], 'b', true);
-		material.diffuse['a'] = this.reader.getFloat(diffuse[0], 'a', true);
+		ambient['r'] = this.reader.getFloat(ambientTag[0], 'r', true);
+		ambient['g'] = this.reader.getFloat(ambientTag[0], 'g', true);
+		ambient['b'] = this.reader.getFloat(ambientTag[0], 'b', true);
+		ambient['a'] = this.reader.getFloat(ambientTag[0], 'a', true);
 
-		material.specular['r'] = this.reader.getFloat(specular[0], 'r', true);
-		material.specular['g'] = this.reader.getFloat(specular[0], 'g', true);
-		material.specular['b'] = this.reader.getFloat(specular[0], 'b', true);
-		material.specular['a'] = this.reader.getFloat(specular[0], 'a', true);
+		diffuse['r'] = this.reader.getFloat(diffuseTag[0], 'r', true);
+		diffuse['g'] = this.reader.getFloat(diffuseTag[0], 'g', true);
+		diffuse['b'] = this.reader.getFloat(diffuseTag[0], 'b', true);
+		diffuse['a'] = this.reader.getFloat(diffuseTag[0], 'a', true);
 
-		this.materials.push(material);
+		specular['r'] = this.reader.getFloat(specularTag[0], 'r', true);
+		specular['g'] = this.reader.getFloat(specularTag[0], 'g', true);
+		specular['b'] = this.reader.getFloat(specularTag[0], 'b', true);
+		specular['a'] = this.reader.getFloat(specularTag[0], 'a', true);
+
+		shininess = this.reader.getFloat(shininessTag[0], 'value', true);
+
+		material.setEmission(emission['r'], emission['g'], emission['b'], emission['a']);
+		material.setAmbient(ambient['r'], ambient['g'], ambient['b'], emission['a']);
+		material.setDiffuse(diffuse['r'], diffuse['g'], diffuse['b'], diffuse['a']);
+		material.setSpecular(specular['r'], specular['g'], specular['b'], specular['a']);
+		material.setShininess(shininess);
+
+		this.materials[id] = material;
 	}
 };
 
@@ -364,37 +371,55 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	this.transformations = [];
 	for (var i = 0; i < transformations.length; i++) {
-		var transformation = new Transformation(this.reader.getString(transformations[i], 'id', true));
-
-		if (transformations[i].children.length == 0)
-			return "There must be at least one 'rotate', one 'scale' or one 'translate' element inside a 'transformation' element.";
+		var matrix = mat4.create();
+		var id = this.reader.getString(transformations[i], 'id', true);
 
 		for (var j = 0; j < transformations[i].children.length; j++) {
-			var temp;
+			switch (transformations[i].children[j].tagName) {
+				case 'rotate':
+					var coord = [];
+					var axis, angle;
 
-			if (transformations[i].children[j].tagName == 'rotate') {
-				temp = new Array(3);
-				temp['type'] = 'rotate';
-				temp['axis'] = this.reader.getItem(transformations[i].children[j], 'axis', [ 'x', 'y', 'z' ], true);
-				temp['angle'] = this.reader.getFloat(transformations[i].children[j], 'angle', true);
-			} else if (transformations[i].children[j].tagName == 'translate') {
-				temp = new Array(4);
-				temp['type'] = 'translate';
-				temp['x'] = this.reader.getFloat(transformations[i].children[j], 'x', true);
-				temp['y'] = this.reader.getFloat(transformations[i].children[j], 'y', true);
-				temp['z'] = this.reader.getFloat(transformations[i].children[j], 'z', true);
-			} else if (transformations[i].children[j].tagName == 'scale') {
-				temp = new Array(4);
-				temp['type'] = 'scale';
-				temp['x'] = this.reader.getFloat(transformations[i].children[j], 'x', true);
-				temp['y'] = this.reader.getFloat(transformations[i].children[j], 'y', true);
-				temp['z'] = this.reader.getFloat(transformations[i].children[j], 'z', true);
+					axis = this.reader.getItem(transformations[i].children[j], 'axis', [ 'x', 'y', 'z' ], true);
+					angle = this.reader.getFloat(transformations[i].children[j], 'angle', true) * this.toRad;
+
+					if (axis == 'x')
+						coord = [1, 0, 0];
+					else if (axis == 'y')
+						coord = [0, 1, 0];
+					else if (axis == 'z')
+						coord = [0, 0, 1];
+
+					mat4.rotate(matrix, matrix, angle, coord);
+					break;
+				case 'translate':
+					var x, y, z;
+					var coord = [];
+
+					x = this.reader.getFloat(transformations[i].children[j], 'x', true);
+					y = this.reader.getFloat(transformations[i].children[j], 'y', true);
+					z = this.reader.getFloat(transformations[i].children[j], 'z', true);
+					coord = [ x, y, z ];
+
+					mat4.translate(matrix, matrix, coord);
+					break;
+				case 'scale':
+					var x, y, z;
+					var coord = [];
+
+					x = this.reader.getFloat(transformations[i].children[j], 'x', true);
+					y = this.reader.getFloat(transformations[i].children[j], 'y', true);
+					z = this.reader.getFloat(transformations[i].children[j], 'z', true);
+					coord = [ x, y, z ];
+
+					mat4.scale(matrix, matrix, coord);
+					break;
+				default:
+					return "Invalid transformation tag name.";
 			}
-
-			transformation.transformations.push(temp);
 		}
 
-		this.transformations.push(transformation);
+		this.transformations[id] = matrix;
 	}
 };
 
@@ -415,55 +440,70 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
 	this.primitives = [];
 	for (var i = 0; i < primitives.length; i++) {
-		if (primitives[i].children.length > 1)
-			return "There can be only one primitive inside each 'primitive' element.";
-		
-		var primitive = new Primitive(this.reader.getString(primitives[i], 'id', true));
-		if (primitives[i].children[0].tagName == 'rectangle') {
-			primitive.type = 'rectangle';
-			primitive.data = new Array(4);
-			primitive.data['x1'] = this.reader.getFloat(primitives[i].children[0], 'x1', true);
-			primitive.data['y1'] = this.reader.getFloat(primitives[i].children[0], 'y1', true);
-			primitive.data['x2'] = this.reader.getFloat(primitives[i].children[0], 'x2', true);
-			primitive.data['y2'] = this.reader.getFloat(primitives[i].children[0], 'y2', true);
-		} else if (primitives[i].children[0].tagName == 'triangle') {
-			primitive.type = 'triangle';
-			primitive.data = new Array(9);
-			primitive.data['x1'] = this.reader.getFloat(primitives[i].children[0], 'x1', true);
-			primitive.data['y1'] = this.reader.getFloat(primitives[i].children[0], 'y1', true);
-			primitive.data['z1'] = this.reader.getFloat(primitives[i].children[0], 'z1', true);
-			primitive.data['x2'] = this.reader.getFloat(primitives[i].children[0], 'x2', true);
-			primitive.data['y2'] = this.reader.getFloat(primitives[i].children[0], 'y2', true);
-			primitive.data['z2'] = this.reader.getFloat(primitives[i].children[0], 'z2', true);
-			primitive.data['x3'] = this.reader.getFloat(primitives[i].children[0], 'x3', true);
-			primitive.data['y3'] = this.reader.getFloat(primitives[i].children[0], 'y3', true);
-			primitive.data['z3'] = this.reader.getFloat(primitives[i].children[0], 'z3', true);
-		} else if (primitives[i].children[0].tagName == 'cylinder') {
-			primitive.type = 'cylinder';
-			primitive.data = new Array(5);
-			primitive.data['base'] = this.reader.getFloat(primitives[i].children[0], 'base', true);
-			primitive.data['top'] = this.reader.getFloat(primitives[i].children[0], 'top', true);
-			primitive.data['height'] = this.reader.getFloat(primitives[i].children[0], 'height', true);
-			primitive.data['slices'] = this.reader.getInteger(primitives[i].children[0], 'slices', true);
-			primitive.data['stacks'] = this.reader.getInteger(primitives[i].children[0], 'stacks', true);
-		} else if (primitives[i].children[0].tagName == 'sphere') {
-			primitive.type = 'sphere';
-			primitive.data = new Array(3);
-			primitive.data['radius'] = this.reader.getFloat(primitives[i].children[0], 'radius', true);
-			primitive.data['slices'] = this.reader.getInteger(primitives[i].children[0], 'slices', true);
-			primitive.data['stacks'] = this.reader.getInteger(primitives[i].children[0], 'stacks', true);
-		} else if (primitives[i].children[0].tagName == 'torus') {
-			primitive.type = 'torus';
-			primitive.data = new Array(4);
-			primitive.data['inner'] = this.reader.getFloat(primitives[i].children[0], 'inner', true);
-			primitive.data['outer'] = this.reader.getFloat(primitives[i].children[0], 'outer', true);
-			primitive.data['slices'] = this.reader.getInteger(primitives[i].children[0], 'slices', true);
-			primitive.data['loops'] = this.reader.getInteger(primitives[i].children[0], 'loops', true);
-		} else {
-			return "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
+		var primitive;
+		var id = this.reader.getString(primitives[i], 'id', true);
+
+		switch (primitives[i].children[0].tagName) {
+			case 'rectangle':
+				var x1, y1, x2, y2;
+
+				x1 = this.reader.getFloat(primitives[i].children[0], 'x1', true);
+				y1 = this.reader.getFloat(primitives[i].children[0], 'y1', true);
+				x2 = this.reader.getFloat(primitives[i].children[0], 'x2', true);
+				y2 = this.reader.getFloat(primitives[i].children[0], 'y2', true);
+
+				primitive = new Rectangle(this.scene, x1, y1, x2, y2);
+				break;
+			case 'triangle':
+				var x1, y1, z1, x2, y2, z2, x3, y3, z3;
+
+				x1 = this.reader.getFloat(primitives[i].children[0], 'x1', true);
+				y1 = this.reader.getFloat(primitives[i].children[0], 'y1', true);
+				z1 = this.reader.getFloat(primitives[i].children[0], 'z1', true);
+				x2 = this.reader.getFloat(primitives[i].children[0], 'x2', true);
+				y2 = this.reader.getFloat(primitives[i].children[0], 'y2', true);
+				z2 = this.reader.getFloat(primitives[i].children[0], 'z2', true);
+				x3 = this.reader.getFloat(primitives[i].children[0], 'x3', true);
+				y3 = this.reader.getFloat(primitives[i].children[0], 'y3', true);
+				z3 = this.reader.getFloat(primitives[i].children[0], 'z3', true);
+
+				primitive = new Triangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+				break;
+			case 'cylinder':
+				var base, top, height, slices, stacks;
+
+				base = this.reader.getFloat(primitives[i].children[0], 'base', true);
+				top = this.reader.getFloat(primitives[i].children[0], 'top', true);
+				height = this.reader.getFloat(primitives[i].children[0], 'height', true);
+				slices = this.reader.getInteger(primitives[i].children[0], 'slices', true);
+				stacks = this.reader.getInteger(primitives[i].children[0], 'stacks', true);
+
+				primitive = new Cylinder(this.scene, base, top, height, slices, stacks);
+				break;
+			case 'sphere':
+				var radius, slices, stacks;
+
+				radius = this.reader.getFloat(primitives[i].children[0], 'radius', true);
+				slices = this.reader.getInteger(primitives[i].children[0], 'slices', true);
+				stacks = this.reader.getInteger(primitives[i].children[0], 'stacks', true);
+
+				primitive = new Sphere(this.scene, radius, slices, stacks);
+				break;
+			case 'torus':
+				var inner, outer, slices, loops;
+
+				inner = this.reader.getFloat(primitives[i].children[0], 'inner', true);
+				outer = this.reader.getFloat(primitives[i].children[0], 'outer', true);
+				slices = this.reader.getInteger(primitives[i].children[0], 'slices', true);
+				loops = this.reader.getInteger(primitives[i].children[0], 'loops', true);
+
+				primitive = new Torus(this.scene, inner, outer, slices, loops);
+				break;
+			default:
+				return "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 		}
 
-		this.primitives.push(primitive);
+		this.primitives[id] = primitive;
 	}
 };
 
@@ -484,84 +524,78 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 	this.components = [];
 	for (var i = 0; i < components.length; i++) {
+		var id = this.reader.getString(components[i], 'id', true);
 		var texture = components[i].getElementsByTagName('texture');
-		if (texture.length != 1)
-			return "The 'texture' element inside 'component' is missing.";
-
-		var component = new Component(this.reader.getString(components[i], 'id', true), this.reader.getString(texture[0], 'id', true));
+		var textureID = this.reader.getString(texture[0], 'id', true);
+		var component = new Component(id, textureID);
 
 		var transformation = components[i].getElementsByTagName('transformation');
 		var materials = components[i].getElementsByTagName('materials');
 		var children = components[i].getElementsByTagName('children');
 
-		if (transformation.length != 1 || materials.length != 1 || children.length != 1)
-			return "There must be exactly one 'transformation', one 'materials', one 'texture' and one 'children' elements inside a 'component' element.";
-
-		if (materials[0].children.length == 0)
-			return "There must be at least one 'material' element inside the 'materials' element of each 'component' element.";
-
 		for (var j = 0; j < materials[0].children.length; j++)
 			component.materials.push(this.reader.getString(materials[0].children[j], 'id', true));
 
-		if (children[0].children.length == 0)
-			return "There must be at least one 'componentref' and/or 'primitiveref' inside the 'children' element.";
-
 		for (var j = 0; j < children[0].children.length; j++) {
-			var temp = new Array(2);
-			temp['id'] = this.reader.getString(children[0].children[j], 'id', true);
-
-			if (children[0].children[j].tagName == 'componentref')
-				temp['type'] = 'component';
-			else if (children[0].children[j].tagName == 'primitiveref')
-				temp['type'] = 'primitive';
-
-			component.children.push(temp);
+			if (children[0].children[j].tagName == 'primitiveref')
+				component.primitive = this.reader.getString(children[0].children[j], 'id', true);
+			else if (children[0].children[j].tagName == 'componentref')
+				component.children.push(this.reader.getString(children[0].children[j], 'id', true));
 		}
 
-		var temp;
-		var tag = false, trans = false;
+		var matrix = mat4.create();
 		for (var j = 0; j < transformation[0].children.length; j++) {
-			if (transformation[0].children[j].tagName == 'transformationref') {
-				tag = true;
-				if (trans == true)
-					return "ERROR";
+			switch (transformation[0].children[j].tagName) {
+				case 'transformationref':
+					matrix = this.transformations[this.reader.getString(transformation[0].children[j], 'id', true)];
+					break;
+				case 'rotate':
+					var coord = [];
+					var axis, angle;
 
-				component.transformations.push(this.reader.getString(transformation[0].children[j], 'id', true));
-			} else if (transformation[0].children[j].tagName == 'rotate') {
-				trans = true;
-				if (tag == true)
-					return "ERROR";
+					axis = this.reader.getItem(transformation[0].children[j], 'axis', [ 'x', 'y', 'z' ], true);
+					angle = this.reader.getFloat(transformation[0].children[j], 'angle', true) * this.toRad;
 
-				temp = new Array(3);
-				temp['type'] = 'rotate';
-				temp['axis'] = this.reader.getItem(transformations[i].children[j], 'axis', [ 'x', 'y', 'z' ], true);
-				temp['angle'] = this.reader.getFloat(transformations[i].children[j], 'angle', true);
-			} else if (transformation[0].children[j].tagName == 'scale') {
-				trans = true;
-				if (tag == true)
-					return "ERROR";
+					if (axis == 'x')
+						coord = [1, 0, 0];
+					else if (axis == 'y')
+						coord = [0, 1, 0];
+					else if (axis == 'z')
+						coord = [0, 0, 1];
 
-				temp = new Array(4);
-				temp['type'] = 'scale';
-				temp['x'] = this.reader.getFloat(transformations[i].children[j], 'x', true);
-				temp['y'] = this.reader.getFloat(transformations[i].children[j], 'y', true);
-				temp['z'] = this.reader.getFloat(transformations[i].children[j], 'z', true);
-			} else if (transformation[0].children[j].tagName == 'translate') {
-				trans = true;
-				if (tag == true)
-					return "ERROR";
+					mat4.rotate(matrix, matrix, angle, coord);
+					break;
+				case 'translate':
+					var x, y, z;
+					var coord = [];
 
-				temp = new Array(4);
-				temp['type'] = 'translate';
-				temp['x'] = this.reader.getFloat(transformations[i].children[j], 'x', true);
-				temp['y'] = this.reader.getFloat(transformations[i].children[j], 'y', true);
-				temp['z'] = this.reader.getFloat(transformations[i].children[j], 'z', true);
+					x = this.reader.getFloat(transformation[0].children[j], 'x', true);
+					y = this.reader.getFloat(transformation[0].children[j], 'y', true);
+					z = this.reader.getFloat(transformation[0].children[j], 'z', true);
+					coord = [ x, y, z ];
+
+					mat4.translate(matrix, matrix, coord);
+					break;
+				case 'scale':
+					var x, y, z;
+					var coord = [];
+
+					x = this.reader.getFloat(transformation[0].children[j], 'x', true);
+					y = this.reader.getFloat(transformation[0].children[j], 'y', true);
+					z = this.reader.getFloat(transformation[0].children[j], 'z', true);
+					coord = [ x, y, z ];
+
+					mat4.scale(matrix, matrix, coord);
+					break;
+				default:
+					return "Invalid transformation tag name.";
 			}
-
-			component.transformations.push(temp);
 		}
 
-		this.components.push(component);
+		if (transformation[0].children.length > 0)
+			component.transformation = matrix;
+
+		this.components[id] = component;
 	}
 };
 
@@ -571,122 +605,43 @@ MySceneGraph.prototype.printGraphInfo = function() {
 
 	// Print views info
 	console.log("views: { default = " + this.defaultView + " }");
-	for (var j = 0; j < this.perspectives.length; j++) {
-		console.log("\tperspective: { id = " + this.perspectives[j].id + ", near = " + this.perspectives[j].near + ", far = " + this.perspectives[j].far + ", angle = " + this.perspectives[j].angle + " }");
-		console.log("\t\tfrom: { x = " + this.perspectives[j].from['x'] + ", y = " + this.perspectives[j].from['y'] + ", z = " + this.perspectives[j].from['z'] + " }");
-		console.log("\t\tto: { x = " + this.perspectives[j].to['x'] + ", y = " + this.perspectives[j].to['y'] + ", z = " + this.perspectives[j].to['z'] + " }");
-	}
+	console.log(this.perspectives);
 
 	// Print illumination info
 	console.log("illumination: { doublesided = " + this.doublesided + ", local = " + this.local + " }");
-	console.log("\tambient: { r = " + this.ambient['r'] + ", g = " + this.ambient['g'] + ", b = " + this.ambient['b'] + ", a = " + this.ambient['a'] + " }");
-	console.log("\tbackground: { r = " + this.background['r'] + ", g = " + this.background['g'] + ", b = " + this.background['b'] + ", a = " + this.background['a'] + " }");
+	console.log(this.ambient);
+	console.log(this.background);
 
 	// Print lights info
 	console.log("lights");
-	for (var j = 0; j < this.omnis.length; j++) {
-		console.log("\tomni: { id = " + this.omnis[j].id + ", enabled = " + this.omnis[j].enabled + " }");
-		console.log("\t\tlocation: { x = " + this.omnis[j].location['x'] + ", y = " + this.omnis[j].location['y'] + ", z = " + this.omnis[j].location['z'] + ", w = " + this.omnis[j].location['w'] + " }");
-		console.log("\t\tambient: { x = " + this.omnis[j].ambient['r'] + ", y = " + this.omnis[j].ambient['g'] + ", z = " + this.omnis[j].ambient['b'] + ", w = " + this.omnis[j].ambient['a'] + " }");
-		console.log("\t\tdiffuse: { x = " + this.omnis[j].diffuse['r'] + ", y = " + this.omnis[j].diffuse['g'] + ", z = " + this.omnis[j].diffuse['b'] + ", w = " + this.omnis[j].diffuse['a'] + " }");
-		console.log("\t\tspecular: { x = " + this.omnis[j].specular['r'] + ", y = " + this.omnis[j].specular['g'] + ", z = " + this.omnis[j].specular['b'] + ", w = " + this.omnis[j].specular['a'] + " }");
-	}
-
-	for (var k = 0; k < this.spots.length; k++) {
-		console.log("\tspot: { id = " + this.spots[k].id + ", enabled = " + this.spots[k].enabled + ", angle = " + this.spots[k].angle + ", exponent = " + this.spots[k].exponent + " }");
-		console.log("\t\ttarget: { x = " + this.spots[k].target['x'] + ", y = " + this.spots[k].target['y'] + ", z = " + this.spots[k].target['z'] + " }");
-		console.log("\t\tlocation: { x = " + this.spots[k].location['x'] + ", y = " + this.spots[k].location['y'] + ", z = " + this.spots[k].location['z'] + " }");
-		console.log("\t\tambient: { x = " + this.spots[k].ambient['r'] + ", y = " + this.spots[k].ambient['g'] + ", z = " + this.spots[k].ambient['b'] + ", w = " + this.spots[k].ambient['a'] + " }");
-		console.log("\t\tdiffuse: { x = " + this.spots[k].diffuse['r'] + ", y = " + this.spots[k].diffuse['g'] + ", z = " + this.spots[k].diffuse['b'] + ", w = " + this.spots[k].diffuse['a'] + " }");
-		console.log("\t\tspecular: { x = " + this.spots[k].specular['r'] + ", y = " + this.spots[k].specular['g'] + ", z = " + this.spots[k].specular['b'] + ", w = " + this.spots[k].specular['a'] + " }");
-	}
+	console.log(this.omnis);
+	console.log(this.spots);
 
 	// Print textures info
-	console.log("textures");
-	for (var j = 0; j < this.textures.length; j++)
-		console.log("\ttexture: { id = " + this.textures[j].id + ", file = " + this.textures[j].file + ", length_s = " + this.textures[j].length_s + ", length_t = " + this.textures[j].length_t + " }");
+	console.log('textures');
+	console.log(this.textures);
 
 	// Print materials info
-	console.log("materials");
-	for (var j = 0; j < this.materials.length; j++) {
-		console.log("\tmaterial: { id = " + this.materials[j].id + " }");
-		console.log("\t\temission: { r = " + this.materials[j].emission['r'] + ", g = " + this.materials[j].emission['g'] + ", b = " + this.materials[j].emission['b'] + ", a = " + this.materials[j].emission['a'] + " }");
-		console.log("\t\tambient: { r = " + this.materials[j].ambient['r'] + ", g = " + this.materials[j].ambient['g'] + ", b = " + this.materials[j].ambient['b'] + ", a = " + this.materials[j].ambient['a'] + " }");
-		console.log("\t\tdiffuse: { r = " + this.materials[j].diffuse['r'] + ", g = " + this.materials[j].diffuse['g'] + ", b = " + this.materials[j].diffuse['b'] + ", a = " + this.materials[j].diffuse['a'] + " }");
-		console.log("\t\tspecular: { r = " + this.materials[j].specular['r'] + ", g = " + this.materials[j].specular['g'] + ", b = " + this.materials[j].specular['b'] + ", a = " + this.materials[j].specular['a'] + " }");
-		console.log("\t\tshininess: { value = " + this.materials[j].shininess + " }");
-	}
+	console.log('materials');
+	console.log(this.materials);
 
 	// Print transformations info
-	console.log("transformations");
-	for (var k = 0; k < this.transformations.length; k++) {
-		console.log("\ttransformation: { id = " + this.transformations[k].id + " }");
-		for (var l = 0; l < this.transformations[k].transformations.length; l++) {
-			if (this.transformations[k].transformations[l].type == 'rotate')
-				console.log("\t\trotate: { axis = " + this.transformations[k].transformations[l]['axis'] + ", angle = " + this.transformations[k].transformations[l]['angle'] + " }");
-			else if (this.transformations[k].transformations[l].type == 'translate')
-				console.log("\t\ttranslate: { x = " + this.transformations[k].transformations[l]['x'] + ", y = " + this.transformations[k].transformations[l]['y'] + ", z = " + this.transformations[k].transformations[l]['z'] + " }");
-			else if (this.transformations[k].transformations[l].type == 'scale')
-				console.log("\t\tscale: { x = " + this.transformations[k].transformations[l]['x'] + ", y = " + this.transformations[k].transformations[l]['y'] + ", z = " + this.transformations[k].transformations[l]['z'] + " }");
-		}
-	}
+	console.log('transformations');
+	console.log(this.transformations);
 
 	// Print primitives info
-	console.log("primitives");
-	for (var j = 0; j < this.primitives.length; j++) {
-		console.log("\tprimitive: { id = " + this.primitives[j].id + " }");
-		if (this.primitives[j].type == 'rectangle')
-			console.log("\t\trectangle: { x1 = " + this.primitives[j].data['x1'] + ", y1 = " + this.primitives[j].data['y1'] + ", x2 = " + this.primitives[j].data['x2'] + ", y2 = " + this.primitives[j].data['y2'] + " }");
-		else if (this.primitives[j].type == 'triangle')
-			console.log("\t\ttriangle: { x1 = " + this.primitives[j].data['x1'] + ", y1 = " + this.primitives[j].data['y1'] + ", z1 = " + this.primitives[j].data['z1'] + ", x2 = " + this.primitives[j].data['x2'] + ", y2 = " + this.primitives[j].data['y2'] + ", z2 = " + this.primitives[j].data['z2'] + ", x3 = " + this.primitives[j].data['x3'] + ", y3 = " + this.primitives[j].data['y3'] + ", z3 = " + this.primitives[j].data['z3'] + " }");
-		else if (this.primitives[j].type == 'cylinder')
-			console.log("\t\tcylinder: { base = " + this.primitives[j].data['base'] + ", top = " + this.primitives[j].data['top'] + ", height = " + this.primitives[j].data['height'] + ", slices = " + this.primitives[j].data['slices'] + ", stacks = " + this.primitives[j].data['stacks'] + " }");
-		else if (this.primitives[j].type == 'sphere')
-			console.log("\t\tsphere: { radius = " + this.primitives[j].data['radius'] + ", slices = " + this.primitives[j].data['slices'] + ", stacks = " + this.primitives[j].data['stacks'] + " }");
-		else if (this.primitives[j].type == 'torus')
-			console.log("\t\ttorus: { inner = " + this.primitives[j].data['inner'] + ", outer = " + this.primitives[j].data['outer'] + ", slices = " + this.primitives[j].data['slices'] + ", loops = " + this.primitives[j].data['loops'] + " }");
-	}
+	console.log('primitives');
+	console.log(this.primitives);
 
-	// Print components info
-	// console.log("components");
-	// for (var k = 0; k < this.components.length; k++) {
-	// 	console.log("\tcomponent: { id = " + this.components[k]['id'] + " }");
-
-	// 	console.log("\t\ttransformation")
-	// 	for (var l = 0; l < this.components[k]['transformation'].length; l++) {
-	// 		if (this.components[k]['transformation']['id#' + l] != null)
-	// 			console.log("\t\t\ttransformationref: { id = " + this.components[k]['transformation']['id#' + l] + " }");
-			
-	// 		if (this.components[k]['transformation']['rotate#' + l] != null)
-	// 			console.log("\t\t\trotate: { axis = " + this.components[k]['transformation']['rotate#' + l]['axis'] + ", angle = " + this.components[k]['transformation']['rotate#' + l]['angle'] + " }");
-			
-	// 		if (this.components[k]['transformation']['scale#' + l] != null)
-	// 			console.log("\t\t\tscale: { x = " + this.components[k]['transformation']['scale#' + l]['x'] + ", y = " + this.components[k]['transformation']['scale#' + l]['y'] + ", z = " + this.components[k]['transformation']['scale#' + l]['z'] + " }");
-			
-	// 		if (this.components[k]['transformation']['translate#' + l] != null)
-	// 			console.log("\t\t\ttranslate: { x = " + this.components[k]['transformation']['translate#' + l]['x'] + ", y = " + this.components[k]['transformation']['translate#' + l]['y'] + ", z = " + this.components[k]['transformation']['translate#' + l]['z'] + " }");
-	// 	}
-
-	// 	console.log("\t\tmaterials")
-	// 	for (var l = 0; l < this.components[k]['materials'].length; l++)
-	// 		console.log("\t\t\tmaterial: { id = " + this.components[k]['materials']['id#' + l] + " }");
-
-	// 	console.log("\t\ttexture: { id = " + this.components[k]['textureId'] + " }");
-
-	// 	console.log("\t\tchildren")
-	// 	for (var l = 0; l < this.components[k]['children'].length; l++) {
-	// 		if (this.components[k]['children']['type#' + l] == 'primitive')
-	// 			console.log("\t\t\tprimitiveref: { id = " + this.components[k]['children']['id#' + l] + " }");
-	// 		else if (this.components[k]['children']['type#' + l] == 'component')
-	// 			console.log("\t\t\tcomponentref: { id = " + this.components[k]['children']['id#' + l] + " }");
-	// 	}
-	// }
-}
+	// Print primitives info
+	console.log('components');
+	console.log(this.components);
+};
 
 /*
  * Callback to be executed on any read error
  */
 MySceneGraph.prototype.onXMLError = function(message) {
  	console.error("XML Loading Error: " + message);	
- 	this.loadedOk=false;
+ 	this.loadedOk = false;
 };

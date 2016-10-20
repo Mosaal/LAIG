@@ -194,7 +194,7 @@
 		<transformation id="saturnRingTransform">
 			<rotate axis="x" angle="90.0" />
 			<translate x="205.0" y="0.0" z="0.0" />
-			<scale x="12.0" y="12.0" z="0.1" />
+			<scale x="10.0" y="10.0" z="0.1" />
 		</transformation>
 
 		<transformation id="uranusTransform">
@@ -217,12 +217,12 @@
 	</transformations>
 
 	<primitives>
-		<primitive id="sphere">
+		<primitive id="sunAndPlanet">
 			<sphere radius="1.0" slices="100" stacks="100" />
 		</primitive>
 
-		<primitive id="torus">
-			<torus inner="0.15" outer="1.0" slices="100" loops="100" />
+		<primitive id="ring">
+			<torus inner="1.0" outer="1.5" slices="100" loops="100" />
 		</primitive>
 	</primitives>
 
@@ -263,7 +263,7 @@
 			<texture id="sunTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -279,7 +279,7 @@
 			<texture id="mercuryTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -295,7 +295,7 @@
 			<texture id="venusTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -311,7 +311,7 @@
 			<texture id="earthTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 				<componentref id="moon" />
 			</children>
 		</component>
@@ -328,7 +328,7 @@
 			<texture id="moonTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -344,7 +344,7 @@
 			<texture id="marsTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -360,7 +360,7 @@
 			<texture id="jupiterTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -376,7 +376,7 @@
 			<texture id="saturnTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 				<componentref id="saturnRing" />
 			</children>
 		</component>
@@ -393,7 +393,7 @@
 			<texture id="saturnRingTex" />
 
 			<children>
-				<primitiveref id="torus" />
+				<primitiveref id="ring" />
 			</children>
 		</component>
 
@@ -409,7 +409,7 @@
 			<texture id="uranusTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -425,7 +425,7 @@
 			<texture id="neptuneTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 
@@ -441,7 +441,7 @@
 			<texture id="plutoTex" />
 
 			<children>
-				<primitiveref id="sphere" />
+				<primitiveref id="sunAndPlanet" />
 			</children>
 		</component>
 	</components>

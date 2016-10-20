@@ -1,8 +1,8 @@
-function Torus(scene, inner, outter, slices, loops) {
+function Torus(scene, inner, outer, slices, loops) {
     CGFobject.call(this, scene);
 
     this.inner = inner;
-    this.outter = outter;
+    this.outer = outer;
     this.slices = slices;
     this.loops = loops;
 
@@ -18,32 +18,68 @@ Torus.prototype.initBuffers = function() {
     this.vertices = [];
     this.texCoords = [];
 
-    var ang_0 = (2 * Math.PI) / this.slices;
-    var ang_1 = (2 * Math.PI) / this.loops;
-    var x1, y1, z1, x, y, z, u, v;
+    // Slice Angle
+    var angSlice = 0;
+    var angSliceIncrement = (2*Math.PI)/this.slices;
+    
+    // Loop Angle
+    var angLoop = 0;
+    var angLoopIncrement = (2*Math.PI)/this.loops;
+    
+    // Radius
+    var radius = (this.outer - this.inner) / 2;
+    
+    // Texture Coordinate T
+    var t = 0;
+    var tIncrement = 1/(this.slices);
+    
+    // Texture Coordinate S
+    var s = 1;
+    var sIncrement = -1/(this.loops);
+    
+    for(var i = 0; i <= this.loops; i++)
+    {
+        for(var j = 0; j <= this.slices; j++)
+        {   
+            // Adds the vertices
+            var distToCenter = this.inner + radius * (1 + Math.cos(angLoop));   
+            var height = radius * Math.sin(angLoop);
+            var vertex = vec3.fromValues(Math.cos(angSlice) * distToCenter, Math.sin(angSlice) * distToCenter, height); 
+            this.vertices.push(vertex[0], vertex[1], vertex[2]);
 
-    for (var j = 0; j <= this.loops; j++) {
-        for (var i = 0; i <= this.slices; i++) {
-            x1 = (this.outter + this.inner * Math.cos(ang_0 * i)) * Math.cos(ang_1 * j);
-            y1 = (this.outter + this.inner * Math.cos(ang_0 * i)) * Math.sin(ang_1 * j);
-            z1 = this.inner * Math.sin(ang_0 * i);
-            u = 1 - (i / this.slices);
-            v = 1 - (j / this.loops);
+            // Adds the normals
+            var centerDist = this.inner + radius;
+            var center = vec3.fromValues(Math.cos(angSlice) * centerDist, Math.sin(angSlice) * centerDist, 0);
+            var normal = vec3.create();
+            vec3.subtract(normal, vertex, center);
+            this.normals.push(normal[0], normal[1], normal[2]);
+            
+            // Adds the Indices
+            if(i > 0 && j > 0)
+            {
+                let A = (this.slices+1)*(i)+(j);
+                let B = (this.slices+1)*(i-1)+(j-1);
+                let C = (this.slices+1)*(i)+(j-1);
+                let D = (this.slices+1)*(i-1)+(j);
 
-            this.vertices.push(x1, y1, z1);
-            this.normals.push(x1, y1, z1);
-            this.texCoords.push(u, v);
+                this.indices.push(A, C, B);
+                this.indices.push(A, B, D);
+            }
+
+            // Adds the texture coordinate
+            this.texCoords.push(t, s);
+
+            // Loop Increments
+            t += tIncrement;
+            angSlice += angSliceIncrement;
         }
-    }
-
-    for (j = 0; j < this.loops; j++) {
-        for (i = 0; i < this.slices ; i++) {
-            x = (this.loops + 1) * j + i;
-            y = (1 + this.loops) * (j + 1) + i;
-            z = (j * (this.loops + 1)) + 1 + i;
-            this.indices.push(x, y, z);
-            this.indices.push(z, y, y + 1);
-        }
+        // Loop Resets
+        t = 0;
+        angSlice = 0;
+        
+        // Loop Increments
+        s += sIncrement;
+        angLoop += angLoopIncrement;
     }
 
     this.primitiveType = this.scene.gl.TRIANGLES;

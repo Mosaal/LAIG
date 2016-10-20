@@ -21,8 +21,11 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 
 	this.axis = new CGFaxis(this);
+
+	this.matIndex = 0;
 	this.viewIndex = 0;
-	this.components = {};
+
+	this.enableTextures(true);
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -43,20 +46,11 @@ XMLscene.prototype.setDefaultAppearance = function() {
 };
 
 XMLscene.prototype.initAxisOnGraphLoaded = function() {
-	this.axis = new CGFaxis(this, this.graph.axisLength, 0.2);
+	this.axis = new CGFaxis(this, this.graph.axisLength);
 };
 
 XMLscene.prototype.initCameraOnGraphLoaded = function() {
-	for (var i = 0; i < this.graph.perspectives.length; i++) {
-		if (this.graph.perspectives[i].id == this.graph.defaultView) {
-			this.viewIndex = i;
-			this.camera = new CGFcamera(this.graph.perspectives[i].angle,
-										this.graph.perspectives[i].near,
-										this.graph.perspectives[i].far,
-										vec3.fromValues(this.graph.perspectives[i].from['x'], this.graph.perspectives[i].from['y'], this.graph.perspectives[i].from['z']),
-										vec3.fromValues(this.graph.perspectives[i].to['x'], this.graph.perspectives[i].to['y'], this.graph.perspectives[i].to['z']));
-		}
-	}
+	this.camera = this.graph.perspectives[this.graph.defaultView];
 };
 
 XMLscene.prototype.initIlluminationOnGraphLoaded = function() {
@@ -108,11 +102,6 @@ XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 		this.interface.addLight(this.lights[i + j], this.graph.omnis[i + j].id, 'Spot');
 };
 
-XMLscene.prototype.initComponentsObject = function() {
-	for (var i = 0; i < this.graph.components.length; i++)
-		this.components[this.graph.components[i].id] = this.graph.components[i];
-};
-
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function() {
@@ -121,23 +110,54 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.initIlluminationOnGraphLoaded();
 	this.initLightsOnGraphLoaded();
 	this.initInterfaceOnGraphLoaded();
-	// this.initTexturesOnGraphLoaded();
-	// this.initMaterialsOnGraphLoaded();
-	this.initComponentsObject();
 };
 
-XMLscene.prototype.displayComponent = function(component) {
-	for (var i = 0; i < component.children.length; i++) {
-		if (component.children[i]['type'] == 'component') {
-			return this.displayComponent(this.components[component.children[i]['id']]);
-		} else if (component.children[i]['type'] == 'primitive') {
-			return 'prim';
+XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextureID) {
+	var materialID, textureID;
+	var component = this.graph.components[componentID];
+
+	if (component.textureId == 'inherit')
+		textureID = preTextureID;
+	else
+		textureID = component.textureId;
+
+	if (component.materials[this.matIndex] == 'inherit')
+		materialID = preMaterialID;
+	else
+		materialID = component.materials[this.matIndex];
+
+	if (component.transformation != null) {
+		this.setMatrix(this.matrix);
+		this.multMatrix(component.transformation);
+	}
+
+	var material = this.graph.materials[materialID];
+	if (component.primitive != null) {
+		this.pushMatrix();
+
+		if (component.textureId == 'none') {
+			material.setTexture(null);
+		} else {
+			material.setTexture(this.graph.textures[component.textureId].texFile);
+			material.setTextureWrap(this.graph.textures[component.textureId].length_s, this.graph.textures[component.textureId].length_t);
 		}
+
+		material.apply();
+		this.graph.primitives[component.primitive].display();
+		this.popMatrix();
+	}
+
+	for (var i = 0; i < component.children.length; i++) {
+		this.pushMatrix();
+		this.processGraph(component.children[i], materialID, textureID);
+		this.popMatrix();
 	}
 };
 
 XMLscene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
+	// console.log('LEL');
+	// console.log(this.graph.components);
 	
 	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -152,13 +172,14 @@ XMLscene.prototype.display = function() {
 
 	// Draw axis
 	this.axis.display();
+	this.matrix = this.getMatrix();
 
 	// this.rect = new Rectangle(this, 0, 0, 1, 1);
 	// this.tri = new Triangle(this, 0, 0, 0, 2, 0, 0, 0, 2, 0);
 	// this.circle = new Circle(this, 2, 50);
 	// this.cyl = new Cylinder(this, 1, 2, 2, 50, 50);
 	// this.sphere = new Sphere(this, 1, 50, 50);
-	// this.torus = new Torus(this, 1, 2, 50, 50);
+	// this.torus = new Torus(this, 10, 12, 100, 100);
 
 	this.setDefaultAppearance();
 	
@@ -168,7 +189,12 @@ XMLscene.prototype.display = function() {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 	if (this.graph.loadedOk == true) {
-		// console.log(this.displayComponent(this.components[this.graph.root]));
-	};	
+		for (var i = 0; i < this.lights.length; i++)
+			this.lights[i].update();
+
+		// Start drawing primitives
+		var comp = this.graph.components[this.graph.root];
+		this.processGraph(this.graph.root, this.graph.materials[comp.materials[this.matIndex]], comp.textureId);
+	};
 };
 
