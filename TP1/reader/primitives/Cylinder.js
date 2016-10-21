@@ -52,6 +52,13 @@ Cylinder.prototype.initBuffers = function() {
 		}
 	}
 
+	this.primitiveType = this.scene.gl.TRIANGLES;
+	this.initGLBuffers();
+};
+
+Cylinder.prototype.display = function() {
+	CGFobject.prototype.display.call(this);
+
 	this.scene.pushMatrix();
 		this.scene.translate(0, 0, this.height);
 		this.topCover.display();
@@ -62,7 +69,4 @@ Cylinder.prototype.initBuffers = function() {
 		this.scene.rotate(Math.PI, 0, 1, 0);
 		this.baseCover.display();
 	this.scene.popMatrix();
-
-	this.primitiveType = this.scene.gl.TRIANGLES;
-	this.initGLBuffers();
-}
+};

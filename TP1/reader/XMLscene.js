@@ -23,6 +23,7 @@ XMLscene.prototype.init = function(application) {
 	this.axis = new CGFaxis(this);
 
 	this.viewIndex = 0;
+	this.degToRad = Math.PI / 180.0;
 
 	this.enableTextures(true);
 };
@@ -118,6 +119,27 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.initInterfaceOnGraphLoaded();
 };
 
+XMLscene.prototype.applyTransformations = function(transformations) {
+	for (var i = 0; i < transformations.length; i++) {
+		switch (transformations[i]['type']) {
+			case 'rotate':
+				if (transformations[i]['axis'] == 'x')
+					this.rotate(transformations[i]['angle'] * this.degToRad, 1, 0, 0);
+				else if (transformations[i]['axis'] == 'y')
+					this.rotate(transformations[i]['angle'] * this.degToRad, 0, 1, 0);
+				else if (transformations[i]['axis'] == 'z')
+					this.rotate(transformations[i]['angle'] * this.degToRad, 0, 0, 1);
+				break;
+			case 'translate':
+				this.translate(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
+				break;
+			case 'scale':
+				this.scale(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
+				break;
+		}
+	}
+};
+
 XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextureID) {
 	var materialID, textureID;
 	var component = this.graph.components[componentID];
@@ -132,14 +154,11 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	else
 		materialID = component.materials[component.matIndex];
 
-	if (component.transformation != null) {
-		this.setMatrix(this.matrix);
-		this.multMatrix(component.transformation);
-	}
-
 	var material = this.graph.materials[materialID];
 	if (component.primitive != null) {
-		this.pushMatrix();
+		// this.pushMatrix();
+		if (component.transformation != null)
+			this.applyTransformations(component.transformation);
 
 		if (textureID == 'none') {
 			material.setTexture(null);
@@ -147,10 +166,13 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 			material.setTexture(this.graph.textures[textureID].texFile);
 			material.setTextureWrap(this.graph.textures[textureID].length_s, this.graph.textures[textureID].length_t);
 		}
-
+		
 		material.apply();
 		this.graph.primitives[component.primitive].display();
-		this.popMatrix();
+		// this.popMatrix();
+	} else {
+		if (component.transformation != null)
+			this.applyTransformations(component.transformation);
 	}
 
 	for (var i = 0; i < component.children.length; i++) {
@@ -162,8 +184,6 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 
 XMLscene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
-	// console.log('LEL');
-	// console.log(this.graph.components);
 	
 	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -178,16 +198,19 @@ XMLscene.prototype.display = function() {
 
 	// Draw axis
 	this.axis.display();
-	this.matrix = this.getMatrix();
 
-	// this.rect = new Rectangle(this, 0, 0, 1, 1);
+	// this.rect = new Rectangle(this, 0, 0, 2, 1);
 	// this.tri = new Triangle(this, 0, 0, 0, 2, 0, 0, 0, 2, 0);
-	// this.circle = new Circle(this, 2, 50);
-	// this.cyl = new Cylinder(this, 1, 2, 2, 50, 50);
+	// this.circle = new Circle(this, 1, 50);
+	// this.cyl = new Cylinder(this, 1, 1, 2, 50, 50);
 	// this.sphere = new Sphere(this, 1, 50, 50);
-	// this.torus = new Torus(this, 10, 12, 100, 100);
+	// this.torus = new Torus(this, 1, 2, 100, 100);
 
 	this.setDefaultAppearance();
+
+	// this.pushMatrix();
+	// this.rect.display();
+	// this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
 
@@ -200,7 +223,7 @@ XMLscene.prototype.display = function() {
 
 		// Start drawing primitives
 		var comp = this.graph.components[this.graph.root];
-		this.processGraph(this.graph.root, this.graph.materials[comp.materials[comp.matIndex]], comp.textureId);
+		this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
 	};
 };
 

@@ -79,7 +79,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 		return;
 	}
 
-	this.printGraphInfo();
+	// this.printGraphInfo();
 
 	this.loadedOk = true;
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -128,7 +128,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		id = this.reader.getString(perspectives[i], 'id', true);
 		near = this.reader.getFloat(perspectives[i], 'near', true);
 		far = this.reader.getFloat(perspectives[i], 'far', true);
-		angle = this.reader.getFloat(perspectives[i], 'angle', true);
+		angle = this.reader.getFloat(perspectives[i], 'angle', true) * this.scene.degToRad;
 
 		from['x'] = this.reader.getFloat(fromTag[0], 'x', true);
 		from['y'] = this.reader.getFloat(fromTag[0], 'y', true);
@@ -235,7 +235,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	for (var i = 0; i < spots.length; i++) {
 		var spot = new Spot(this.reader.getString(spots[i], 'id', true),
 							this.reader.getBoolean(spots[i], 'enabled', true),
-							this.reader.getFloat(spots[i], 'angle', true),
+							this.reader.getFloat(spots[i], 'angle', true) * this.scene.degToRad,
 							this.reader.getFloat(spots[i], 'exponent', true));
 
 		var target = spots[i].getElementsByTagName('target');
@@ -373,55 +373,58 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	this.transformations = [];
 	for (var i = 0; i < transformations.length; i++) {
-		var matrix = mat4.create();
+		var transformation = [];
 		var id = this.reader.getString(transformations[i], 'id', true);
 
 		for (var j = 0; j < transformations[i].children.length; j++) {
+			var temp;
+
 			switch (transformations[i].children[j].tagName) {
 				case 'rotate':
-					var coord = [];
 					var axis, angle;
+					temp = new Array(3);
 
 					axis = this.reader.getItem(transformations[i].children[j], 'axis', [ 'x', 'y', 'z' ], true);
-					angle = this.reader.getFloat(transformations[i].children[j], 'angle', true) * this.toRad;
+					angle = this.reader.getFloat(transformations[i].children[j], 'angle', true);
 
-					if (axis == 'x')
-						coord = [1, 0, 0];
-					else if (axis == 'y')
-						coord = [0, 1, 0];
-					else if (axis == 'z')
-						coord = [0, 0, 1];
-
-					mat4.rotate(matrix, matrix, angle, coord);
+					temp['axis'] = axis;
+					temp['angle'] = angle;
+					temp['type'] = 'rotate';
 					break;
 				case 'translate':
 					var x, y, z;
-					var coord = [];
+					temp = new Array(4);
 
 					x = this.reader.getFloat(transformations[i].children[j], 'x', true);
 					y = this.reader.getFloat(transformations[i].children[j], 'y', true);
 					z = this.reader.getFloat(transformations[i].children[j], 'z', true);
-					coord = [ x, y, z ];
 
-					mat4.translate(matrix, matrix, coord);
+					temp['x'] = x;
+					temp['y'] = y;
+					temp['z'] = z;
+					temp['type'] = 'translate';
 					break;
 				case 'scale':
 					var x, y, z;
-					var coord = [];
+					temp = new Array(4);
 
 					x = this.reader.getFloat(transformations[i].children[j], 'x', true);
 					y = this.reader.getFloat(transformations[i].children[j], 'y', true);
 					z = this.reader.getFloat(transformations[i].children[j], 'z', true);
-					coord = [ x, y, z ];
 
-					mat4.scale(matrix, matrix, coord);
+					temp['x'] = x;
+					temp['y'] = y;
+					temp['z'] = z;
+					temp['type'] = 'scale';
 					break;
 				default:
 					return "Invalid transformation tag name.";
 			}
+
+			transformation.push(temp);
 		}
 
-		this.transformations[id] = matrix;
+		this.transformations[id] = transformation;
 	}
 };
 
@@ -545,49 +548,73 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 				component.children.push(this.reader.getString(children[0].children[j], 'id', true));
 		}
 
-		var matrix = mat4.create();
+		var matrix = [], tag = false, trans = false;
 		for (var j = 0; j < transformation[0].children.length; j++) {
+			var temp;
+
 			switch (transformation[0].children[j].tagName) {
 				case 'transformationref':
-					matrix = this.transformations[this.reader.getString(transformation[0].children[j], 'id', true)];
+					if (trans == false) {
+						tag = true;
+						matrix = this.transformations[this.reader.getString(transformation[0].children[j], 'id', true)];
+					} else {
+						return "ERROR";
+					}
 					break;
 				case 'rotate':
-					var coord = [];
-					var axis, angle;
+					if (tag == false) {
+						trans = true;
+						var axis, angle;
+						temp = new Array(3);
 
-					axis = this.reader.getItem(transformation[0].children[j], 'axis', [ 'x', 'y', 'z' ], true);
-					angle = this.reader.getFloat(transformation[0].children[j], 'angle', true) * this.toRad;
+						axis = this.reader.getItem(transformation[0].children[j], 'axis', [ 'x', 'y', 'z' ], true);
+						angle = this.reader.getFloat(transformation[0].children[j], 'angle', true);
 
-					if (axis == 'x')
-						coord = [1, 0, 0];
-					else if (axis == 'y')
-						coord = [0, 1, 0];
-					else if (axis == 'z')
-						coord = [0, 0, 1];
-
-					mat4.rotate(matrix, matrix, angle, coord);
+						temp['axis'] = axis;
+						temp['angle'] = angle;
+						temp['type'] = 'rotate';
+						matrix.push(temp);
+					} else {
+						return "ERROR";
+					}
 					break;
 				case 'translate':
-					var x, y, z;
-					var coord = [];
+					if (tag == false) {
+						trans = true;
+						var x, y, z;
+						temp = new Array(4);
 
-					x = this.reader.getFloat(transformation[0].children[j], 'x', true);
-					y = this.reader.getFloat(transformation[0].children[j], 'y', true);
-					z = this.reader.getFloat(transformation[0].children[j], 'z', true);
-					coord = [ x, y, z ];
+						x = this.reader.getFloat(transformation[0].children[j], 'x', true);
+						y = this.reader.getFloat(transformation[0].children[j], 'y', true);
+						z = this.reader.getFloat(transformation[0].children[j], 'z', true);
 
-					mat4.translate(matrix, matrix, coord);
+						temp['x'] = x;
+						temp['y'] = y;
+						temp['z'] = z;
+						temp['type'] = 'translate';
+						matrix.push(temp);
+					} else {
+						return "ERROR";
+					}
 					break;
 				case 'scale':
-					var x, y, z;
-					var coord = [];
+					if (tag == false) {
+						trans = true;
+						var x, y, z;
+						temp = new Array(4);
 
-					x = this.reader.getFloat(transformation[0].children[j], 'x', true);
-					y = this.reader.getFloat(transformation[0].children[j], 'y', true);
-					z = this.reader.getFloat(transformation[0].children[j], 'z', true);
-					coord = [ x, y, z ];
+						x = this.reader.getFloat(transformation[0].children[j], 'x', true);
+						y = this.reader.getFloat(transformation[0].children[j], 'y', true);
+						z = this.reader.getFloat(transformation[0].children[j], 'z', true);
 
-					mat4.scale(matrix, matrix, coord);
+						temp['x'] = x;
+						temp['y'] = y;
+						temp['z'] = z;
+						temp['type'] = 'scale';
+						matrix.push(temp);
+					} else {
+						return "ERROR";
+					}
 					break;
 				default:
 					return "Invalid transformation tag name.";
@@ -603,40 +630,40 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 MySceneGraph.prototype.printGraphInfo = function() {
 	// Print scene info
-	console.log("scene: { root = " + this.root + ", axis_length = " + this.axisLength + " }");
+	console.log("SCENE: { root = " + this.root + ", axis_length = " + this.axisLength + " }");
 
 	// Print views info
-	console.log("views: { default = " + this.defaultView + " }");
+	console.log("VIEWS: { default = " + this.defaultView + " }");
 	console.log(this.perspectives);
 
 	// Print illumination info
-	console.log("illumination: { doublesided = " + this.doublesided + ", local = " + this.local + " }");
+	console.log("ILLUMINATION: { doublesided = " + this.doublesided + ", local = " + this.local + " }");
 	console.log(this.ambient);
 	console.log(this.background);
 
 	// Print lights info
-	console.log("lights");
+	console.log("LIGHTS");
 	console.log(this.omnis);
 	console.log(this.spots);
 
 	// Print textures info
-	console.log('textures');
+	console.log('TEXTURES');
 	console.log(this.textures);
 
 	// Print materials info
-	console.log('materials');
+	console.log('MATERIALS');
 	console.log(this.materials);
 
 	// Print transformations info
-	console.log('transformations');
+	console.log('TRANSFORMATIONS');
 	console.log(this.transformations);
 
 	// Print primitives info
-	console.log('primitives');
+	console.log('PRIMITIVES');
 	console.log(this.primitives);
 
 	// Print primitives info
-	console.log('components');
+	console.log('COMPONENTS');
 	console.log(this.components);
 };
 
