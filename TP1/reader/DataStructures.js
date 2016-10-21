@@ -29,6 +29,7 @@ function Texture(id, file, length_s, length_t) {
 
 function Component(id, textureId) {
 	this.id = id;
+	this.matIndex = 0;
 	this.children = [];
 	this.materials = [];
 	this.primitive = null;

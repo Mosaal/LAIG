@@ -22,7 +22,6 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
-	this.matIndex = 0;
 	this.viewIndex = 0;
 
 	this.enableTextures(true);
@@ -81,17 +80,17 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 	}
 
 	for (var j = 0; j < this.graph.spots.length; j++) {
-		this.lights[i + j].setSpotCutOff(this.graph.spots[i + j].angle);
-		this.lights[i + j].setSpotExponent(this.graph.spots[i + j].exponent);
-		this.lights[i + j].setSpotDirection(this.graph.spots[i + j].target['x'], this.graph.spots[i + j].target['y'], this.graph.spots[i + j].target['z']);
-		this.lights[i + j].setPosition(this.graph.spots[i + j].location['x'], this.graph.spots[i + j].location['y'], this.graph.spots[i + j].location['z']);
-		this.lights[i + j].setAmbient(this.graph.spots[i + j].ambient['r'], this.graph.spots[i + j].ambient['g'], this.graph.spots[i + j].ambient['b'], this.graph.spots[i + j].ambient['a']);
-		this.lights[i + j].setDiffuse(this.graph.spots[i + j].diffuse['r'], this.graph.spots[i + j].diffuse['g'], this.graph.spots[i + j].diffuse['b'], this.graph.spots[i + j].diffuse['a']);
-		this.lights[i + j].setSpecular(this.graph.spots[i + j].specular['r'], this.graph.spots[i + j].specular['g'], this.graph.spots[i + j].specular['b'], this.graph.spots[i + j].specular['a']);
+		this.lights[i + j].setSpotCutOff(this.graph.spots[j].angle);
+		this.lights[i + j].setSpotExponent(this.graph.spots[j].exponent);
+		this.lights[i + j].setSpotDirection(this.graph.spots[j].target['x'], this.graph.spots[j].target['y'], this.graph.spots[j].target['z']);
+		this.lights[i + j].setPosition(this.graph.spots[j].location['x'], this.graph.spots[j].location['y'], this.graph.spots[j].location['z']);
+		this.lights[i + j].setAmbient(this.graph.spots[j].ambient['r'], this.graph.spots[j].ambient['g'], this.graph.spots[j].ambient['b'], this.graph.spots[j].ambient['a']);
+		this.lights[i + j].setDiffuse(this.graph.spots[j].diffuse['r'], this.graph.spots[j].diffuse['g'], this.graph.spots[j].diffuse['b'], this.graph.spots[j].diffuse['a']);
+		this.lights[i + j].setSpecular(this.graph.spots[j].specular['r'], this.graph.spots[j].specular['g'], this.graph.spots[j].specular['b'], this.graph.spots[j].specular['a']);
 
-		if (this.graph.spots[i + j].enabled == true)
+		if (this.graph.spots[j].enabled == true)
 			this.lights[i + j].enable();
-		else if (this.graph.spots[i + j].enabled == false)
+		else if (this.graph.spots[j].enabled == false)
 			this.lights[i + j].disable();
 
 		this.lights[i + j].update();
@@ -106,7 +105,7 @@ XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 		this.interface.addLight(this.lights[i], this.graph.omnis[i].id, 'Omni');
 
 	for (var j = 0; j < this.graph.spots.length; j++)
-		this.interface.addLight(this.lights[i + j], this.graph.omnis[i + j].id, 'Spot');
+		this.interface.addLight(this.lights[i + j], this.graph.spots[j].id, 'Spot');
 };
 
 // Handler called when the graph is finally loaded. 
@@ -128,10 +127,10 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	else
 		textureID = component.textureId;
 
-	if (component.materials[this.matIndex] == 'inherit')
+	if (component.materials[component.matIndex] == 'inherit')
 		materialID = preMaterialID;
 	else
-		materialID = component.materials[this.matIndex];
+		materialID = component.materials[component.matIndex];
 
 	if (component.transformation != null) {
 		this.setMatrix(this.matrix);
@@ -142,11 +141,11 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	if (component.primitive != null) {
 		this.pushMatrix();
 
-		if (component.textureId == 'none') {
+		if (textureID == 'none') {
 			material.setTexture(null);
 		} else {
-			material.setTexture(this.graph.textures[component.textureId].texFile);
-			material.setTextureWrap(this.graph.textures[component.textureId].length_s, this.graph.textures[component.textureId].length_t);
+			material.setTexture(this.graph.textures[textureID].texFile);
+			material.setTextureWrap(this.graph.textures[textureID].length_s, this.graph.textures[textureID].length_t);
 		}
 
 		material.apply();
@@ -201,7 +200,7 @@ XMLscene.prototype.display = function() {
 
 		// Start drawing primitives
 		var comp = this.graph.components[this.graph.root];
-		this.processGraph(this.graph.root, this.graph.materials[comp.materials[this.matIndex]], comp.textureId);
+		this.processGraph(this.graph.root, this.graph.materials[comp.materials[comp.matIndex]], comp.textureId);
 	};
 };
 
