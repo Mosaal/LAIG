@@ -168,8 +168,7 @@
 		</transformation>
 
 		<transformation id="moonTransform">
-			<rotate axis="x" angle="90.0" />
-			<translate x="60.0" y="0.0" z="0.0" />
+			<translate x="5.0" y="0.0" z="0.0" />
 			<scale x="0.3" y="0.3" z="0.3" />
 		</transformation>
 
@@ -192,9 +191,7 @@
 		</transformation>
 
 		<transformation id="saturnRingTransform">
-			<rotate axis="x" angle="90.0" />
-			<translate x="205.0" y="0.0" z="0.0" />
-			<scale x="10.0" y="10.0" z="0.1" />
+			<scale x="1.1" y="1.1" z="0.05" />
 		</transformation>
 
 		<transformation id="uranusTransform">
@@ -242,11 +239,9 @@
 				<componentref id="mercury" />
 				<componentref id="venus" />
 				<componentref id="earth" />
-				<componentref id="moon" />
 				<componentref id="mars" />
 				<componentref id="jupiter" />
 				<componentref id="saturn" />
-				<componentref id="saturnRing" />
 				<componentref id="uranus" />
 				<componentref id="neptune" />
 				<componentref id="pluto" />
@@ -314,6 +309,7 @@
 
 			<children>
 				<primitiveref id="sunAndPlanet" />
+				<componentref id="moon" />
 			</children>
 		</component>
 
@@ -378,6 +374,7 @@
 
 			<children>
 				<primitiveref id="sunAndPlanet" />
+				<componentref id="saturnRing" />
 			</children>
 		</component>
 

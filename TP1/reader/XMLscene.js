@@ -24,7 +24,6 @@ XMLscene.prototype.init = function(application) {
 
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
-
 	this.enableTextures(true);
 };
 
@@ -156,7 +155,6 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 
 	var material = this.graph.materials[materialID];
 	if (component.primitive != null) {
-		// this.pushMatrix();
 		if (component.transformation != null)
 			this.applyTransformations(component.transformation);
 
@@ -169,7 +167,6 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 		
 		material.apply();
 		this.graph.primitives[component.primitive].display();
-		// this.popMatrix();
 	} else {
 		if (component.transformation != null)
 			this.applyTransformations(component.transformation);
@@ -198,19 +195,7 @@ XMLscene.prototype.display = function() {
 
 	// Draw axis
 	this.axis.display();
-
-	// this.rect = new Rectangle(this, 0, 0, 2, 1);
-	// this.tri = new Triangle(this, 0, 0, 0, 2, 0, 0, 0, 2, 0);
-	// this.circle = new Circle(this, 1, 50);
-	// this.cyl = new Cylinder(this, 1, 1, 2, 50, 50);
-	// this.sphere = new Sphere(this, 1, 50, 50);
-	// this.torus = new Torus(this, 1, 2, 100, 100);
-
 	this.setDefaultAppearance();
-
-	// this.pushMatrix();
-	// this.rect.display();
-	// this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
 
