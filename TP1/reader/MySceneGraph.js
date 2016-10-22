@@ -24,75 +24,56 @@ MySceneGraph.prototype.onXMLReady = function() {
 	console.log("XML Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement;
 
-	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseScene(rootElement);
-	if (error != null) {
+	try {
+		this.checkOrder(rootElement);
+		this.parseScene(rootElement);
+		this.parseViews(rootElement);
+		this.parseIllumination(rootElement);
+		this.parseLights(rootElement);
+		this.parseTextures(rootElement);
+		this.parseMaterials(rootElement);
+		this.parseTransformations(rootElement);
+		this.parsePrimitives(rootElement);
+		this.parseComponents(rootElement);
+	} catch (error) {
 		this.onXMLError(error);
 		return;
 	}
-
-	error = this.parseViews(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseIllumination(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseLights(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseTextures(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseMaterials(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseTransformations(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parsePrimitives(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	error = this.parseComponents(rootElement);
-	if (error != null) {
-		this.onXMLError(error);
-		return;
-	}
-
-	// this.printGraphInfo();
 
 	this.loadedOk = true;
+	// this.printGraphInfo();
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 	this.scene.onGraphLoaded();
+};
+
+MySceneGraph.prototype.checkOrder = function(rootElement) {
+	if (rootElement.children[0].tagName != 'scene')
+		return "The 'scene' element should be the first element in the .dsx file.";
+	else if (rootElement.children[1].tagName != 'views')
+		return "The 'views' element should be the second element in the .dsx file.";
+	else if (rootElement.children[2].tagName != 'illumination')
+		return "The 'illumination' element should be the third element in the .dsx file.";
+	else if (rootElement.children[3].tagName != 'lights')
+		return "The 'lights' element should be the fourth element in the .dsx file.";
+	else if (rootElement.children[4].tagName != 'textures')
+		return "The 'textures' element should be the fifth element in the .dsx file.";
+	else if (rootElement.children[5].tagName != 'materials')
+		return "The 'materials' element should be the sixth element in the .dsx file.";
+	else if (rootElement.children[6].tagName != 'transformations')
+		return "The 'transformations' element should be the seventh element in the .dsx file.";
+	else if (rootElement.children[7].tagName != 'primitives')
+		return "The 'primitives' element should be the eighth element in the .dsx file.";
+	else if (rootElement.children[8].tagName != 'components')
+		return "The 'components' element should be the ninth element in the .dsx file.";
 };
 
 MySceneGraph.prototype.parseScene = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('scene');
 	if (elems == null)
-		return "The 'scene' element is missing.";
+		throw "The 'scene' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'scene' element found.";
+		throw "Zero or more than one 'scene' element found.";
 
 	var scene = elems[0];
 	this.root = this.reader.getString(scene, 'root', true);
@@ -102,28 +83,34 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 MySceneGraph.prototype.parseViews = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('views');
 	if (elems == null)
-		return "The 'views' element is missing.";
+		throw "The 'views' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'views' element found.";
+		throw "Zero or more than one 'views' element found.";
 
 	var views = elems[0];
 	this.defaultView = this.reader.getString(views, 'default', true);
 
 	var perspectives = elems[0].getElementsByTagName('perspective');
 	if (perspectives == null)
-		return "The 'perspective' element is missing.";
+		throw "The 'perspective' element is missing.";
 
 	if (perspectives.length < 1)
-		return "There must be at least one 'perspective' element.";
+		throw "There must be at least one 'perspective' element.";
 
 	this.viewsIndex = [];
 	this.perspectives = [];
 	for (var i = 0; i < perspectives.length; i++) {
 		var from = [], to = [];
 		var id, near, far, angle;
+
 		var fromTag = perspectives[i].getElementsByTagName('from');
 		var toTag = perspectives[i].getElementsByTagName('to');
+
+		if (fromTag.length != 1)
+			throw "There must be exactly one 'from' element inside each 'perspective' element.";
+		else if (toTag.length != 1)
+			throw "There must be exactly one 'to' element inside each 'perspective' element.";
 
 		id = this.reader.getString(perspectives[i], 'id', true);
 		near = this.reader.getFloat(perspectives[i], 'near', true);
@@ -147,10 +134,10 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('illumination');
 	if (elems == null)
-		return "The 'illumination' element is missing.";
+		throw "The 'illumination' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'illumination' element found.";
+		throw "Zero or more than one 'illumination' element found.";
 
 	var illumination = elems[0];
 	this.doublesided = this.reader.getBoolean(illumination, 'doublesided', true);
@@ -158,10 +145,10 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	var ambient = illumination.getElementsByTagName('ambient');
 	if (ambient == null)
-		return "The 'ambient' element is missing.";
+		throw "The 'ambient' element is missing.";
 
 	if (ambient.length != 1)
-		return "Zero or more than one 'ambient' element found.";
+		throw "There must be exactly one 'ambient' element inside the 'illumination' element.";
 
 	this.ambient = [];
 	this.ambient['r'] = this.reader.getFloat(ambient[0], 'r', true);
@@ -171,10 +158,10 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	var background = illumination.getElementsByTagName('background');
 	if (background == null)
-		return "The 'background' element is missing.";
+		throw "The 'background' element is missing.";
 
 	if (background.length != 1)
-		return "Zero or more than one 'background' element found.";
+		throw "There must be exactly one 'background' element inside the 'illumination' element.";
 
 	this.background = [];
 	this.background['r'] = this.reader.getFloat(background[0], 'r', true);
@@ -186,15 +173,15 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 MySceneGraph.prototype.parseLights = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('lights');
 	if (elems == null)
-		return "The 'lights' element is missing.";
+		throw "The 'lights' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'lights' element found.";
+		throw "Zero or more than one 'lights' element found.";
 
 	var omnis = elems[0].getElementsByTagName('omni');
 	var spots = elems[0].getElementsByTagName('spot');
 	if (omnis.length == 0 && spots.length == 0)
-		return "Both 'omni' and 'spot' elements are missing. There must be at least one 'omni' or 'spot' element.";
+		throw "Both 'omni' and 'spot' elements are missing. There must be at least one 'omni' or 'spot' element.";
 
 	this.omnis = [];
 	for (var i = 0; i < omnis.length; i++) {
@@ -206,7 +193,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var specular = omnis[i].getElementsByTagName('specular');
 
 		if (location.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1)
-			return "There must be exactly one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'omni' element.";
+			throw "There must be exactly one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'omni' element.";
 
 		omni.location['x'] = this.reader.getFloat(location[0], 'x', true);
 		omni.location['y'] = this.reader.getFloat(location[0], 'y', true);
@@ -245,7 +232,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var specular = spots[i].getElementsByTagName('specular');
 
 		if (target.length != 1 || location.length != 1 || ambient.length != 1 || diffuse.length != 1 || specular.length != 1)
-			return "There must be exactly one 'target', one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'spot' element.";
+			throw "There must be exactly one 'target', one 'location', one 'ambient', one 'diffuse' and one 'specular' elements inside a 'spot' element.";
 
 		spot.target['x'] = this.reader.getFloat(target[0], 'x', true);
 		spot.target['y'] = this.reader.getFloat(target[0], 'y', true);
@@ -277,14 +264,14 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('textures');
 	if (elems == null)
-		return "The 'textures' element is missing.";
+		throw "The 'textures' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'textures' element found.";
+		throw "Zero or more than one 'textures' element found.";
 
 	var textures = elems[0].getElementsByTagName('texture');
 	if (textures.length == 0)
-		return "There must be at least one 'texture' element.";
+		throw "There must be at least one 'texture' element.";
 
 	this.textures = [];
 	for (var i = 0; i < textures.length; i++) {
@@ -300,14 +287,14 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('materials');
 	if (elems == null)
-		return "The 'materials' element is missing.";
+		throw "The 'materials' element is missing.";
 
 	var materials = elems[0].getElementsByTagName('material');
 	if (materials == null)
-		return "The 'material' element is missing.";
+		throw "The 'material' element is missing.";
 
 	if (materials.length < 1)
-		return "There must be at least one 'material' element.";
+		throw "There must be at least one 'material' element.";
 
 	this.materials = [];
 	for (var i = 0; i < materials.length; i++) {
@@ -321,6 +308,9 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		var diffuseTag = materials[i].getElementsByTagName('diffuse');
 		var specularTag = materials[i].getElementsByTagName('specular');
 		var shininessTag = materials[i].getElementsByTagName('shininess');
+
+		if (emissionTag.length != 1 || ambientTag.length != 1 || diffuseTag.length != 1 || specularTag.length != 1 || shininessTag.length != 1)
+			throw "There must be exactly one 'emission', one 'ambient', one 'diffuse', one 'specular' and one 'shininess' elements inside each 'material' element.";
 
 		id = this.reader.getString(materials[i], 'id', true);
 
@@ -359,17 +349,17 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('transformations');
 	if (elems == null)
-		return "The 'transformations' element is missing.";
+		throw "The 'transformations' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'transformations' element found.";
+		throw "Zero or more than one 'transformations' element found.";
 
 	var transformations = elems[0].getElementsByTagName('transformation');
 	if (transformations == null)
-		return "The 'transformation' element is missing.";
+		throw "The 'transformation' element is missing.";
 
 	if (transformations.length < 1)
-		return "There must be at least one 'transformation' element.";
+		throw "There must be at least one 'transformation' element.";
 
 	this.transformations = [];
 	for (var i = 0; i < transformations.length; i++) {
@@ -418,7 +408,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 					temp['type'] = 'scale';
 					break;
 				default:
-					return "Invalid transformation tag name.";
+					throw "Invalid transformation element.";
 			}
 
 			transformation.push(temp);
@@ -431,22 +421,25 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('primitives');
 	if (elems == null)
-		return "The 'primitives' element is missing.";
+		throw "The 'primitives' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'primitives' element found.";
+		throw "Zero or more than one 'primitives' element found.";
 
 	var primitives = elems[0].getElementsByTagName('primitive');
 	if (primitives == null)
-		return "The 'primitive' element is missing.";
+		throw "The 'primitive' element is missing.";
 
 	if (primitives.length < 1)
-		return "There must be at least one 'primitive' element.";
+		throw "There must be at least one 'primitive' element.";
 
 	this.primitives = [];
 	for (var i = 0; i < primitives.length; i++) {
 		var primitive;
 		var id = this.reader.getString(primitives[i], 'id', true);
+
+		if (primitives[i].children.length != 1)
+			throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 
 		switch (primitives[i].children[0].tagName) {
 			case 'rectangle':
@@ -505,7 +498,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				primitive = new Torus(this.scene, inner, outer, slices, loops);
 				break;
 			default:
-				return "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
+				throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 		}
 
 		this.primitives[id] = primitive;
@@ -515,28 +508,39 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 MySceneGraph.prototype.parseComponents = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('components');
 	if (elems == null)
-		return "The 'components' element is missing.";
+		throw "The 'components' element is missing.";
 
 	if (elems.length != 1)
-		return "Zero or more than one 'components' element found.";
+		throw "Zero or more than one 'components' element found.";
 
 	var components = elems[0].getElementsByTagName('component');
 	if (components == null)
-		return "The 'component' element is missing.";
+		throw "The 'component' element is missing.";
 
 	if (components.length < 1)
-		return "There must be at least one 'component' element.";
+		throw "There must be at least one 'component' element.";
 
 	this.components = [];
 	for (var i = 0; i < components.length; i++) {
 		var id = this.reader.getString(components[i], 'id', true);
 		var texture = components[i].getElementsByTagName('texture');
+
+		if (texture.length != 1)
+			throw "There can only be one 'texture' element inside each 'component' element.";
+
 		var textureID = this.reader.getString(texture[0], 'id', true);
 		var component = new Component(id, textureID);
 
 		var transformation = components[i].getElementsByTagName('transformation');
 		var materials = components[i].getElementsByTagName('materials');
 		var children = components[i].getElementsByTagName('children');
+
+		if (transformation.length != 1)
+			throw "There can only be one 'texture' element inside each 'component' element.";
+		else if (materials.length != 1)
+			throw "There can only be one 'materials' element inside each 'component' element.";
+		else if (children.length != 1)
+			throw "There can only be one 'children' element inside each 'component' element.";
 
 		for (var j = 0; j < materials[0].children.length; j++)
 			component.materials.push(this.reader.getString(materials[0].children[j], 'id', true));
@@ -558,7 +562,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 						tag = true;
 						matrix = this.transformations[this.reader.getString(transformation[0].children[j], 'id', true)];
 					} else {
-						return "ERROR";
+						throw "There must be a 'transformationref' element or explicit transformations, NOT both.";
 					}
 					break;
 				case 'rotate':
@@ -575,7 +579,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 						temp['type'] = 'rotate';
 						matrix.push(temp);
 					} else {
-						return "ERROR";
+						throw "There must be a 'transformationref' element or explicit transformations, NOT both.";
 					}
 					break;
 				case 'translate':
@@ -594,7 +598,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 						temp['type'] = 'translate';
 						matrix.push(temp);
 					} else {
-						return "ERROR";
+						throw "There must be a 'transformationref' element or explicit transformations, NOT both.";
 					}
 					break;
 				case 'scale':
@@ -613,11 +617,11 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 						temp['type'] = 'scale';
 						matrix.push(temp);
 					} else {
-						return "ERROR";
+						throw "There must be a 'transformationref' element or explicit transformations, NOT both.";
 					}
 					break;
 				default:
-					return "Invalid transformation tag name.";
+					throw "Invalid transformation element.";
 			}
 		}
 

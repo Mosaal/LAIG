@@ -209,6 +209,6 @@ XMLscene.prototype.display = function() {
 		// Start drawing primitives
 		var comp = this.graph.components[this.graph.root];
 		this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
-	};
+	}
 };
 
