@@ -15,8 +15,8 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
-MyInterface.prototype.addLight = function(light, id, type) {
-	this.lights.add(light, 'enabled').name(type + ": " + id);
+MyInterface.prototype.addLight = function(light, type, index) {
+	this.lights.add(light, 'enabled').name(type + " #" + index);
 };
 
 MyInterface.prototype.processKeyDown = function(event) {

@@ -58,3 +58,7 @@ Sphere.prototype.initBuffers = function() {
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
+
+Sphere.prototype.getName = function() {
+	return 'Sphere';
+};

@@ -47,23 +47,23 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 MySceneGraph.prototype.checkOrder = function(rootElement) {
 	if (rootElement.children[0].tagName != 'scene')
-		return "The 'scene' element should be the first element in the .dsx file.";
+		throw "The 'scene' element should be the first element in the .dsx file.";
 	else if (rootElement.children[1].tagName != 'views')
-		return "The 'views' element should be the second element in the .dsx file.";
+		throw "The 'views' element should be the second element in the .dsx file.";
 	else if (rootElement.children[2].tagName != 'illumination')
-		return "The 'illumination' element should be the third element in the .dsx file.";
+		throw "The 'illumination' element should be the third element in the .dsx file.";
 	else if (rootElement.children[3].tagName != 'lights')
-		return "The 'lights' element should be the fourth element in the .dsx file.";
+		throw "The 'lights' element should be the fourth element in the .dsx file.";
 	else if (rootElement.children[4].tagName != 'textures')
-		return "The 'textures' element should be the fifth element in the .dsx file.";
+		throw "The 'textures' element should be the fifth element in the .dsx file.";
 	else if (rootElement.children[5].tagName != 'materials')
-		return "The 'materials' element should be the sixth element in the .dsx file.";
+		throw "The 'materials' element should be the sixth element in the .dsx file.";
 	else if (rootElement.children[6].tagName != 'transformations')
-		return "The 'transformations' element should be the seventh element in the .dsx file.";
+		throw "The 'transformations' element should be the seventh element in the .dsx file.";
 	else if (rootElement.children[7].tagName != 'primitives')
-		return "The 'primitives' element should be the eighth element in the .dsx file.";
+		throw "The 'primitives' element should be the eighth element in the .dsx file.";
 	else if (rootElement.children[8].tagName != 'components')
-		return "The 'components' element should be the ninth element in the .dsx file.";
+		throw "The 'components' element should be the ninth element in the .dsx file.";
 };
 
 MySceneGraph.prototype.parseScene = function(rootElement) {
@@ -184,7 +184,8 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 	this.omnis = [];
 	for (var i = 0; i < omnis.length; i++) {
-		var omni = new Omni(this.reader.getString(omnis[i], 'id', true), this.reader.getBoolean(omnis[i], 'enabled', true));
+		var omni = new Omni(this.reader.getString(omnis[i], 'id', true),
+							this.reader.getBoolean(omnis[i], 'enabled', true));
 
 		var location = omnis[i].getElementsByTagName('location');
 		var ambient = omnis[i].getElementsByTagName('ambient');
@@ -535,7 +536,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		var children = components[i].getElementsByTagName('children');
 
 		if (transformation.length != 1)
-			throw "There can only be one 'texture' element inside each 'component' element.";
+			throw "There can only be one 'transformation' element inside each 'component' element.";
 		else if (materials.length != 1)
 			throw "There can only be one 'materials' element inside each 'component' element.";
 		else if (children.length != 1)

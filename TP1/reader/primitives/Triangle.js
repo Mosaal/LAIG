@@ -28,35 +28,62 @@ Triangle.prototype.initBuffers = function() {
 		0, 1, 2
 	];
 
-	var v12 = [this.x2 - this.x1, this.y2 - this.y1, this.z2 - this.z1];
-	var v13 = [this.x3 - this.x1, this.y3 - this.y1, this.z3 - this.z1];
-	var vNorm = this.crossProduct(v12, v13);
-
     this.normals = [
-		vNorm[0], vNorm[1], vNorm[2],
-		vNorm[0], vNorm[1], vNorm[2],
-		vNorm[0], vNorm[1], vNorm[2]
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1
 	];
 
-	var a = Math.sqrt(Math.pow(this.x1 - this.x3, 2) + Math.pow(this.y1 - this.y3, 2) + Math.pow(this.z1 - this.z3, 2));
-	var b = Math.sqrt(Math.pow(this.x2 - this.x1, 2) + Math.pow(this.y2 - this.y1, 2) + Math.pow(this.z2 - this.z1, 2));
-	var c = Math.sqrt(Math.pow(this.x3 - this.x2, 2) + Math.pow(this.y3 - this.y2, 2) + Math.pow(this.z3 - this.z2, 2));
-
-	var cosA = (-Math.pow(a, 2) + Math.pow(b, 2) + Math.pow(c, 2)) / (2 * b * c);
-	var cosB = (Math.pow(a, 2) - Math.pow(b, 2) + Math.pow(c, 2)) / (2 * a * c);
-	var cosC = (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b);
-	var sinB = Math.sin(Math.acos(cosB));
+	var properties = this.makeProperties(this.makeVector(this.x3, this.y3, this.z3, this.x2, this.y2, this.z2),
+										 this.makeVector(this.x3, this.y3, this.z3, this.x1, this.y1, this.z1));
 
 	this.texCoords = [
-		c - (a * cosB), a * sinB,
-		0, 0,
-		c, 0
+		properties[0] - (properties[1] * Math.cos(properties[2])), 1 - (properties[1] * Math.sin(properties[2])),
+		0, 1,
+		properties[0], 1
+	];
+
+	this.baseTexCoords = [
+		properties[0] - (properties[1] * Math.cos(properties[2])), properties[1] * Math.sin(properties[2]),
+		0, 1,
+		properties[0], 1
 	];
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
 
-Triangle.prototype.crossProduct = function(v1, v2) {
-	return [v1[1]*v2[2] - v1[2]*v2[1], v1[2]*v2[0] - v1[0]*v2[2], v1[0]*v2[1] - v1[1]*v2[0]];
+Triangle.prototype.makeVector = function(xf, yf, zf, xs, ys, zs) {
+	return new Point3(xs - xf, ys - yf, zs - zf);
+};
+
+Triangle.prototype.calculateLength = function(vec) {
+	return Math.sqrt((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
+};
+
+Triangle.prototype.dotProduct = function(vec1, vec2) {
+	return (vec1.x * vec2.x) + (vec1.y * vec2.y) + (vec1.z * vec2.z);
+};
+
+Triangle.prototype.makeProperties = function(vec1, vec2) {
+	var length1 = this.calculateLength(vec1);
+	var length2 = this.calculateLength(vec2);
+	var dot = this.dotProduct(vec1, vec2);
+	var angle = Math.acos(dot / (length1 * length2));
+
+	return [length1, length2, angle];
+};
+
+Triangle.prototype.setTextureCoords = function(length_s, length_t) {
+	this.texCoords = [
+		this.baseTexCoords[0] / length_s, 1 - (this.baseTexCoords[1] / length_t),
+		0, 1,
+		this.baseTexCoords[4] / length_s, 1
+	];
+
+	this.updateTexCoordsGLBuffers();
+};
+
+Triangle.prototype.getName = function() {
+    return 'Triangle';
 };

@@ -42,7 +42,7 @@ Cylinder.prototype.initBuffers = function() {
 				this.indices.push((this.slices+1)*(k)+(i),(this.slices+1)*(k-1)+(i-1),(this.slices+1)*(k-1)+(i));
 			}
 
-			this.normals.push(h*Math.cos(alphaRad),h*Math.sin(alphaRad),-1*h); //simplified version
+			this.normals.push(h*Math.cos(alphaRad),h*Math.sin(alphaRad),-1*h);
 			this.texCoords.push(i/(this.slices), 1 -k/this.stacks);
 
 			alpha += deltaAlpha;
@@ -60,13 +60,17 @@ Cylinder.prototype.display = function() {
 	CGFobject.prototype.display.call(this);
 
 	this.scene.pushMatrix();
-	this.scene.translate(0, 0, this.height);
-	this.topCover.display();
+		this.scene.translate(0, 0, this.height);
+		this.topCover.display();
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI * this.slices, 0, 0, 1);
-	this.scene.rotate(Math.PI, 0, 1, 0);
-	this.baseCover.display();
+		this.scene.rotate(Math.PI * this.slices, 0, 0, 1);
+		this.scene.rotate(Math.PI, 0, 1, 0);
+		this.baseCover.display();
 	this.scene.popMatrix();
+};
+
+Cylinder.prototype.getName = function() {
+    return 'Cylinder';
 };

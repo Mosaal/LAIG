@@ -102,10 +102,10 @@ XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.interface.setActiveCamera(this.camera);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
-		this.interface.addLight(this.lights[i], this.graph.omnis[i].id, 'Omni');
+		this.interface.addLight(this.lights[i], 'Omni', i);
 
 	for (var j = 0; j < this.graph.spots.length; j++)
-		this.interface.addLight(this.lights[i + j], this.graph.spots[j].id, 'Spot');
+		this.interface.addLight(this.lights[i + j], 'Spot', j);
 };
 
 // Handler called when the graph is finally loaded. 
@@ -143,6 +143,9 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	var materialID, textureID;
 	var component = this.graph.components[componentID];
 
+	if (component == null)
+		console.error("XMLscene: Component undefined.");
+
 	if (component.textureId == 'inherit')
 		textureID = preTextureID;
 	else
@@ -162,7 +165,12 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 			material.setTexture(null);
 		} else {
 			material.setTexture(this.graph.textures[textureID].texFile);
-			material.setTextureWrap(this.graph.textures[textureID].length_s, this.graph.textures[textureID].length_t);
+
+			var primType = this.graph.primitives[component.primitive].getName();
+			if (primType == 'Triangle' || primType == 'Rectangle') {
+				this.graph.primitives[component.primitive].setTextureCoords(this.graph.textures[textureID].length_s,
+																			this.graph.textures[textureID].length_t);
+			}
 		}
 		
 		material.apply();
