@@ -259,6 +259,8 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 		this.spots.push(spot);
 	}
+
+	this.checkRepeatedLights();
 };
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
@@ -547,7 +549,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		for (var j = 0; j < children[0].children.length; j++) {
 			if (children[0].children[j].tagName == 'primitiveref')
-				component.primitive = this.reader.getString(children[0].children[j], 'id', true);
+				component.primitives.push(this.reader.getString(children[0].children[j], 'id', true));
 			else if (children[0].children[j].tagName == 'componentref')
 				component.children.push(this.reader.getString(children[0].children[j], 'id', true));
 		}
@@ -629,6 +631,37 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			component.transformation = matrix;
 
 		this.components[id] = component;
+	}
+};
+
+MySceneGraph.prototype.checkRepeated = function(array) {
+
+};
+
+MySceneGraph.prototype.checkRepeatedLights = function() {
+	for (var i = 0; i < this.omnis.length; i++) {
+		for (var j = 0; j < this.omnis.length; j++) {
+			if (i != j) {
+				if (this.omnis[i].id == this.omnis[j].id)
+					throw "There can not be lights with repeated id's.";
+			}
+		}
+	}
+
+	for (var i = 0; i < this.spots.length; i++) {
+		for (var j = 0; j < this.spots.length; j++) {
+			if (i != j) {
+				if (this.spots[i].id == this.spots[j].id)
+					throw "There can not be lights with repeated id's.";
+			}
+		}
+	}
+
+	for (var i = 0; i < this.omnis.length; i++) {
+		for (var j = 0; j < this.spots.length; j++) {
+			if (this.omnis[i].id == this.spots[j].id)
+				throw "There can not be lights with repeated id's.";
+		}
 	}
 };
 

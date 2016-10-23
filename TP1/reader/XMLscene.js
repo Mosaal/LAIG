@@ -119,22 +119,24 @@ XMLscene.prototype.onGraphLoaded = function() {
 };
 
 XMLscene.prototype.applyTransformations = function(transformations) {
-	for (var i = 0; i < transformations.length; i++) {
-		switch (transformations[i]['type']) {
-			case 'rotate':
-				if (transformations[i]['axis'] == 'x')
-					this.rotate(transformations[i]['angle'] * this.degToRad, 1, 0, 0);
-				else if (transformations[i]['axis'] == 'y')
-					this.rotate(transformations[i]['angle'] * this.degToRad, 0, 1, 0);
-				else if (transformations[i]['axis'] == 'z')
-					this.rotate(transformations[i]['angle'] * this.degToRad, 0, 0, 1);
-				break;
-			case 'translate':
-				this.translate(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
-				break;
-			case 'scale':
-				this.scale(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
-				break;
+	if (transformations != null) {
+		for (var i = 0; i < transformations.length; i++) {
+			switch (transformations[i]['type']) {
+				case 'rotate':
+					if (transformations[i]['axis'] == 'x')
+						this.rotate(transformations[i]['angle'] * this.degToRad, 1, 0, 0);
+					else if (transformations[i]['axis'] == 'y')
+						this.rotate(transformations[i]['angle'] * this.degToRad, 0, 1, 0);
+					else if (transformations[i]['axis'] == 'z')
+						this.rotate(transformations[i]['angle'] * this.degToRad, 0, 0, 1);
+					break;
+				case 'translate':
+					this.translate(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
+					break;
+				case 'scale':
+					this.scale(transformations[i]['x'], transformations[i]['y'], transformations[i]['z']);
+					break;
+			}
 		}
 	}
 };
@@ -143,8 +145,10 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	var materialID, textureID;
 	var component = this.graph.components[componentID];
 
-	if (component == null)
+	if (component == null) {
 		console.error("XMLscene: Component undefined.");
+		return;
+	}
 
 	if (component.textureId == 'inherit')
 		textureID = preTextureID;
@@ -156,35 +160,31 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	else
 		materialID = component.materials[component.matIndex];
 
-	var material = this.graph.materials[materialID];
-	if (component.primitive != null) {
-		if (component.transformation != null)
-			this.applyTransformations(component.transformation);
+	this.pushMatrix();
+	this.applyTransformations(component.transformation);
 
+	var material = this.graph.materials[materialID];
+	for (var i = 0; i < component.primitives.length; i++) {
 		if (textureID == 'none') {
 			material.setTexture(null);
 		} else {
 			material.setTexture(this.graph.textures[textureID].texFile);
 
-			var primType = this.graph.primitives[component.primitive].getName();
+			var primType = this.graph.primitives[component.primitives[i]].getName();
 			if (primType == 'Triangle' || primType == 'Rectangle') {
-				this.graph.primitives[component.primitive].setTextureCoords(this.graph.textures[textureID].length_s,
+				this.graph.primitives[component.primitives[i]].setTextureCoords(this.graph.textures[textureID].length_s,
 																			this.graph.textures[textureID].length_t);
 			}
 		}
-		
+
 		material.apply();
-		this.graph.primitives[component.primitive].display();
-	} else {
-		if (component.transformation != null)
-			this.applyTransformations(component.transformation);
+		this.graph.primitives[component.primitives[i]].display();
 	}
 
-	for (var i = 0; i < component.children.length; i++) {
-		this.pushMatrix();
+	for (var i = 0; i < component.children.length; i++)
 		this.processGraph(component.children[i], materialID, textureID);
-		this.popMatrix();
-	}
+
+	this.popMatrix();
 };
 
 XMLscene.prototype.display = function() {

@@ -38,7 +38,7 @@ function Component(id, textureId) {
 	this.matIndex = 0;
 	this.children = [];
 	this.materials = [];
-	this.primitive = null;
+	this.primitives = [];
 	this.textureId = textureId;
 	this.transformation = null;
 }
