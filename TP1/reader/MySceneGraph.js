@@ -125,6 +125,8 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		to['z'] = this.reader.getFloat(toTag[0], 'z', true);
 
 		var camera = new CGFcamera(angle, near, far, vec3.fromValues(from['x'], from['y'], from['z']), vec3.fromValues(to['x'], to['y'], to['z']));
+		
+		this.checkRepeated(id, this.perspectives, 'perspectives');
 		this.perspectives[id] = camera;
 		this.viewsIndex.push(id);
 	}
@@ -282,6 +284,8 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 								  this.reader.getFloat(textures[i], 'length_s', true),
 								  this.reader.getFloat(textures[i], 'length_t', true));
 		texture.texFile = new CGFtexture(this.scene, texture.file);
+
+		this.checkRepeated(this.reader.getString(textures[i], 'id', true), this.textures, 'textures');
 		this.textures[this.reader.getString(textures[i], 'id', true)] = texture;
 	}
 };
@@ -344,6 +348,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		material.setSpecular(specular['r'], specular['g'], specular['b'], specular['a']);
 		material.setShininess(shininess);
 
+		this.checkRepeated(id, this.materials, 'materials');
 		this.materials[id] = material;
 	}
 };
@@ -416,6 +421,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			transformation.push(temp);
 		}
 
+		this.checkRepeated(id, this.transformations, 'transformations');
 		this.transformations[id] = transformation;
 	}
 };
@@ -503,6 +509,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 		}
 
+		this.checkRepeated(id, this.primitives, 'primitives');
 		this.primitives[id] = primitive;
 	}
 };
@@ -630,12 +637,16 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		if (transformation[0].children.length > 0)
 			component.transformation = matrix;
 
+		this.checkRepeated(id, this.components, 'components');
 		this.components[id] = component;
 	}
 };
 
-MySceneGraph.prototype.checkRepeated = function(array) {
-
+MySceneGraph.prototype.checkRepeated = function(element, array, arrayName) {
+	for (var id in array) {
+		if (element == id)
+			throw "The id '" + element + "' repeats itself in the " + arrayName + " list.";
+	}
 };
 
 MySceneGraph.prototype.checkRepeatedLights = function() {
