@@ -50,6 +50,10 @@ Rectangle.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
+/**
+ * @param {float} length_s Amplification factor along the length of the Rectangle
+ * @param {float} length_t Amplification factor along the width of the Rectangle
+ */
 Rectangle.prototype.setTextureCoords = function(length_s, length_t) {
 	this.texCoords = [
 		0, 1,
@@ -61,6 +65,10 @@ Rectangle.prototype.setTextureCoords = function(length_s, length_t) {
 	this.updateTexCoordsGLBuffers();
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Rectangle.prototype.getName = function() {
     return 'Rectangle';
 };

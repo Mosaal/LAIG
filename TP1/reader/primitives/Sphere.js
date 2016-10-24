@@ -59,6 +59,10 @@ Sphere.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Sphere.prototype.getName = function() {
 	return 'Sphere';
 };

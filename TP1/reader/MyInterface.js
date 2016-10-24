@@ -15,6 +15,12 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
+/**
+ * Adds the control to the light received
+ * @param {Light} light
+ * @param {string} type
+ * @param {int} index
+ */
 MyInterface.prototype.addLight = function(light, type, index) {
 	this.lights.add(light, 'enabled').name(type + " #" + index);
 };

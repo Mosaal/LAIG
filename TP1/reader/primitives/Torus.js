@@ -68,6 +68,10 @@ Torus.prototype.initBuffers = function() {
     this.initGLBuffers();
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Torus.prototype.getName = function() {
     return 'Torus';
 };

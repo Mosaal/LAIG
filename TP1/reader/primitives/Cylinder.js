@@ -56,6 +56,11 @@ Cylinder.prototype.initBuffers = function() {
     this.initGLBuffers();
 };
 
+/**
+ * Displays the top and bottom covers of the cylinder
+ * as these are updated in the scene
+ * @return {void}
+ */
 Cylinder.prototype.display = function() {
 	CGFobject.prototype.display.call(this);
 
@@ -71,6 +76,10 @@ Cylinder.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Cylinder.prototype.getName = function() {
     return 'Cylinder';
 };

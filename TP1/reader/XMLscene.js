@@ -44,10 +44,18 @@ XMLscene.prototype.setDefaultAppearance = function() {
 	this.setShininess(10.0);
 };
 
+/**
+ * Initializes the axis once the graph has loaded
+ * @return {void}
+ */
 XMLscene.prototype.initAxisOnGraphLoaded = function() {
 	this.axis = new CGFaxis(this, this.graph.axisLength);
 };
 
+/**
+ * Initializes the camera once the graph has loaded
+ * @return {void}
+ */
 XMLscene.prototype.initCameraOnGraphLoaded = function() {
 	this.camera = this.graph.perspectives[this.graph.defaultView];
 
@@ -59,11 +67,19 @@ XMLscene.prototype.initCameraOnGraphLoaded = function() {
 	}
 };
 
+/**
+ * Initializes the scene's illumination once the graph has loaded
+ * @return {void}
+ */
 XMLscene.prototype.initIlluminationOnGraphLoaded = function() {
 	this.setGlobalAmbientLight(this.graph.ambient['r'], this.graph.ambient['g'], this.graph.ambient['b'], this.graph.ambient['a']);
 	this.gl.clearColor(this.graph.background['r'], this.graph.background['g'], this.graph.background['b'], this.graph.background['a']);
 };
 
+/**
+ * Initializes the lights once the graph has loaded
+ * @return {void}
+ */
 XMLscene.prototype.initLightsOnGraphLoaded = function() {
 	for (var i = 0; i < this.graph.omnis.length; i++) {
 		this.lights[i].setPosition(this.graph.omnis[i].location['x'], this.graph.omnis[i].location['y'], this.graph.omnis[i].location['z'], this.graph.omnis[i].location['w']);
@@ -97,6 +113,10 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 	}
 };
 
+/**
+ * Initializes the interface once the graph has loaded
+ * @return {void}
+ */
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
 	this.interface.setActiveCamera(this.camera);
@@ -108,8 +128,11 @@ XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 		this.interface.addLight(this.lights[i + j], 'Spot', j);
 };
 
-// Handler called when the graph is finally loaded. 
-// As loading is asynchronous, this may be called already after the application has started the run loop
+/**
+ * Handler called when the graph is finally loaded
+ * As loading is asynchronous, this may be called already after the application has started the run loop
+ * @return {void}
+ */
 XMLscene.prototype.onGraphLoaded = function() {
 	this.initAxisOnGraphLoaded();
 	this.initCameraOnGraphLoaded();
@@ -118,6 +141,11 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.initInterfaceOnGraphLoaded();
 };
 
+/**
+ * Applys the transformations stored in the received array
+ * @param  {Array} transformations
+ * @return {void}
+ */
 XMLscene.prototype.applyTransformations = function(transformations) {
 	if (transformations != null) {
 		for (var i = 0; i < transformations.length; i++) {
@@ -141,6 +169,13 @@ XMLscene.prototype.applyTransformations = function(transformations) {
 	}
 };
 
+/**
+ * Display's the scene starting by the root of the graph
+ * @param  {string} componentID Component to be processed
+ * @param  {string} preMaterialID Previous material used
+ * @param  {string} preTextureID Previous texture used
+ * @return {void}
+ */
 XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextureID) {
 	var materialID, textureID;
 	var component = this.graph.components[componentID];

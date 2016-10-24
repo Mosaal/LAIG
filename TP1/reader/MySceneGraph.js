@@ -18,6 +18,7 @@ function MySceneGraph(filename, scene) {
 
 /*
  * Callback to be executed after successful reading
+ * @return {void}
  */
 MySceneGraph.prototype.onXMLReady = function() {
 	console.log("XML Loading finished.");
@@ -45,6 +46,11 @@ MySceneGraph.prototype.onXMLReady = function() {
 	this.scene.onGraphLoaded();
 };
 
+/**
+ * Checks the order of the elements in the .dsx file
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.checkOrder = function(rootElement) {
 	if (rootElement.children[0].tagName != 'scene')
 		throw "The 'scene' element should be the first element in the .dsx file.";
@@ -66,6 +72,11 @@ MySceneGraph.prototype.checkOrder = function(rootElement) {
 		throw "The 'components' element should be the ninth element in the .dsx file.";
 };
 
+/**
+ * Reads and stores the information from the 'scene' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseScene = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('scene');
 	if (elems == null)
@@ -79,6 +90,11 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 	this.axisLength = this.reader.getFloat(scene, 'axis_length', true);
 };
 
+/**
+ * Reads and stores the information from the 'views' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseViews = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('views');
 	if (elems == null)
@@ -132,6 +148,11 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	}
 };
 
+/**
+ * Reads and stores the information from the 'illumination' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('illumination');
 	if (elems == null)
@@ -171,6 +192,11 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	this.background['a'] = this.reader.getFloat(background[0], 'a', true);
 };
 
+/**
+ * Reads and stores the information from the 'lights' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseLights = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('lights');
 	if (elems == null)
@@ -265,6 +291,11 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	this.checkRepeatedLights();
 };
 
+/**
+ * Reads and stores the information from the 'textures' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('textures');
 	if (elems == null)
@@ -290,6 +321,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	}
 };
 
+/**
+ * Reads and stores the information from the 'materials' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('materials');
 	if (elems == null)
@@ -353,6 +389,11 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	}
 };
 
+/**
+ * Reads and stores the information from the 'transformations' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('transformations');
 	if (elems == null)
@@ -426,6 +467,11 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	}
 };
 
+/**
+ * Reads and stores the information from the 'primitives' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('primitives');
 	if (elems == null)
@@ -514,6 +560,11 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	}
 };
 
+/**
+ * Reads and stores the information from the 'components' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
 MySceneGraph.prototype.parseComponents = function(rootElement) {
 	var elems = rootElement.getElementsByTagName('components');
 	if (elems == null)
@@ -642,6 +693,13 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	}
 };
 
+/**
+ * Checks if the element repeats itself in the given array
+ * @param  {string} element
+ * @param  {Array} array
+ * @param  {string} arrayName
+ * @return {void}
+ */
 MySceneGraph.prototype.checkRepeated = function(element, array, arrayName) {
 	for (var id in array) {
 		if (element == id)
@@ -649,6 +707,10 @@ MySceneGraph.prototype.checkRepeated = function(element, array, arrayName) {
 	}
 };
 
+/**
+ * Checks if there are any lights with repeated ids
+ * @return {void}
+ */
 MySceneGraph.prototype.checkRepeatedLights = function() {
 	for (var i = 0; i < this.omnis.length; i++) {
 		for (var j = 0; j < this.omnis.length; j++) {
@@ -676,6 +738,10 @@ MySceneGraph.prototype.checkRepeatedLights = function() {
 	}
 };
 
+/**
+ * Prints the graph's information
+ * @return {void}
+ */
 MySceneGraph.prototype.printGraphInfo = function() {
 	// Print scene info
 	console.log("SCENE: { root = " + this.root + ", axis_length = " + this.axisLength + " }");
