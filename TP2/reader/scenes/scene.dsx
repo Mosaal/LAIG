@@ -213,7 +213,44 @@
 		</transformation>
 	</transformations>
 
+	<animations>
+		<animation id="test0" span="10.0" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="1.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="1.0" />
+			<controlpoint x="-1.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="-1.0" />
+			<controlpoint x="1.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+		</animation>
+
+		<animation id="test1" span="10.0" type="circular"
+				   center="1.0 1.0 1.0" radius="1.0" startang="0.0" rotang="45.0" />
+	</animations>
+
 	<primitives>
+		<!-- <primitive id="ss">
+			<plane dimX="ff" dimY="ff" partsX="ii" partsY="ii" />
+		</primitive>
+
+		<primitive id="ss">
+			<patch orderU="ii" orderV="ii" partsU="ii" partsV="ii">
+				<controlpoint x="ff" y="ff" z="ff" />
+				<controlpoint x="ff" y="ff" z="ff" />
+				<controlpoint x="ff" y="ff" z="ff" />
+				<controlpoint x="ff" y="ff" z="ff" />
+				<controlpoint x="ff" y="ff" z="ff" />
+			</patch>
+		</primitive>
+
+		<primitive id="ss">
+			<vehicle />
+		</primitive>
+
+		<primitive id="ss">
+			<terrain texture="ss" heightmap="ss" />
+		</primitive> -->
+
 		<primitive id="sunAndPlanet">
 			<sphere radius="1.0" slices="100" stacks="100" />
 		</primitive>

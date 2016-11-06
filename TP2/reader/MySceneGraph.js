@@ -33,6 +33,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 		this.parseTextures(rootElement);
 		this.parseMaterials(rootElement);
 		this.parseTransformations(rootElement);
+		this.parseAnimations(rootElement);
 		this.parsePrimitives(rootElement);
 		this.parseComponents(rootElement);
 	} catch (error) {
@@ -66,9 +67,11 @@ MySceneGraph.prototype.checkOrder = function(rootElement) {
 		throw "The 'materials' element should be the sixth element in the .dsx file.";
 	else if (rootElement.children[6].tagName != 'transformations')
 		throw "The 'transformations' element should be the seventh element in the .dsx file.";
-	else if (rootElement.children[7].tagName != 'primitives')
-		throw "The 'primitives' element should be the eighth element in the .dsx file.";
-	else if (rootElement.children[8].tagName != 'components')
+	else if (rootElement.children[7].tagName != 'animations')
+		throw "The 'animations' element should be the eighth element in the .dsx file.";
+	else if (rootElement.children[8].tagName != 'primitives')
+		throw "The 'primitives' element should be the ninth element in the .dsx file.";
+	else if (rootElement.children[9].tagName != 'components')
 		throw "The 'components' element should be the ninth element in the .dsx file.";
 };
 
@@ -468,6 +471,63 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 };
 
 /**
+ * Reads and stores the information from the 'animations' element
+ * @param  {documentElement} rootElement
+ * @return {void}
+ */
+MySceneGraph.prototype.parseAnimations = function(rootElement) {
+	var elems = rootElement.getElementsByTagName('animations');
+	if (elems == null)
+		throw "The 'animations' element is missing.";
+
+	if (elems.length != 1)
+		throw "Zero or more than one 'animations' element found.";
+
+	this.animations = [];
+	var animations = elems[0].getElementsByTagName('animation');
+	for (var i = 0; i < animations.length; i++) {
+		var animation;
+		var id, span, type;
+
+		id = this.reader.getString(animations[i], 'id', true);
+		span = this.reader.getFloat(animations[i], 'span', true);
+		type = this.reader.getString(animations[i], 'type', true);
+
+		switch (type) {
+			case 'linear':
+				var temp = [];
+				var controlPoints = animations[i].getElementsByTagName('controlpoint');
+
+				for (var j = 0; j < controlPoints.length; j++) {
+					var point = new Point3(this.reader.getFloat(controlPoints[j], 'x', true),
+										   this.reader.getFloat(controlPoints[j], 'y', true),
+										   this.reader.getFloat(controlPoints[j], 'z', true));
+					temp.push(point);
+				}
+
+				animation = new LinearAnimation(id, span, type, temp);
+				break;
+			case 'circular':
+				var center, radius, startang, rotang;
+
+				center = this.reader.getVector3(animations[i], 'center', true);
+				var point = new Point3(center[0], center[1], center[2]);
+
+				radius = this.reader.getFloat(animations[i], 'radius', true);
+				startang = this.reader.getFloat(animations[i], 'startang', true);
+				rotang = this.reader.getFloat(animations[i], 'rotang', true);
+
+				animation = new CircularAnimation(id, span, type, point, radius, startang, rotang);
+				break;
+			default:
+				throw "Invalid value in 'type' attribute in one of the 'animation' elements.";
+		}
+
+		this.animations[id] = animation;
+	}
+};
+
+/**
  * Reads and stores the information from the 'primitives' element
  * @param  {documentElement} rootElement
  * @return {void}
@@ -771,6 +831,10 @@ MySceneGraph.prototype.printGraphInfo = function() {
 	// Print transformations info
 	console.log('TRANSFORMATIONS');
 	console.log(this.transformations);
+
+	// Print animations info
+	console.log('ANIMATIONS');
+	console.log(this.animations);
 
 	// Print primitives info
 	console.log('PRIMITIVES');
