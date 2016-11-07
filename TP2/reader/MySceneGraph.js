@@ -523,6 +523,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				throw "Invalid value in 'type' attribute in one of the 'animation' elements.";
 		}
 
+		this.checkRepeated(id, this.animations, 'animations');
 		this.animations[id] = animation;
 	}
 };
@@ -611,6 +612,48 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
 				primitive = new Torus(this.scene, inner, outer, slices, loops);
 				break;
+			case 'plane':
+				var dimX, dimY, partsX, partsY;
+
+				dimX = this.reader.getFloat(primitives[i].children[0], 'dimX', true);
+				dimY = this.reader.getFloat(primitives[i].children[0], 'dimY', true);
+				partsX = this.reader.getInteger(primitives[i].children[0], 'partsX', true);
+				partsY = this.reader.getInteger(primitives[i].children[0], 'partsY', true);
+
+				primitive = new Plane(this.scene, dimX, dimY, partsX, partsY);
+				break;
+			case 'patch':
+				var orderU, orderV, partsU, partsV;
+
+				orderU = this.reader.getInteger(primitives[i].children[0], 'orderU', true);
+				orderV = this.reader.getInteger(primitives[i].children[0], 'orderV', true);
+				partsU = this.reader.getInteger(primitives[i].children[0], 'partsU', true);
+				partsV = this.reader.getInteger(primitives[i].children[0], 'partsV', true);
+
+				var temp = [];
+				var controlPoints = primitives[i].children[0].getElementsByTagName('controlpoint');
+
+				for (var j = 0; j < controlPoints.length; j++) {
+					var point = new Point3(this.reader.getFloat(controlPoints[j], 'x', true),
+										   this.reader.getFloat(controlPoints[j], 'y', true),
+										   this.reader.getFloat(controlPoints[j], 'z', true));
+					temp.push(point);
+				}
+
+				primitive = new Patch(this.scene, orderU, orderV, partsU, partsV, temp);
+				break;
+			case 'vehicle':
+				primitive = new Vehicle(this.scene);
+				break;
+			case 'terrain':
+				var texture, heightmap;
+
+				texture = this.reader.getString(primitives[i].children[0], 'texture', true);
+				heightmap = this.reader.getString(primitives[i].children[0], 'heightmap', true);
+
+				primitive = null;
+				// primitive = new Terrain(this.scene, texture, heightmap);
+				break;
 			default:
 				throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
 		}
@@ -651,9 +694,15 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		var textureID = this.reader.getString(texture[0], 'id', true);
 		var component = new Component(id, textureID);
 
+		var animations = components[i].getElementsByTagName('animation');
 		var transformation = components[i].getElementsByTagName('transformation');
 		var materials = components[i].getElementsByTagName('materials');
 		var children = components[i].getElementsByTagName('children');
+
+		if (animations.length != 0) {
+			for (var j = 0; j < animations[0].children.length; j++)
+				component.animations.push(this.reader.getString(animations[0].children[j], 'id', true));
+		}
 
 		if (transformation.length != 1)
 			throw "There can only be one 'transformation' element inside each 'component' element.";

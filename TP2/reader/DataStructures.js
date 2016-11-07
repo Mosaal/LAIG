@@ -39,6 +39,7 @@ function Component(id, textureId) {
 	this.children = [];
 	this.materials = [];
 	this.primitives = [];
+	this.animations = [];
 	this.textureId = textureId;
 	this.transformation = null;
 }

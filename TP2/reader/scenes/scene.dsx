@@ -214,6 +214,7 @@
 	</transformations>
 
 	<animations>
+		<!-- HERE -->
 		<animation id="test0" span="10.0" type="linear">
 			<controlpoint x="0.0" y="0.0" z="0.0" />
 			<controlpoint x="1.0" y="0.0" z="0.0" />
@@ -224,32 +225,36 @@
 			<controlpoint x="0.0" y="0.0" z="0.0" />
 		</animation>
 
-		<animation id="test1" span="10.0" type="circular"
-				   center="1.0 1.0 1.0" radius="1.0" startang="0.0" rotang="45.0" />
+		<animation id="test1" span="2.0" type="circular" center="0.0 0.0 0.0" radius="1.0" startang="0.0" rotang="45.0" />
+		<!-- HERE -->
 	</animations>
 
 	<primitives>
-		<!-- <primitive id="ss">
-			<plane dimX="ff" dimY="ff" partsX="ii" partsY="ii" />
+		<!-- HERE -->
+		<primitive id="planetest">
+			<plane dimX="35.0" dimY="56.0" partsX="45" partsY="54" />
 		</primitive>
 
-		<primitive id="ss">
-			<patch orderU="ii" orderV="ii" partsU="ii" partsV="ii">
-				<controlpoint x="ff" y="ff" z="ff" />
-				<controlpoint x="ff" y="ff" z="ff" />
-				<controlpoint x="ff" y="ff" z="ff" />
-				<controlpoint x="ff" y="ff" z="ff" />
-				<controlpoint x="ff" y="ff" z="ff" />
+		<primitive id="patchtest">
+			<patch orderU="10" orderV="20" partsU="50" partsV="50">
+				<controlpoint x="0.0" y="0.0" z="0.0" />
+				<controlpoint x="1.0" y="0.0" z="0.0" />
+				<controlpoint x="0.0" y="0.0" z="1.0" />
+				<controlpoint x="-1.0" y="0.0" z="0.0" />
+				<controlpoint x="0.0" y="0.0" z="-1.0" />
+				<controlpoint x="1.0" y="0.0" z="0.0" />
+				<controlpoint x="0.0" y="0.0" z="0.0" />
 			</patch>
 		</primitive>
 
-		<primitive id="ss">
+		<primitive id="vehicletest">
 			<vehicle />
 		</primitive>
 
-		<primitive id="ss">
-			<terrain texture="ss" heightmap="ss" />
-		</primitive> -->
+		<primitive id="terraintest">
+			<terrain texture="sunTex" heightmap="sunMap" />
+		</primitive>
+		<!-- HERE -->
 
 		<primitive id="sunAndPlanet">
 			<sphere radius="1.0" slices="100" stacks="100" />
@@ -264,6 +269,11 @@
 		<component id="root">
 			<transformation>
 			</transformation>
+
+			<animation>
+				<animationref id="test0" />
+				<animationref id="test1" />
+			</animation>
 
 			<materials>
 				<material id="solarSystemMat" />
