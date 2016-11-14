@@ -499,25 +499,25 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				var controlPoints = animations[i].getElementsByTagName('controlpoint');
 
 				for (var j = 0; j < controlPoints.length; j++) {
-					var point = new Point3(this.reader.getFloat(controlPoints[j], 'x', true),
-										   this.reader.getFloat(controlPoints[j], 'y', true),
-										   this.reader.getFloat(controlPoints[j], 'z', true));
+					var point = new Point3(this.reader.getFloat(controlPoints[j], 'xx', true),
+										   this.reader.getFloat(controlPoints[j], 'yy', true),
+										   this.reader.getFloat(controlPoints[j], 'zz', true));
 					temp.push(point);
 				}
 
 				animation = new LinearAnimation(id, span, type, temp);
 				break;
 			case 'circular':
-				var center, radius, startang, rotang;
+				var centerx, centery, centerz, radius, startang, rotang;
 
-				center = this.reader.getVector3(animations[i], 'center', true);
-				var point = new Point3(center[0], center[1], center[2]);
-
+				centerx = this.reader.getFloat(animations[i], 'centerx', true);
+				centery = this.reader.getFloat(animations[i], 'centery', true);
+				centerz = this.reader.getFloat(animations[i], 'centerz', true);
 				radius = this.reader.getFloat(animations[i], 'radius', true);
 				startang = this.reader.getFloat(animations[i], 'startang', true);
 				rotang = this.reader.getFloat(animations[i], 'rotang', true);
 
-				animation = new CircularAnimation(id, span, type, point, radius, startang, rotang);
+				animation = new CircularAnimation(id, span, type, centerx, centery, centerz, radius, startang, rotang);
 				break;
 			default:
 				throw "Invalid value in 'type' attribute in one of the 'animation' elements.";

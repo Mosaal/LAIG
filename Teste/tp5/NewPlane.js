@@ -1,4 +1,4 @@
-function Plane(scene, dimX, dimY, partsX, partsY) {
+function NewPlane(scene, dimX, dimY, partsX, partsY) {
 	CGFobject.call(this, scene);
 
 	this.dimX = dimX;
@@ -9,10 +9,10 @@ function Plane(scene, dimX, dimY, partsX, partsY) {
 	this.initBuffers();
 }
 
-Plane.prototype = Object.create(CGFobject.prototype);
-Plane.prototype.constructor = Plane;
+NewPlane.prototype = Object.create(CGFobject.prototype);
+NewPlane.prototype.constructor = NewPlane;
 
-Plane.prototype.initBuffers = function() {
+NewPlane.prototype.initBuffers = function() {
 	this.normals = [];
 	this.indices = [];
 	this.vertices = [];
@@ -46,6 +46,6 @@ Plane.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
-Plane.prototype.getName = function() {
+NewPlane.prototype.getName = function() {
 	return 'Plane';
 };

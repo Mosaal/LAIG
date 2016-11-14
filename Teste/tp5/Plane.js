@@ -68,7 +68,8 @@ Plane.prototype.initBuffers = function() {
 			this.normals.push(0,0,1);
 
 			// texCoords should be computed here; uncomment and fill the blanks
-			this.texCoords.push(i*(((1+this.auxx)-(-this.auxx))/this.nrDivs)+(-this.auxx),j*(((1+this.auxy)-(-this.auxy))/this.nrDivs)+(-this.auxy));
+			this.texCoords.push(i * (((1 + this.auxx) - (-this.auxx)) / this.nrDivs) + (-this.auxx),
+								j * (((1 + this.auxy) - (-this.auxy)) / this.nrDivs) + (-this.auxy));
 
 			xCoord += this.patchLength;
 		}

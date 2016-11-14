@@ -216,16 +216,18 @@
 	<animations>
 		<!-- HERE -->
 		<animation id="test0" span="10.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="1.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="1.0" />
-			<controlpoint x="-1.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="-1.0" />
-			<controlpoint x="1.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint xx="0.0" yy="0.0" zz="0.0" />
+			<controlpoint xx="1.0" yy="0.0" zz="0.0" />
+			<controlpoint xx="0.0" yy="0.0" zz="1.0" />
+			<controlpoint xx="-1.0" yy="0.0" zz="0.0" />
+			<controlpoint xx="0.0" yy="0.0" zz="-1.0" />
+			<controlpoint xx="1.0" yy="0.0" zz="0.0" />
+			<controlpoint xx="0.0" yy="0.0" zz="0.0" />
 		</animation>
 
-		<animation id="test1" span="2.0" type="circular" center="0.0 0.0 0.0" radius="1.0" startang="0.0" rotang="45.0" />
+		<animation id="test1" span="2.0" type="circular"
+					centerx="0.0" centery="0.0" centerz="0.0"
+					radius="1.0" startang="0.0" rotang="45.0" />
 		<!-- HERE -->
 	</animations>
 

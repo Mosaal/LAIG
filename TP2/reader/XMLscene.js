@@ -208,7 +208,7 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 			var primType = this.graph.primitives[component.primitives[i]].getName();
 			if (primType == 'Triangle' || primType == 'Rectangle') {
 				this.graph.primitives[component.primitives[i]].setTextureCoords(this.graph.textures[textureID].length_s,
-																			this.graph.textures[textureID].length_t);
+																				this.graph.textures[textureID].length_t);
 			}
 		}
 
