@@ -225,20 +225,28 @@
 			<controlpoint xx="0.0" yy="0.0" zz="0.0" />
 		</animation>
 
-		<animation id="test1" span="2.0" type="circular"
-					centerx="0.0" centery="0.0" centerz="0.0"
-					radius="1.0" startang="0.0" rotang="45.0" />
+		<animation id="sunAnimation" span="10.0" type="circular"
+					centerx="-195.0" centery="0.0" centerz="0.0"
+					radius="0.0" startang="0.0" rotang="36.0" />
+
+		<animation id="mercuryAnimation0" span="10.0" type="circular"
+					centerx="-45.0" centery="0.0" centerz="0.0"
+					radius="0.0" startang="0.0" rotang="36.0" />
+
+		<animation id="mercuryAnimation1" span="10.0" type="circular"
+					centerx="-195.0" centery="0.0" centerz="0.0"
+					radius="50.0" startang="0.0" rotang="36.0" />
 		<!-- HERE -->
 	</animations>
 
 	<primitives>
 		<!-- HERE -->
 		<primitive id="planetest">
-			<plane dimX="35.0" dimY="56.0" partsX="45" partsY="54" />
+			<plane dimX="100.0" dimY="100.0" partsX="100" partsY="100" />
 		</primitive>
 
 		<primitive id="patchtest">
-			<patch orderU="10" orderV="20" partsU="50" partsV="50">
+			<patch orderU="2" orderV="3" partsU="50" partsV="50">
 				<controlpoint x="0.0" y="0.0" z="0.0" />
 				<controlpoint x="1.0" y="0.0" z="0.0" />
 				<controlpoint x="0.0" y="0.0" z="1.0" />
@@ -253,8 +261,12 @@
 			<vehicle />
 		</primitive>
 
-		<primitive id="terraintest">
-			<terrain texture="sunTex" heightmap="sunMap" />
+		<primitive id="chessboardtest">
+			<chessboard du="ii" dv="ii" textureref="ss" su="ii" sv="ii">
+				<c1 r="ff" g="ff" b="ff" a="ff" />
+				<c2 r="ff" g="ff" b="ff" a="ff" />
+				<cs r="ff" g="ff" b="ff" a="ff" />
+			</chessboard>
 		</primitive>
 		<!-- HERE -->
 
@@ -272,10 +284,12 @@
 			<transformation>
 			</transformation>
 
+			<!-- HERE -->
 			<animation>
 				<animationref id="test0" />
 				<animationref id="test1" />
 			</animation>
+			<!-- HERE -->
 
 			<materials>
 				<material id="solarSystemMat" />

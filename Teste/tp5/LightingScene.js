@@ -99,7 +99,7 @@ LightingScene.prototype.init = function(application) {
 	// this.boardB = new Plane(this, BOARD_B_DIVISIONS, BOARD_WIDTH, BOARD_HEIGHT);
 	// this.prism = new MyPrism(this, 10, 8);
 	// this.cylinder = new MyCylinder(this, 10, 8);
-	this.plane = new NewPlane(this, 3, 2, 10, 10);
+	this.plane = new NewPlane(this, 4, 4, 100, 100);
 
 	// Scene elements - TEMP
 	// this.universe = new MySphere(this, 1, 100, 100);
@@ -180,11 +180,37 @@ LightingScene.prototype.initCameras = function() {
 };
 
 LightingScene.prototype.initLights = function() {
-	this.setGlobalAmbientLight(1, 1, 1, 1);
+	this.setGlobalAmbientLight(0,0,0, 1.0);
 
-	this.lights[0].setPosition(0.5, 0.5, 5, 1);
+	this.lights[0].setPosition(4, 6, 1, 1);
+	this.lights[1].setPosition(10.5, 6.0, 1.0, 1.0);
+	this.lights[2].setPosition(10.5, 6.0, 5.0, 1.0);
+	this.lights[3].setPosition(4, 6.0, 5.0, 1.0);
+
+	this.lights[0].setAmbient(0, 0, 0, 1);
+	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[0].setSpecular(1.0, 1.0, 0.0, 1.0);
 	this.lights[0].enable();
-	this.lights[0].update();
+
+	this.lights[1].setAmbient(0, 0, 0, 1);
+	this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[1].enable();
+
+	this.lights[2].setAmbient(0, 0, 0, 1);
+	this.lights[2].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[2].setSpecular(1.0, 1.0, 1.0, 1.0);
+	this.lights[2].setConstantAttenuation(0.0);
+	this.lights[2].setLinearAttenuation(1.0);
+	this.lights[2].setQuadraticAttenuation(0.0);
+	this.lights[2].enable();
+
+	this.lights[3].setAmbient(0, 0, 0, 1);
+	this.lights[3].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[3].setSpecular(1.0, 1.0, 0.0, 1.0);
+	this.lights[3].setConstantAttenuation(0.0);
+	this.lights[3].setLinearAttenuation(1.0);
+	this.lights[3].setQuadraticAttenuation(0.2);
+	this.lights[3].enable();
 
 	// this.shader.bind();
 	
