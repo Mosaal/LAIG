@@ -13,7 +13,7 @@ function Plane(scene, dimX, dimY, partsX, partsY) {
 		]
 	];
 
-	Patch.call(this, scene, 1, 1, partsX, partsY, controlPoints);
+	Patch.call(this, scene, 1, 1, partsX, partsY, controlPoints, true);
 }
 
 Plane.prototype = Object.create(Patch.prototype);

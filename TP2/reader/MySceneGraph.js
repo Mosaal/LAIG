@@ -554,7 +554,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		var id = this.reader.getString(primitives[i], 'id', true);
 
 		if (primitives[i].children.length != 1)
-			throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
+			throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere', one 'torus', one 'plane', one 'patch', one 'vehicle' or one 'chessboard' element inside each 'primitive' element.";
 
 		switch (primitives[i].children[0].tagName) {
 			case 'rectangle':
@@ -640,19 +640,33 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 					temp.push(point);
 				}
 
-				primitive = new Patch(this.scene, orderU, orderV, partsU, partsV, temp);
+				primitive = new Patch(this.scene, orderU, orderV, partsU, partsV, temp, false);
 				break;
 			case 'vehicle':
 				primitive = new Vehicle(this.scene);
 				break;
-			case 'terrain':
-				var texture, heightmap;
+			case 'chessboard':
+				var colors = [];
+				var du, dv, su, sv, textureref;
 
-				texture = this.reader.getString(primitives[i].children[0], 'texture', true);
-				heightmap = this.reader.getString(primitives[i].children[0], 'heightmap', true);
+				du = this.reader.getInteger(primitives[i].children[0], 'du', true);
+				dv = this.reader.getInteger(primitives[i].children[0], 'dv', true);
+				su = this.reader.getInteger(primitives[i].children[0], 'su', true);
+				sv = this.reader.getInteger(primitives[i].children[0], 'sv', true);
+				textureref = this.reader.getString(primitives[i].children[0], 'textureref', true);
 
-				primitive = null;
-				// primitive = new Terrain(this.scene, texture, heightmap);
+				for (var j = 0; j < primitives[i].children[0].children.length; j++) {
+					var temp = [];
+
+					temp['r'] = this.reader.getFloat(primitives[i].children[0].children[j], 'r', true);
+					temp['g'] = this.reader.getFloat(primitives[i].children[0].children[j], 'g', true);
+					temp['b'] = this.reader.getFloat(primitives[i].children[0].children[j], 'b', true);
+					temp['a'] = this.reader.getFloat(primitives[i].children[0].children[j], 'a', true);
+
+					colors.push(temp);
+				}
+
+				primitive = new Chessboard(this.scene, du, dv, su, sv, colors, textureref);
 				break;
 			default:
 				throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";
@@ -700,6 +714,9 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		var children = components[i].getElementsByTagName('children');
 
 		if (animations.length != 0) {
+			if (animations.length != 1)
+				throw "There can only be one 'animation' element inside each 'component' element.";
+
 			for (var j = 0; j < animations[0].children.length; j++)
 				component.animations.push(this.reader.getString(animations[0].children[j], 'id', true));
 		}

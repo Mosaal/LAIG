@@ -43,8 +43,3 @@ function Component(id, textureId) {
 	this.textureId = textureId;
 	this.transformation = null;
 }
-
-function Child(id, type) {
-	this.id = id;
-	this.type = type;
-}

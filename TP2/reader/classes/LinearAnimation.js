@@ -3,3 +3,7 @@ function LinearAnimation(id, span, type, controlPoints) {
 
 	this.controlPoints = controlPoints;
 }
+
+LinearAnimation.prototype = Object.create(Animation.prototype);
+LinearAnimation.prototype.constructor = LinearAnimation;
+
