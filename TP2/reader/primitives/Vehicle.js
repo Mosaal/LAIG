@@ -94,3 +94,7 @@ Vehicle.prototype.display = function() {
 		this.wing1.display();
 	this.scene.popMatrix();
 };
+
+Vehicle.prototype.getName = function() {
+	return 'Vehicle';
+};

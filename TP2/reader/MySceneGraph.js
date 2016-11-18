@@ -505,7 +505,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 					temp.push(point);
 				}
 
-				animation = new LinearAnimation(id, span, type, temp);
+				animation = new LinearAnimation(this.scene, id, span, type, temp);
 				break;
 			case 'circular':
 				var centerx, centery, centerz, radius, startang, rotang;
@@ -517,7 +517,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				startang = this.reader.getFloat(animations[i], 'startang', true);
 				rotang = this.reader.getFloat(animations[i], 'rotang', true);
 
-				animation = new CircularAnimation(id, span, type, centerx, centery, centerz, radius, startang, rotang);
+				animation = new CircularAnimation(this.scene, id, span, type, centerx, centery, centerz, radius, startang, rotang);
 				break;
 			default:
 				throw "Invalid value in 'type' attribute in one of the 'animation' elements.";

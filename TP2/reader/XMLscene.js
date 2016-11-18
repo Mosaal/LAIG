@@ -1,3 +1,6 @@
+var FPS = 60;
+var UPDATE_PERIOD = 1000 / FPS;
+
 function XMLscene(app, interface) {
 	CGFscene.call(this);
 
@@ -22,9 +25,12 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
+	this.time = 0;
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
+
 	this.enableTextures(true);
+	this.setUpdatePeriod(UPDATE_PERIOD);
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -177,6 +183,7 @@ XMLscene.prototype.applyTransformations = function(transformations) {
  * @return {void}
  */
 XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextureID) {
+	var animation = null;
 	var materialID, textureID;
 	var component = this.graph.components[componentID];
 
@@ -195,8 +202,16 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	else
 		materialID = component.materials[component.matIndex];
 
+	if (component.animations.length != 0)
+		animation = this.graph.animations[component.animations[component.animationIndex]];
+
 	this.pushMatrix();
 	this.applyTransformations(component.transformation);
+
+	if (animation != null)
+		animation.applyAnimation(this.elapsedTime, component);
+	// if (component.animationIndex == component.animations.length)
+	// 	component.animationIndex = 0;
 
 	var material = this.graph.materials[materialID];
 	for (var i = 0; i < component.primitives.length; i++) {
@@ -220,6 +235,13 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 		this.processGraph(component.children[i], materialID, textureID);
 
 	this.popMatrix();
+};
+
+XMLscene.prototype.update = function(currTime) {
+	if (this.time == 0)
+		this.time = currTime;
+
+	this.elapsedTime = (currTime - this.time) / 1000;
 };
 
 XMLscene.prototype.display = function() {

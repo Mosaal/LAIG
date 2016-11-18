@@ -1,30 +1,35 @@
-function CircularAnimation(id, span, type, centerx, centery, centerz, radius, startang, rotang) {
-	Animation.call(this, id, span, type);
-	var degToRad = Math.PI / 180.0;
+function CircularAnimation(scene, id, span, type, centerx, centery, centerz, radius, startang, rotang) {
+	Animation.call(this, scene, id, span, type);
 	
+	this.radius = radius;
+	this.rotang = rotang;
 	this.centerx = centerx;
 	this.centery = centery;
 	this.centerz = centerz;
-	this.radius = radius;
-	this.startang = startang * degToRad;
-	this.rotang = rotang * degToRad;
+	this.startang = startang;
+	this.velocity = this.rotang / this.span;
 }
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
-CircularAnimation.prototype.getTransformation = function(deltaTime) {
-	var transf = mat4.create();
-	
-	mat4.translate(transf, transf, vec3.fromValues(this.centerx, this.centery, this.centerz));
-	if (deltaTime > this.span)
-		mat4.rotate(transf, transf, this.startAng + this.rotAng, [0, 1, 0]);
-	else
-		mat4.rotate(transf, transf, this.startAng + (deltaTime / this.span) * this.rotAng, [0, 1, 0]);
-	mat4.translate(transf, transf, [this.radius, 0, 0]);
+CircularAnimation.prototype.applyAnimation = function(currTime, component) {
+	var degToRad = Math.PI / 180.0;
 
-	//if(this.rotAng > 0)
-		//mat4.rotate(transf, transf, Math.PI, [0, 1, 0]);
+	if (currTime > this.span) {
+		currTime = this.span;
 
-	return transf;
+		if (component.animationIndex < component.animations.length)
+			component.animationIndex++;
+
+		this.scene.time = 0;
+		this.scene.elapsedTime = 0;
+	}
+
+	var currPosition = this.velocity * currTime;
+	var currAngle = this.startang + currPosition;
+
+	this.scene.translate(this.centerx, this.centery, this.centerz);
+	this.scene.rotate(currAngle, 0, 1, 0);
+	this.scene.translate(this.radius, 0, 0);
 };

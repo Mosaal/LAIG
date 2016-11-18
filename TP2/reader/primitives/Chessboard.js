@@ -17,7 +17,7 @@ function Chessboard(scene, du, dv, su, sv, colors, texture) {
 	this.shader.setUniformsValues({cs: vec4.fromValues(cs['r'], cs['g'], cs['b'], cs['a'])});
 
 	this.appearance = new CGFappearance(scene);
-	this.appearance.loadTexture(texture.file);
+	this.appearance.setTexture(texture.texFile);
 }
 
 Chessboard.prototype = Object.create(CGFobject.prototype);
