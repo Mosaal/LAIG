@@ -666,7 +666,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 					colors.push(temp);
 				}
 
-				primitive = new Chessboard(this.scene, du, dv, su, sv, colors, textureref);
+				primitive = new Chessboard(this.scene, du, dv, su, sv, colors, this.textures[textureref]);
 				break;
 			default:
 				throw "There can be only one 'rectangle', one 'triangle', one 'cylinder', one 'sphere' or one 'torus' element inside each 'primitive' element.";

@@ -232,20 +232,6 @@
 	</animations>
 
 	<primitives>
-		<!-- HERE -->
-		<primitive id="vehicletest">
-			<vehicle />
-		</primitive>
-
-		<primitive id="chessboardtest">
-			<chessboard du="8" dv="8" textureref="chessTex" su="0" sv="4">
-				<c1 r="1.0" g="1.0" b="1.0" a="1.0" />
-				<c2 r="0.0" g="0.0" b="0.0" a="1.0" />
-				<cs r="1.0" g="0.0" b="0.0" a="1.0" />
-			</chessboard>
-		</primitive>
-		<!-- HERE -->
-
 		<primitive id="sunAndPlanet">
 			<sphere radius="1.0" slices="100" stacks="100" />
 		</primitive>

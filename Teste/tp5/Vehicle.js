@@ -3,7 +3,7 @@ function Vehicle(scene) {
 
 	this.scene = scene;
 	this.piramide = new Piramide(scene);
-	this.plane = new Plane(scene, 0.5, 1, 100, 100);
+	this.plane = new NewPlane(scene, 0.5, 1, 100, 100);
 	this.wing1 = new Triangle(scene, 0.0, 0.0, 0.0,
 									 0.5, 0.0, 0.0,
 									 0.0, 1.0, 0.0);

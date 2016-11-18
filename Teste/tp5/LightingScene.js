@@ -29,7 +29,7 @@ LightingScene.prototype.init = function(application) {
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.axis = new CGFaxis(this);
+	this.axis = new CGFaxis(this, 1.0, 0.0);
 
 	//Texturas
 	this.enableTextures(true);
@@ -99,7 +99,12 @@ LightingScene.prototype.init = function(application) {
 	// this.boardB = new Plane(this, BOARD_B_DIVISIONS, BOARD_WIDTH, BOARD_HEIGHT);
 	// this.prism = new MyPrism(this, 10, 8);
 	// this.cylinder = new MyCylinder(this, 10, 8);
-	this.plane = new NewPlane(this, 4, 4, 100, 100);
+	// this.plane = new NewPlane(this, 4, 4, 100, 100);
+	// this.vehicle = new Vehicle(this);
+	this.chess = new Chessboard(this, 8, 8, 2, 4, "resources/images/wood.jpg",
+								[ 1.0, 1.0, 1.0, 0.0 ],
+								[ 0.0, 0.0, 0.0, 1.0 ],
+								[ 1.0, 0.0, 0.0, 1.0 ]);
 
 	// Scene elements - TEMP
 	// this.universe = new MySphere(this, 1, 100, 100);
@@ -163,7 +168,7 @@ LightingScene.prototype.init = function(application) {
 };
 
 LightingScene.prototype.initCameras = function() {
-	this.camera = new CGFcamera(1.0, 1.0, 500, vec3.fromValues(5, 5, 5), vec3.fromValues(0, 0, 0)); // default
+	this.camera = new CGFcamera(1.0, 0.01, 500, vec3.fromValues(3, 3, 3), vec3.fromValues(0, 0, 0)); // default
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(0, 0, 400), vec3.fromValues(0, 0, 0)); // main
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-195, 0, 250), vec3.fromValues(-195, 0, 0)); // sun
 	// this.camera = new CGFcamera(1.0, 0.01, 1000, vec3.fromValues(-45, 0, 2), vec3.fromValues(-45, 0, 0)); // mercury
@@ -304,7 +309,8 @@ LightingScene.prototype.display = function() {
 	this.axis.display();
 
 	this.pushMatrix();
-		this.plane.display();
+		this.rotate(-90 * degToRad, 1, 0, 0);
+		this.chess.display();
 	this.popMatrix();
 
 	// this.materialDefault.apply();
