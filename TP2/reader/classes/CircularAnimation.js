@@ -1,35 +1,38 @@
 function CircularAnimation(scene, id, span, type, centerx, centery, centerz, radius, startang, rotang) {
 	Animation.call(this, scene, id, span, type);
-	
+	this.degToRad = Math.PI / 180.0;
+
+	this.done = false;
 	this.radius = radius;
-	this.rotang = rotang;
 	this.centerx = centerx;
 	this.centery = centery;
 	this.centerz = centerz;
-	this.startang = startang;
+
+	this.rotang = rotang * this.degToRad;
+	this.angle = startang * this.degToRad;
+	this.startang = startang * this.degToRad;
+	this.finalAng = this.startang + this.rotang;
+
 	this.velocity = this.rotang / this.span;
 }
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
-CircularAnimation.prototype.applyAnimation = function(currTime, component) {
-	var degToRad = Math.PI / 180.0;
+CircularAnimation.prototype.applyAnimation = function(currTime) {
+	if (this.lastTime == -1) {
+		this.lastTime = currTime;
+	} else {
+		var deltaTime = (currTime - this.lastTime) / 1000;
 
-	if (currTime > this.span) {
-		currTime = this.span;
+		this.lastTime = currTime;
+		this.angle += this.velocity * deltaTime;
 
-		if (component.animationIndex < component.animations.length)
-			component.animationIndex++;
-
-		this.scene.time = 0;
-		this.scene.elapsedTime = 0;
+		if (Math.abs(this.angle) >= Math.abs(this.finalAng))
+			this.done = true;
 	}
 
-	var currPosition = this.velocity * currTime;
-	var currAngle = this.startang + currPosition;
-
 	this.scene.translate(this.centerx, this.centery, this.centerz);
-	this.scene.rotate(currAngle, 0, 1, 0);
+	this.scene.rotate(this.angle, 0, 1, 0);
 	this.scene.translate(this.radius, 0, 0);
 };

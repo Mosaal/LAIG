@@ -1,7 +1,7 @@
 function LinearAnimation(scene, id, span, type, controlPoints) {
 	Animation.call(this, scene, id, span, type);
 
-	this.angle = 0;
+	this.done = false;
 	this.distances = [];
 	this.totalDistance = 0;
 	this.controlPoints = controlPoints;
@@ -12,57 +12,49 @@ function LinearAnimation(scene, id, span, type, controlPoints) {
 		this.totalDistance += dis;
 	}
 
+	this.currDist = 0;
+	this.currControlPoint = 0;
+	this.currPosition = controlPoints[0];
+	this.currAngle = this.calculateAngle(controlPoints[0], controlPoints[1]);
+
 	this.velocity = this.totalDistance / this.span;
 }
 
 LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
-LinearAnimation.prototype.applyAnimation = function(currTime, component) {
-	if (currTime > this.span) {
-		currTime = this.span;
+LinearAnimation.prototype.applyAnimation = function(currTime) {
+	if (this.lastTime == -1)
+		this.lastTime = currTime;
 
-		if (component.animationIndex < component.animations.length)
-			component.animationIndex++;
+	var deltaTime = (currTime - this.lastTime) / 1000;
 
-		this.scene.time = 0;
-		this.scene.elapsedTime = 0;
+	this.lastTime = currTime;
+	this.currDist += this.velocity * deltaTime;
+
+	if (this.currDist > this.distances[this.currControlPoint]) {
+		if (this.currControlPoint == this.controlPoints.length - 2) {
+			this.done = true;
+		} else {
+			this.currDist = 0;
+			this.currControlPoint++;
+			this.currAngle = this.calculateAngle(this.controlPoints[this.currControlPoint], this.controlPoints[this.currControlPoint + 1]);
+		}
 	}
 
-	this.currPosition = this.velocity * currTime;
+	var dis = this.currDist / this.distances[this.currControlPoint];
+	var x = this.controlPoints[this.currControlPoint + 1].x * dis + ((1 - dis) * this.controlPoints[this.currControlPoint].x);
+	var y = this.controlPoints[this.currControlPoint + 1].y * dis + ((1 - dis) * this.controlPoints[this.currControlPoint].y);
+	var z = this.controlPoints[this.currControlPoint + 1].z * dis + ((1 - dis) * this.controlPoints[this.currControlPoint].z);
 
-	var i = 0;
-	while (this.currPosition > this.distances[i] && i < this.distances.length)
-		i++;
-
-	var p1 = this.controlPoints[i];
-	var p2 = this.controlPoints[i + 1];
-
-	var lastSegment;
-	if (i == 0)
-		lastSegment = 0;
-	else
-		lastSegment = this.distances[i - 1];
-
-	var offset = (this.currPosition - lastSegment) / (this.distances[i] - lastSegment);
-
-	var x = (p2.x - p1.x) * offset + p1.x;
-	var y = (p2.y - p1.y) * offset + p1.y;
-	var z = (p2.z - p1.z) * offset + p1.z;
-
-	var rotAngle = Math.atan((p2.x - p1.x) / (p2.z - p1.z));
-
-	if (p2.z - p1.z < 0)
-		rotAngle += Math.PI;
-
-	if (p2.x - p1.x == 0 && p2.z - p1.z == 0)
-		rotAngle = this.angle;
-
-	this.angle = rotAngle;
 	this.scene.translate(x, y, z);
-	this.scene.rotate(rotAngle, 0, 1, 0);
+	this.scene.rotate(this.currAngle, 0, 1, 0);
 };
 
 LinearAnimation.prototype.calculateDistance = function(p1, p2) {
 	return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2));
+};
+
+LinearAnimation.prototype.calculateAngle = function(p1, p2) {
+	return Math.atan2(p2.x - p1.x, p2.z - p1.z);
 };

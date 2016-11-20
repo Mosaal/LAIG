@@ -22,28 +22,27 @@ Cylinder.prototype.initBuffers = function() {
 	this.vertices = [];
 	this.texCoords = [];
 
-	var deg2Rad = Math.PI/180.0;
+	var deg2Rad = Math.PI / 180.0;
 	var h = this.top - this.base;
- 	var deltaAlpha = 360.0/this.slices
- 	var deltaZ = this.height/this.stacks;
- 	var deltaR = h/this.stacks;
+ 	var deltaAlpha = 360.0 / this.slices
+ 	var deltaZ = this.height / this.stacks;
+ 	var deltaR = h / this.stacks;
 
 	var z = 0;
 	var r = this.base;
 	for (var k = 0; k <= this.stacks; k++) {
 		var alpha = 0;
 		for (var i = 0; i <= this.slices; i++) {
-			var alphaRad = alpha*deg2Rad;
-
-			this.vertices.push(r*Math.cos(alphaRad),r*Math.sin(alphaRad),z);
+			var alphaRad = alpha * deg2Rad;
+			this.vertices.push(r * Math.cos(alphaRad), r * Math.sin(alphaRad), z);
 
 			if (i > 0 && k > 0) {
-				this.indices.push((this.slices+1)*(k)+(i),(this.slices+1)*(k)+(i-1),(this.slices+1)*(k-1)+(i-1));
-				this.indices.push((this.slices+1)*(k)+(i),(this.slices+1)*(k-1)+(i-1),(this.slices+1)*(k-1)+(i));
+				this.indices.push((this.slices + 1) * (k) + (i), (this.slices + 1) * (k) + (i - 1), (this.slices + 1) * (k - 1) + (i - 1));
+				this.indices.push((this.slices + 1) * (k) + (i), (this.slices + 1) * (k - 1) + (i - 1), (this.slices + 1) * (k - 1) + (i));
 			}
 
-			this.normals.push(h*Math.cos(alphaRad),h*Math.sin(alphaRad),-1*h);
-			this.texCoords.push(i/(this.slices), 1 -k/this.stacks);
+			this.normals.push(h * Math.cos(alphaRad), h * Math.sin(alphaRad), -1 * h);
+			this.texCoords.push(i / this.slices, 1 -k / this.stacks);
 
 			alpha += deltaAlpha;
 		}

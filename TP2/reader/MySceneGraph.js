@@ -717,8 +717,11 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			if (animations.length != 1)
 				throw "There can only be one 'animation' element inside each 'component' element.";
 
-			for (var j = 0; j < animations[0].children.length; j++)
-				component.animations.push(this.reader.getString(animations[0].children[j], 'id', true));
+			component.animations = [];
+			for (var j = 0; j < animations[0].children.length; j++) {
+				var animationID = this.reader.getString(animations[0].children[j], 'id', true);
+				component.animations.push(this.animations[animationID]);
+			}
 		}
 
 		if (transformation.length != 1)

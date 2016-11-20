@@ -1,4 +1,4 @@
-var FPS = 60;
+var FPS = 120;
 var UPDATE_PERIOD = 1000 / FPS;
 
 function XMLscene(app, interface) {
@@ -25,7 +25,8 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
-	this.time = 0;
+	this.loop = false;
+	this.currTime = 0;
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
 
@@ -175,6 +176,17 @@ XMLscene.prototype.applyTransformations = function(transformations) {
 	}
 };
 
+XMLscene.prototype.applyAnimations = function(animations) {
+	if (animations != null) {
+		for (var i = 0; i < animations.length; i++) {
+			if (animations[i].done == false) {
+				animations[i].applyAnimation(this.currTime);
+				break;
+			}
+		}
+	}
+};
+
 /**
  * Display's the scene starting by the root of the graph
  * @param  {string} componentID Component to be processed
@@ -183,7 +195,6 @@ XMLscene.prototype.applyTransformations = function(transformations) {
  * @return {void}
  */
 XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextureID) {
-	var animation = null;
 	var materialID, textureID;
 	var component = this.graph.components[componentID];
 
@@ -202,16 +213,9 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 	else
 		materialID = component.materials[component.matIndex];
 
-	if (component.animations.length != 0)
-		animation = this.graph.animations[component.animations[component.animationIndex]];
-
 	this.pushMatrix();
 	this.applyTransformations(component.transformation);
-
-	if (animation != null)
-		animation.applyAnimation(this.elapsedTime, component);
-	// if (component.animationIndex == component.animations.length)
-	// 	component.animationIndex = 0;
+	this.applyAnimations(component.animations);
 
 	var material = this.graph.materials[materialID];
 	for (var i = 0; i < component.primitives.length; i++) {
@@ -238,10 +242,8 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 };
 
 XMLscene.prototype.update = function(currTime) {
-	if (this.time == 0)
-		this.time = currTime;
-
-	this.elapsedTime = (currTime - this.time) / 1000;
+	if (this.graph.loadedOk)
+		this.currTime = currTime;
 };
 
 XMLscene.prototype.display = function() {

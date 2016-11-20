@@ -29,7 +29,7 @@ Sphere.prototype.initBuffers = function() {
 			this.normals.push(
 								Math.cos(j * angHor) * Math.sin(i * angVer),
 								Math.sin(j * angHor) * Math.sin(i * angVer),
-								Math.cos(i * angVer)
+								-1 * Math.cos(i * angVer)
 							 );
 			this.vertices.push(
 								this.radius * Math.cos(j * angHor) * Math.cos(i * angVer - Math.PI / 2),
