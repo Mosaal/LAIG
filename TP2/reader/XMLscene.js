@@ -25,7 +25,8 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
-	this.loop = false;
+	this.loop = { loop: false };
+
 	this.currTime = 0;
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
@@ -127,6 +128,7 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
 	this.interface.setActiveCamera(this.camera);
+	this.interface.addLoopState(this.loop);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
 		this.interface.addLight(this.lights[i], 'Omni', i);
@@ -178,11 +180,20 @@ XMLscene.prototype.applyTransformations = function(transformations) {
 
 XMLscene.prototype.applyAnimations = function(animations) {
 	if (animations != null) {
+		var allDone = true;
+
 		for (var i = 0; i < animations.length; i++) {
 			if (animations[i].done == false) {
+				allDone = false;
 				animations[i].applyAnimation(this.currTime);
 				break;
 			}
+		}
+
+		if (allDone && this.loop.loop) {
+			for (var i = 0; i < animations.length; i++)
+				animations[i].resetAnimation();
+			animations[0].applyAnimation(this.currTime);
 		}
 	}
 };

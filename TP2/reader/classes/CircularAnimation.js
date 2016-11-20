@@ -2,7 +2,6 @@ function CircularAnimation(scene, id, span, type, centerx, centery, centerz, rad
 	Animation.call(this, scene, id, span, type);
 	this.degToRad = Math.PI / 180.0;
 
-	this.done = false;
 	this.radius = radius;
 	this.centerx = centerx;
 	this.centery = centery;
@@ -20,7 +19,7 @@ CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
 CircularAnimation.prototype.applyAnimation = function(currTime) {
-	if (this.lastTime == -1) {
+	if (this.lastTime == 0) {
 		this.lastTime = currTime;
 	} else {
 		var deltaTime = (currTime - this.lastTime) / 1000;
@@ -35,4 +34,10 @@ CircularAnimation.prototype.applyAnimation = function(currTime) {
 	this.scene.translate(this.centerx, this.centery, this.centerz);
 	this.scene.rotate(this.angle, 0, 1, 0);
 	this.scene.translate(this.radius, 0, 0);
+};
+
+CircularAnimation.prototype.resetAnimation = function() {
+	this.done = false;
+	this.lastTime = 0;
+	this.angle = this.startang;
 };

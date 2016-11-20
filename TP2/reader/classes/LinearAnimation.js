@@ -1,7 +1,6 @@
 function LinearAnimation(scene, id, span, type, controlPoints) {
 	Animation.call(this, scene, id, span, type);
 
-	this.done = false;
 	this.distances = [];
 	this.totalDistance = 0;
 	this.controlPoints = controlPoints;
@@ -24,7 +23,7 @@ LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
 LinearAnimation.prototype.applyAnimation = function(currTime) {
-	if (this.lastTime == -1)
+	if (this.lastTime == 0)
 		this.lastTime = currTime;
 
 	var deltaTime = (currTime - this.lastTime) / 1000;
@@ -49,6 +48,15 @@ LinearAnimation.prototype.applyAnimation = function(currTime) {
 
 	this.scene.translate(x, y, z);
 	this.scene.rotate(this.currAngle, 0, 1, 0);
+};
+
+LinearAnimation.prototype.resetAnimation = function() {
+	this.done = false;
+	this.lastTime = 0;
+	this.currDist = 0;
+	this.currControlPoint = 0;
+	this.currPosition = this.controlPoints[0];
+	this.currAngle = this.calculateAngle(this.controlPoints[0], this.controlPoints[1]);
 };
 
 LinearAnimation.prototype.calculateDistance = function(p1, p2) {
