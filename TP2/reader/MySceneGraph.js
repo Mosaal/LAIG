@@ -646,7 +646,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				primitive = new Vehicle(this.scene);
 				break;
 			case 'chessboard':
-				var colors = [];
+				var colors = new Array(3);
 				var du, dv, su, sv, textureref;
 
 				du = this.reader.getInteger(primitives[i].children[0], 'du', true);
@@ -654,6 +654,16 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				su = this.reader.getInteger(primitives[i].children[0], 'su', true);
 				sv = this.reader.getInteger(primitives[i].children[0], 'sv', true);
 				textureref = this.reader.getString(primitives[i].children[0], 'textureref', true);
+
+				var c1 = primitives[i].children[0].getElementsByTagName('c1');
+				if (c1.length != 1)
+					throw "Zero or more than one 'c1' elements found in one of the 'chessboard' primitives.";
+				var c2 = primitives[i].children[0].getElementsByTagName('c2');
+				if (c2.length != 1)
+					throw "Zero or more than one 'c2' elements found in one of the 'chessboard' primitives.";
+				var cs = primitives[i].children[0].getElementsByTagName('cs');
+				if (cs.length != 1)
+					throw "Zero or more than one 'cs' elements found in one of the 'chessboard' primitives.";
 
 				for (var j = 0; j < primitives[i].children[0].children.length; j++) {
 					var temp = [];
@@ -663,7 +673,17 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 					temp['b'] = this.reader.getFloat(primitives[i].children[0].children[j], 'b', true);
 					temp['a'] = this.reader.getFloat(primitives[i].children[0].children[j], 'a', true);
 
-					colors.push(temp);
+					switch (primitives[i].children[0].children[j].tagName) {
+						case 'c1':
+							colors[0] = temp;
+							break;
+						case 'c2':
+							colors[1] = temp;
+							break;
+						case 'cs':
+							colors[2] = temp;
+							break;
+					}
 				}
 
 				primitive = new Chessboard(this.scene, du, dv, su, sv, colors, this.textures[textureref]);
