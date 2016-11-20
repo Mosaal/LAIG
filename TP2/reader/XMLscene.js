@@ -1,6 +1,3 @@
-var FPS = 120;
-var UPDATE_PERIOD = 1000 / FPS;
-
 function XMLscene(app, interface) {
 	CGFscene.call(this);
 
@@ -25,6 +22,7 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
+	this.FPS = { VALUE: 120 };
 	this.loop = { loop: false };
 
 	this.currTime = 0;
@@ -32,7 +30,7 @@ XMLscene.prototype.init = function(application) {
 	this.degToRad = Math.PI / 180.0;
 
 	this.enableTextures(true);
-	this.setUpdatePeriod(UPDATE_PERIOD);
+	this.setUpdatePeriod(1000 / this.FPS.VALUE);
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -128,7 +126,7 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
 	this.interface.setActiveCamera(this.camera);
-	this.interface.addLoopState(this.loop);
+	this.interface.addLoopState(this.loop, this.FPS);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
 		this.interface.addLight(this.lights[i], 'Omni', i);
@@ -253,8 +251,10 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 };
 
 XMLscene.prototype.update = function(currTime) {
-	if (this.graph.loadedOk)
+	if (this.graph.loadedOk) {
 		this.currTime = currTime;
+		this.setUpdatePeriod(1000 / this.FPS.VALUE);
+	}
 };
 
 XMLscene.prototype.display = function() {

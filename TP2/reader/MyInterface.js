@@ -29,8 +29,9 @@ MyInterface.prototype.addLight = function(light, type, index) {
 	this.lights.add(light, 'enabled').name(type + " #" + index);
 };
 
-MyInterface.prototype.addLoopState = function(loop) {
+MyInterface.prototype.addLoopState = function(loop, fps) {
 	this.animations.add(loop, 'loop').name('Loop');
+	this.animations.add(fps, 'VALUE', 1, 120).name('FPS');
 };
 
 MyInterface.prototype.processKeyDown = function(event) {
