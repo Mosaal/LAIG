@@ -36,6 +36,13 @@ Patch.prototype.createKnots = function(order) {
 	return temp;
 };
 
+/**
+ * Returns an array with the control points for the patch
+ * @param {integer} orderU
+ * @param {integer} orderV
+ * @param {Array} controlPoints
+ * @return {string}
+ */
 Patch.prototype.calculateControlPoints = function(orderU, orderV, controlPoints) {
 	var index = 0, result = [];
 
@@ -55,6 +62,10 @@ Patch.prototype.calculateControlPoints = function(orderU, orderV, controlPoints)
 	return result;
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Patch.prototype.getName = function() {
 	return 'Patch';
 };

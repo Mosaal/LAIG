@@ -95,6 +95,10 @@ Vehicle.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
+/**
+ * Returns the name of the primitive
+ * @return {string}
+ */
 Vehicle.prototype.getName = function() {
 	return 'Vehicle';
 };

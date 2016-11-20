@@ -214,21 +214,6 @@
 	</transformations>
 
 	<animations>
-		<!-- HERE -->
-		<animation id="test0" span="10.0" type="linear">
-			<controlpoint xx="0.0" yy="0.0" zz="0.0" />
-			<controlpoint xx="1.0" yy="0.0" zz="0.0" />
-			<controlpoint xx="0.0" yy="0.0" zz="1.0" />
-			<controlpoint xx="-1.0" yy="0.0" zz="0.0" />
-			<controlpoint xx="0.0" yy="0.0" zz="-1.0" />
-			<controlpoint xx="1.0" yy="0.0" zz="0.0" />
-			<controlpoint xx="0.0" yy="0.0" zz="0.0" />
-		</animation>
-
-		<animation id="sunAnimation" span="10.0" type="circular"
-					centerx="-195.0" centery="0.0" centerz="0.0"
-					radius="0.0" startang="0.0" rotang="36.0" />
-		<!-- HERE -->
 	</animations>
 
 	<primitives>
@@ -245,13 +230,6 @@
 		<component id="root">
 			<transformation>
 			</transformation>
-
-			<!-- HERE -->
-			<animation>
-				<animationref id="test0" />
-				<animationref id="test1" />
-			</animation>
-			<!-- HERE -->
 
 			<materials>
 				<material id="solarSystemMat" />

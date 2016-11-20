@@ -23,8 +23,10 @@
 	</lights>
 
 	<textures>
-		<texture id="tex" file="images/wood.jpg" length_s="1.0" length_t="1.0" />
-		<texture id="grid" file="images/grid.jpg" length_s="1.0" length_t="1.0" />
+		<texture id="woodTex" file="images/wood.jpg" length_s="1.0" length_t="1.0" />
+		<texture id="gridTex" file="images/grid.jpg" length_s="1.0" length_t="1.0" />
+		<texture id="ballTex" file="images/ball.jpg" length_s="1.0" length_t="1.0" />
+		<texture id="metalTex" file="images/metal.jpg" length_s="1.0" length_t="1.0" />
 	</textures>
 
 	<materials>
@@ -67,11 +69,11 @@
 		</primitive>
 
 		<primitive id="esfera">
-			<sphere radius="0.5" slices="20" stacks="20" />
+			<sphere radius="0.5" slices="50" stacks="50" />
 		</primitive>
 
 		<primitive id="chessboard0">
-			<chessboard du="8" dv="8" textureref="tex" su="3" sv="3">
+			<chessboard du="8" dv="8" textureref="woodTex" su="3" sv="3">
 				<c1 r="1.0" g="1.0" b="1.0" a="1.0" />
 				<c2 r="0.0" g="0.0" b="0.0" a="1.0" />
 				<cs r="1.0" g="0.0" b="0.0" a="1.0" />
@@ -79,7 +81,7 @@
 		</primitive>
 
 		<primitive id="chessboard1">
-			<chessboard du="8" dv="8" textureref="tex" su="3" sv="3">
+			<chessboard du="8" dv="8" textureref="woodTex" su="3" sv="3">
 				<c1 r="1.0" g="0.0" b="0.0" a="1.0" />
 				<c2 r="0.0" g="0.0" b="1.0" a="1.0" />
 				<cs r="0.0" g="1.0" b="0.0" a="1.0" />
@@ -128,7 +130,7 @@
 				<material id="inherit" />
 			</materials>
 
-			<texture id="grid" />
+			<texture id="gridTex" />
 
 			<children>
 				<primitiveref id="patch" />
@@ -149,7 +151,7 @@
 				<material id="inherit" />
 			</materials>
 
-			<texture id="tex" />
+			<texture id="metalTex" />
 
 			<children>
 				<primitiveref id="vehicle" />
@@ -169,7 +171,7 @@
 				<material id="inherit" />
 			</materials>
 
-			<texture id="tex" />
+			<texture id="ballTex" />
 
 			<children>
 				<primitiveref id="esfera" />
