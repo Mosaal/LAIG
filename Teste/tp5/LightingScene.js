@@ -101,10 +101,10 @@ LightingScene.prototype.init = function(application) {
 	// this.cylinder = new MyCylinder(this, 10, 8);
 	// this.plane = new NewPlane(this, 4, 4, 100, 100);
 	// this.vehicle = new Vehicle(this);
-	this.chess = new Chessboard(this, 8, 8, 2, 4, "resources/images/wood.jpg",
-								[ 1.0, 1.0, 1.0, 0.0 ],
+	// this.chess = new Chessboard(this, 8, 8, 2, 4, "resources/images/wood.jpg",
+	/*							[ 1.0, 1.0, 1.0, 0.0 ],
 								[ 0.0, 0.0, 0.0, 1.0 ],
-								[ 1.0, 0.0, 0.0, 1.0 ]);
+								[ 1.0, 0.0, 0.0, 1.0 ]);*/
 
 	// Scene elements - TEMP
 	// this.universe = new MySphere(this, 1, 100, 100);
@@ -120,6 +120,12 @@ LightingScene.prototype.init = function(application) {
 	// this.uranus = new MySphere(this, 1, 100, 100);
 	// this.neptune = new MySphere(this, 1, 100, 100);
 	// this.pluto = new MySphere(this, 1, 100, 100);
+	this.cyl = new Cylinder(this, 1, 1, 0.1, 6, 1);
+	this.smallp1 = new Cylinder(this,0.2,0.2,0.1,20,1);
+	this.mediump1= new Cylinder(this,0.4,0.4,0.1,20,1);
+
+	this.smallp2 = new Cylinder(this,0.2,0.2,0.1,20,1);
+	this.mediump2= new Cylinder(this,0.4,0.4,0.1,20,1);
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
@@ -148,6 +154,29 @@ LightingScene.prototype.init = function(application) {
 	// this.materialD.setDiffuse(0.5,0.5,0.5,1);
 	// this.materialD.setSpecular(0.7,0.7,0.7,1);	
 	// this.materialD.setShininess(120);
+
+
+
+	this.boardAppearance = new CGFappearance(this);
+	this.boardAppearance.loadTexture("resources/images/tabuleiro.jpg");
+	this.boardAppearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	this.boardAppearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.boardAppearance.setShininess(20);
+	this.boardAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
+
+	this.p1Appearance = new CGFappearance(this);
+	this.p1Appearance.loadTexture("resources/images/wood.jpg");
+	this.p1Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	this.p1Appearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.p1Appearance.setShininess(20);
+	this.p1Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
+
+	this.p2Appearance = new CGFappearance(this);
+	this.p2Appearance.loadTexture("resources/images/wood2.jpg");
+	this.p2Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	this.p2Appearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.p2Appearance.setShininess(20);
+	this.p2Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
 	// this.slidesAppearance = new CGFappearance(this);
 	// this.slidesAppearance.loadTexture("resources/images/slides.png");
@@ -308,11 +337,166 @@ LightingScene.prototype.display = function() {
 	// Draw axis
 	this.axis.display();
 
+
 	this.pushMatrix();
-		this.rotate(-90 * degToRad, 1, 0, 0);
-		this.chess.display();
+		this.boardAppearance.apply();
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
 	this.popMatrix();
 
+	this.pushMatrix();
+		this.translate(-1.7,0,-1);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+this.pushMatrix();
+		this.translate(1.7,0,1);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(1.7,0,-1);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-1.7,0,1);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(0,0,-2);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(0,0,2);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(1.7,0,-3);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-1.7,0,3);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.p1Appearance.apply();
+		this.translate(-4,0,3);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-4,0.15,3);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-4,0.3,3);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.p2Appearance.apply();
+		this.translate(0.5,0,-4.5);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp2.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(0.5,0.15,-4.5);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp2.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(0.5,0.3,-4.5);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.smallp2.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.p1Appearance.apply();
+		this.translate(-4.5,0,2);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-4.5,0.15,2);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-4.5,0.3,2);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump1.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.p2Appearance.apply();
+		this.translate(-0.5,0,-4);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump2.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-0.5,0.15,-4);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump2.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(-0.5,0.3,-4);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.mediump2.display();
+	this.popMatrix();
+
+
+
+
+/*	this.pushMatrix();
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.cyl.display();
+	this.popMatrix();
+
+	this.pushMatrix();
+		this.cyl.display();
+	this.popMatrix();
+
+	*/
 	// this.materialDefault.apply();
 
 	// cycle that draws everything on screen
