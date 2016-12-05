@@ -28,6 +28,7 @@ serialInclude([
 	'MyTorus.js',
 	'MyDiamond.js',
 	'MySquare.js',
+	'MyBigPiece.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);

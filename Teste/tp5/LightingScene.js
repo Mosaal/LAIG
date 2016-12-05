@@ -123,6 +123,7 @@ LightingScene.prototype.init = function(application) {
 	this.cyl = new Cylinder(this, 1, 1, 0.1, 6, 1);
 	this.smallp1 = new Cylinder(this,0.2,0.2,0.1,20,1);
 	this.mediump1= new Cylinder(this,0.4,0.4,0.1,20,1);
+	this.bigp1=new MyBigPiece(this,20);
 
 	this.smallp2 = new Cylinder(this,0.2,0.2,0.1,20,1);
 	this.mediump2= new Cylinder(this,0.4,0.4,0.1,20,1);
@@ -467,6 +468,14 @@ this.pushMatrix();
 		this.rotate(90*Math.PI/180,1,0,0);
 		this.mediump2.display();
 	this.popMatrix();
+
+	this.pushMatrix();
+		this.translate(0,2,0);
+		this.rotate(90*Math.PI/180,1,0,0);
+		this.bigp1.display();
+	this.popMatrix();
+	
+
 
 
 
