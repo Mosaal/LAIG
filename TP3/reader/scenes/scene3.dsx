@@ -75,11 +75,13 @@
 			<texture id="none" />
 
 			<children>
-				<componentref id="gameboard" />
+				<componentref id="gameBoard" />
+				<componentref id="gamePieces" />
 			</children>
 		</component>
 
-		<component id="gameboard">
+		<!-- GAMEBOARD -->
+		<component id="gameBoard">
 			<transformation>
 			</transformation>
 
@@ -99,6 +101,276 @@
 				<componentref id="boardPiece7" />
 				<componentref id="boardPiece8" />
 				<componentref id="boardPiece9" />
+			</children>
+		</component>
+
+		<component id="boardPiece1">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece2">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece3">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece4">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece5">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece6">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece7">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece8">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<component id="boardPiece9">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<primitiveref id="boardPiece" />
+			</children>
+		</component>
+
+		<!-- GAME PIECES -->
+		<component id="gamePieces">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<componentref id="gamePiecesP1" />
+				<componentref id="gamePiecesP2" />
+			</children>
+		</component>
+
+		<component id="gamePiecesP1">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<componentref id="smallPiecesP1" />
+				<componentref id="mediumPiecesP1" />
+				<componentref id="bigPiecesP1" />
+			</children>
+		</component>
+
+		<component id="smallPiecesP1">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+			</children>
+		</component>
+
+		<component id="mediumPiecesP1">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+			</children>
+		</component>
+
+		<component id="bigPiecesP1">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+			</children>
+		</component>
+
+		<component id="gamePiecesP2">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<componentref id="smallPiecesP2" />
+				<componentref id="mediumPiecesP2" />
+				<componentref id="bigPiecesP2" />
+			</children>
+		</component>
+
+		<component id="smallPiecesP2">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+			</children>
+		</component>
+
+		<component id="mediumPiecesP2">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+			</children>
+		</component>
+
+		<component id="bigPiecesP2">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
 			</children>
 		</component>
 	</components>
