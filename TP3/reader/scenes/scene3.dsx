@@ -37,7 +37,7 @@
 	</materials>
 
 	<transformations>
-		<transformation id="transf">
+		<transformation id="rot90deg">
 			<rotate axis="x" angle="-90.0" />
 		</transformation>
 	</transformations>
@@ -106,6 +106,7 @@
 
 		<component id="boardPiece1">
 			<transformation>
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -121,6 +122,8 @@
 
 		<component id="boardPiece2">
 			<transformation>
+				<translate x="-1.7" y="0.0" z="-1.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -136,6 +139,8 @@
 
 		<component id="boardPiece3">
 			<transformation>
+				<translate x="1.7" y="0.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -151,6 +156,8 @@
 
 		<component id="boardPiece4">
 			<transformation>
+				<translate x="1.7" y="0.0" z="-1.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -166,6 +173,8 @@
 
 		<component id="boardPiece5">
 			<transformation>
+				<translate x="-1.7" y="0.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -181,6 +190,8 @@
 
 		<component id="boardPiece6">
 			<transformation>
+				<translate x="0.0" y="0.0" z="-2.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -196,6 +207,8 @@
 
 		<component id="boardPiece7">
 			<transformation>
+				<translate x="0.0" y="0.0" z="2.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -211,6 +224,8 @@
 
 		<component id="boardPiece8">
 			<transformation>
+				<translate x="1.7" y="0.0" z="-3.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>
@@ -226,6 +241,8 @@
 
 		<component id="boardPiece9">
 			<transformation>
+				<translate x="-1.7" y="0.0" z="3.0" />
+				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
 			<materials>

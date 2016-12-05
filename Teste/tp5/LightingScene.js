@@ -351,7 +351,7 @@ LightingScene.prototype.display = function() {
 		this.cyl.display();
 	this.popMatrix();
 
-this.pushMatrix();
+	this.pushMatrix();
 		this.translate(1.7,0,1);
 		this.rotate(90*Math.PI/180,1,0,0);
 		this.cyl.display();
