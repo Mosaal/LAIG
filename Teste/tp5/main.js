@@ -29,6 +29,9 @@ serialInclude([
 	'MyDiamond.js',
 	'MySquare.js',
 	'MyBigPiece.js',
+	'GamePiece.js',
+	'GamePieceLarge.js',
+	'RingPrimitive.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);

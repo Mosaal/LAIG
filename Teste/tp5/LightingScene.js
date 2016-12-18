@@ -120,17 +120,11 @@ LightingScene.prototype.init = function(application) {
 	// this.uranus = new MySphere(this, 1, 100, 100);
 	// this.neptune = new MySphere(this, 1, 100, 100);
 	// this.pluto = new MySphere(this, 1, 100, 100);
-	this.cyl = new Cylinder(this, 1, 1, 0.1, 6, 1);
-	this.smallp1 = new Cylinder(this,0.2,0.2,0.1,20,1);
-	this.mediump1= new Cylinder(this,0.4,0.4,0.1,20,1);
-	this.bigp1=new MyBigPiece(this,20);
-
-	this.smallp2 = new Cylinder(this,0.2,0.2,0.1,20,1);
-	this.mediump2= new Cylinder(this,0.4,0.4,0.1,20,1);
+	this.big = new GamePieceLarge();
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
-	
+
 	// this.materialA = new CGFappearance(this);
 	// this.materialA.setAmbient(1.0, 1.0, 1.0, 1.0);
 	// this.materialA.setDiffuse(1.0, 1.0, 0.0, 1.0);
@@ -141,19 +135,19 @@ LightingScene.prototype.init = function(application) {
 	// this.materialB = new CGFappearance(this);
 	// this.materialB.setAmbient(0.3,0.3,0.3,1);
 	// this.materialB.setDiffuse(0.6,0.6,0.6,1);
-	// this.materialB.setSpecular(0.8,0.8,0.8,1);	
+	// this.materialB.setSpecular(0.8,0.8,0.8,1);
 	// this.materialB.setShininess(120);
-	
+
 	// this.materialC = new CGFappearance(this);
 	// this.materialC.setAmbient(0.55,0.27,0.07,1);
 	// this.materialC.setDiffuse(0.55,0.27,0.07,1);
-	// this.materialC.setSpecular(0.55,0.27,0.07,1);	
+	// this.materialC.setSpecular(0.55,0.27,0.07,1);
 	// this.materialC.setShininess(120);
 
 	// this.materialD = new CGFappearance(this);
 	// this.materialD.setAmbient(0.3,0.3,0.3,1);
 	// this.materialD.setDiffuse(0.5,0.5,0.5,1);
-	// this.materialD.setSpecular(0.7,0.7,0.7,1);	
+	// this.materialD.setSpecular(0.7,0.7,0.7,1);
 	// this.materialD.setShininess(120);
 
 
@@ -161,28 +155,28 @@ LightingScene.prototype.init = function(application) {
 	this.boardAppearance = new CGFappearance(this);
 	this.boardAppearance.loadTexture("resources/images/tabuleiro.jpg");
 	this.boardAppearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.boardAppearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.boardAppearance.setSpecular(0.1, 0.1, 0.1, 1);
 	this.boardAppearance.setShininess(20);
 	this.boardAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
 	this.p1Appearance = new CGFappearance(this);
 	this.p1Appearance.loadTexture("resources/images/wood.jpg");
 	this.p1Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.p1Appearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.p1Appearance.setSpecular(0.1, 0.1, 0.1, 1);
 	this.p1Appearance.setShininess(20);
 	this.p1Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
 	this.p2Appearance = new CGFappearance(this);
 	this.p2Appearance.loadTexture("resources/images/wood2.jpg");
 	this.p2Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.p2Appearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	this.p2Appearance.setSpecular(0.1, 0.1, 0.1, 1);
 	this.p2Appearance.setShininess(20);
 	this.p2Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
 	// this.slidesAppearance = new CGFappearance(this);
 	// this.slidesAppearance.loadTexture("resources/images/slides.png");
 	// this.slidesAppearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	// this.slidesAppearance.setSpecular(0.1, 0.1, 0.1, 1);	
+	// this.slidesAppearance.setSpecular(0.1, 0.1, 0.1, 1);
 	// this.slidesAppearance.setShininess(20);
 	// this.slidesAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
@@ -190,7 +184,7 @@ LightingScene.prototype.init = function(application) {
 	// this.earthAppearance.loadTexture("resources/images/earth.png");
 	// this.earthAppearance.setAmbient(1.0, 1.0, 1.0, 1.0);
 	// this.earthAppearance.setDiffuse(1.0, 1.0, 1.0, 1.0);
-	// this.earthAppearance.setSpecular(1.0, 1.0, 1.0, 1.0);	
+	// this.earthAppearance.setSpecular(1.0, 1.0, 1.0, 1.0);
 	// this.earthAppearance.setShininess(120);
 	// this.earthAppearance.setTextureWrap("CLAMP_TO_EDGE", "CLAMP_TO_EDGE");
 
@@ -248,7 +242,7 @@ LightingScene.prototype.initLights = function() {
 	this.lights[3].enable();
 
 	// this.shader.bind();
-	
+
 	// Positions for six lights
 	// this.lights[0].setPosition(400, 0, 0, 1.0);
 	// this.lights[1].setPosition(0, 150, 0, 1.0);
@@ -339,7 +333,7 @@ LightingScene.prototype.display = function() {
 	this.axis.display();
 
 
-	this.pushMatrix();
+	/*this.pushMatrix();
 		this.boardAppearance.apply();
 		this.rotate(90*Math.PI/180,1,0,0);
 		this.cyl.display();
@@ -467,18 +461,11 @@ LightingScene.prototype.display = function() {
 		this.translate(-0.5,0.3,-4);
 		this.rotate(90*Math.PI/180,1,0,0);
 		this.mediump2.display();
-	this.popMatrix();
+	this.popMatrix();*/
 
 	this.pushMatrix();
-		this.translate(0,2,0);
-		this.rotate(90*Math.PI/180,1,0,0);
 		this.bigp1.display();
 	this.popMatrix();
-	
-
-
-
-
 
 /*	this.pushMatrix();
 		this.rotate(90*Math.PI/180,1,0,0);
@@ -632,7 +619,7 @@ LightingScene.prototype.display = function() {
 	// 	this.scale(15, 8, 0.2);
 	// 	this.wall.display();
 	// this.popMatrix();
-	
+
 	// // Floor
 	// this.pushMatrix();
 	// 	this.translate(7.5, 0, 7.5);

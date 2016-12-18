@@ -42,6 +42,7 @@ MyInterface.prototype.processKeyDown = function(event) {
 			this.scene.viewIndex++;
 
 		this.scene.camera = this.scene.graph.perspectives[this.scene.graph.viewsIndex[this.scene.viewIndex]];
+		this.setActiveCamera(this.scene.camera);
 	} else if (event.which == 77 || event.which == 109) {
 		for (var id in this.scene.graph.components) {
 			if (this.scene.graph.components[id].materials.length > 1) {

@@ -125,6 +125,7 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
  */
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
+	this.interface.setActiveCamera(this.camera);
 	this.interface.addLoopState(this.loop, this.FPS);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
@@ -258,7 +259,7 @@ XMLscene.prototype.update = function(currTime) {
 
 XMLscene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
-
+	
 	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -271,10 +272,9 @@ XMLscene.prototype.display = function() {
 	this.applyViewMatrix();
 
 	// Draw axis
-	if (this.graph.axisLength > 0)
-		this.axis.display();
+	this.axis.display();
 	this.setDefaultAppearance();
-
+	
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
@@ -289,3 +289,4 @@ XMLscene.prototype.display = function() {
 		this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
 	}
 };
+
