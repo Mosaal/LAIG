@@ -29,7 +29,7 @@ LightingScene.prototype.init = function(application) {
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.axis = new CGFaxis(this, 1.0, 0.0);
+	this.axis = new CGFaxis(this);
 
 	//Texturas
 	this.enableTextures(true);
@@ -120,7 +120,9 @@ LightingScene.prototype.init = function(application) {
 	// this.uranus = new MySphere(this, 1, 100, 100);
 	// this.neptune = new MySphere(this, 1, 100, 100);
 	// this.pluto = new MySphere(this, 1, 100, 100);
-	this.big = new GamePieceLarge();
+	this.ring = new RingPrimitive(this, 24, 0.4, 0.25);
+	this.innerbody = new Cylinder(this, 0.25, 0.25, 0.15, 24, 3);
+	this.outterbody = new Cylinder(this, 0.4, 0.4, 0.15, 24, 3);
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
@@ -211,10 +213,10 @@ LightingScene.prototype.initCameras = function() {
 LightingScene.prototype.initLights = function() {
 	this.setGlobalAmbientLight(0,0,0, 1.0);
 
-	this.lights[0].setPosition(4, 6, 1, 1);
-	this.lights[1].setPosition(10.5, 6.0, 1.0, 1.0);
-	this.lights[2].setPosition(10.5, 6.0, 5.0, 1.0);
-	this.lights[3].setPosition(4, 6.0, 5.0, 1.0);
+	this.lights[0].setPosition(0.0, 6.0, 0.0, 1.0);
+	this.lights[1].setPosition(0.0, -6.0, 0.0, 1.0);
+	this.lights[2].setPosition(0.0, 0.0, 6.0, 1.0);
+	this.lights[3].setPosition(0.0, 0.0, -6.0, 1.0);
 
 	this.lights[0].setAmbient(0, 0, 0, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -331,6 +333,37 @@ LightingScene.prototype.display = function() {
 
 	// Draw axis
 	this.axis.display();
+
+	/*this.pushMatrix();
+		this.rotate(180*Math.PI/180,0,1,0);
+		this.ring.display();
+	this.popMatrix();*/
+
+	this.pushMatrix();
+  
+  this.rotate(-90*degToRad,1,0,0);
+  
+    this.pushMatrix();
+    // this.scale(-1,1,1);
+    this.innerbody.display();
+    this.popMatrix();
+    
+    this.pushMatrix();
+    this.outterbody.display();
+    this.popMatrix();
+    
+    this.pushMatrix();
+    this.rotate(180*degToRad,1,0,0);
+    this.translate(0,0,-0.15);
+    this.ring.display();
+    this.popMatrix();
+    
+    this.pushMatrix();
+    this.ring.display();
+    this.popMatrix();
+    
+    
+  this.popMatrix();
 
 
 	/*this.pushMatrix();
@@ -462,10 +495,6 @@ LightingScene.prototype.display = function() {
 		this.rotate(90*Math.PI/180,1,0,0);
 		this.mediump2.display();
 	this.popMatrix();*/
-
-	this.pushMatrix();
-		this.bigp1.display();
-	this.popMatrix();
 
 /*	this.pushMatrix();
 		this.rotate(90*Math.PI/180,1,0,0);

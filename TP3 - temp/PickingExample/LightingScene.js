@@ -84,14 +84,12 @@ LightingScene.prototype.display = function ()
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.DEPTH_TEST);
 
-	// Initialize Model-View matrix as identity (no transformation
+	// Initialize Model-View matrix as identity (no transformation)
 	this.updateProjectionMatrix();
     this.loadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
-
-	//this.scale(5,5,5);
 	
 	// Update all lights used
 	this.lights[0].update();

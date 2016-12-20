@@ -63,11 +63,15 @@
 		</primitive>
 
 		<primitive id="smallPiece">
-			<cylinder base="0.2" top="0.2" height="0.1" slices="50" stacks="1" />
+			<cylinder base="0.2" top="0.2" height="0.1" slices="100" stacks="1" />
 		</primitive>
 
 		<primitive id="mediumPiece">
-			<cylinder base="0.4" top="0.4" height="0.1" slices="50" stacks="1" />
+			<cylinder base="0.4" top="0.4" height="0.1" slices="100" stacks="1" />
+		</primitive>
+
+		<primitive id="bigPiece">
+			<cylinder base="0.6" top="0.6" height="0.1" slices="100" stacks="1" />
 		</primitive>
 	</primitives>
 
@@ -130,7 +134,7 @@
 
 		<component id="boardPiece2">
 			<transformation>
-				<translate x="-1.7" y="0.0" z="-1.0" />
+				<translate x="-1.55" y="0.0" z="-0.9" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -147,7 +151,7 @@
 
 		<component id="boardPiece3">
 			<transformation>
-				<translate x="1.7" y="0.0" z="1.0" />
+				<translate x="1.55" y="0.0" z="0.9" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -164,7 +168,7 @@
 
 		<component id="boardPiece4">
 			<transformation>
-				<translate x="1.7" y="0.0" z="-1.0" />
+				<translate x="1.55" y="0.0" z="-0.9" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -181,7 +185,7 @@
 
 		<component id="boardPiece5">
 			<transformation>
-				<translate x="-1.7" y="0.0" z="1.0" />
+				<translate x="-1.55" y="0.0" z="0.9" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -198,7 +202,7 @@
 
 		<component id="boardPiece6">
 			<transformation>
-				<translate x="0.0" y="0.0" z="-2.0" />
+				<translate x="0.0" y="0.0" z="-1.8" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -215,7 +219,7 @@
 
 		<component id="boardPiece7">
 			<transformation>
-				<translate x="0.0" y="0.0" z="2.0" />
+				<translate x="0.0" y="0.0" z="1.8" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -232,7 +236,7 @@
 
 		<component id="boardPiece8">
 			<transformation>
-				<translate x="1.7" y="0.0" z="-3.0" />
+				<translate x="1.55" y="0.0" z="-2.7" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -249,7 +253,7 @@
 
 		<component id="boardPiece9">
 			<transformation>
-				<translate x="-1.7" y="0.0" z="3.0" />
+				<translate x="-1.55" y="0.0" z="2.7" />
 				<rotate axis="x" angle="-90.0" />
 			</transformation>
 
@@ -294,13 +298,13 @@
 			<children>
 				<componentref id="smallPiecesP1" />
 				<componentref id="mediumPiecesP1" />
-				<!-- <componentref id="bigPiecesP1" /> -->
+				<componentref id="bigPiecesP1" />
 			</children>
 		</component>
 
 		<component id="smallPiecesP1">
 			<transformation>
-				<translate x="-4.0" y="0.0" z="3.0" />
+				<translate x="-3.5" y="0.0" z="3.0" />
 			</transformation>
 
 			<materials>
@@ -368,7 +372,7 @@
 
 		<component id="mediumPiecesP1">
 			<transformation>
-				<translate x="-4.0" y="0.0" z="2.0" />
+				<translate x="-3.5" y="0.0" z="2.2" />
 			</transformation>
 
 			<materials>
@@ -434,6 +438,74 @@
 			</children>
 		</component>
 
+		<component id="bigPiecesP1">
+			<transformation>
+				<translate x="-3.5" y="0.0" z="1.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<componentref id="bigPieceP1-1" />
+				<componentref id="bigPieceP1-2" />
+				<componentref id="bigPieceP1-3" />
+			</children>
+		</component>
+
+		<component id="bigPieceP1-1">
+			<transformation>
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
+			</children>
+		</component>
+
+		<component id="bigPieceP1-2">
+			<transformation>
+				<translate x="0.0" y="0.15" z="0.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
+			</children>
+		</component>
+
+		<component id="bigPieceP1-3">
+			<transformation>
+				<translate x="0.0" y="0.3" z="0.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
+			</children>
+		</component>
+
 		<component id="gamePiecesP2">
 			<transformation>
 			</transformation>
@@ -447,13 +519,13 @@
 			<children>
 				<componentref id="smallPiecesP2" />
 				<componentref id="mediumPiecesP2" />
-				<!-- <componentref id="bigPiecesP2" /> -->
+				<componentref id="bigPiecesP2" />
 			</children>
 		</component>
 
 		<component id="smallPiecesP2">
 			<transformation>
-				<translate x="4.0" y="0.0" z="-3.0" />
+				<translate x="3.5" y="0.0" z="-3.0" />
 			</transformation>
 
 			<materials>
@@ -521,7 +593,7 @@
 
 		<component id="mediumPiecesP2">
 			<transformation>
-				<translate x="4.0" y="0.0" z="-2.0" />
+				<translate x="3.5" y="0.0" z="-2.2" />
 			</transformation>
 
 			<materials>
@@ -584,6 +656,74 @@
 
 			<children>
 				<primitiveref id="mediumPiece" />
+			</children>
+		</component>
+
+		<component id="bigPiecesP2">
+			<transformation>
+				<translate x="3.5" y="0.0" z="-1.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<componentref id="bigPieceP2-1" />
+				<componentref id="bigPieceP2-2" />
+				<componentref id="bigPieceP2-3" />
+			</children>
+		</component>
+
+		<component id="bigPieceP2-1">
+			<transformation>
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
+			</children>
+		</component>
+
+		<component id="bigPieceP2-2">
+			<transformation>
+				<translate x="0.0" y="0.15" z="0.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
+			</children>
+		</component>
+
+		<component id="bigPieceP2-3">
+			<transformation>
+				<translate x="0.0" y="0.3" z="0.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="bigPiece" />
 			</children>
 		</component>
 	</components>

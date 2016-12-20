@@ -2,11 +2,11 @@
  * MyCylinder
  * @constructor
  */
- function MyBigPiece(scene, stacks) {
+ function MyBigPiece(scene, slices) {
     CGFobject.call(this,scene);
    
-    this.slices = 1;
-    this.stacks = stacks;
+    this.stacks = 1;
+    this.slices = slices;
  
     this.initBuffers();
  };
