@@ -17,6 +17,10 @@ serialInclude([ '../lib/CGF.js',
                 'MySceneGraph.js',
                 'DataStructures.js',
 
+                'classes/GameState.js',
+                'classes/ModeGameState.js',
+                'classes/GameStateManager.js',
+
                 'animations/Animation.js',
                 'animations/LinearAnimation.js',
                 'animations/CircularAnimation.js',

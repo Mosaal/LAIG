@@ -3,7 +3,7 @@
 
 	<views default="p1View">
 		<perspective id="p1View" near="0.01" far="500.0" angle="57.3">
-			<from x="0.0" y="5.0" z="7.0" />
+			<from x="0.0" y="7.0" z="7.0" />
 			<to x="0.0" y="0.0" z="0.0" />
 		</perspective>
 	</views>

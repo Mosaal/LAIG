@@ -29,6 +29,9 @@ XMLscene.prototype.init = function(application) {
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
 
+	this.gsm = new GameStateManager(this);
+	this.gsm.setState(this.gsm.MODE);
+
 	this.enableTextures(true);
 	this.setPickEnabled(true);
 	this.setUpdatePeriod(1000 / this.FPS.VALUE);
@@ -251,6 +254,8 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 };
 
 XMLscene.prototype.update = function(currTime) {
+	this.gsm.update(currTime);
+
 	if (this.graph.loadedOk) {
 		this.currTime = currTime;
 		this.setUpdatePeriod(1000 / this.FPS.VALUE);
@@ -304,8 +309,9 @@ XMLscene.prototype.display = function() {
 		for (var i = 0; i < this.lights.length; i++)
 			this.lights[i].update();
 
+		this.gsm.display();
 		// Start drawing primitives
-		var comp = this.graph.components[this.graph.root];
-		this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
+		// var comp = this.graph.components[this.graph.root];
+		// this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
 	}
 };
