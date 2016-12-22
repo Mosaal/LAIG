@@ -1,7 +1,13 @@
 function PlayGameState(gsm, scene) {
 	GameState.call(this, gsm, scene);
+
+	this.gamePieces = [];
+	this.gamePieces.push(null);
+
+	this.animation = null;
 	this.degToRad = Math.PI / 180.0;
 
+	this.TIME = 0;
 	this.TURN = 1;
 	this.BOARD1 = 1;
 	this.BOARD2 = 2;
@@ -16,7 +22,6 @@ function PlayGameState(gsm, scene) {
 	this.MEDIUMPIECESP2 = 3;
 	this.BIGPIECESP2 = 3;
 
-	this.boardPieces = [];
 	this.BOARDPIECE1 = 1;
 	this.BOARDPIECE2 = 2;
 	this.BOARDPIECE3 = 3;
@@ -28,7 +33,6 @@ function PlayGameState(gsm, scene) {
 	this.BOARDPIECE9 = 9;
 	this.generateBoard();
 
-	this.piecesP1 = [];
 	this.SMALLPIECEP11 = 10;
 	this.SMALLPIECEP12 = 11;
 	this.SMALLPIECEP13 = 12;
@@ -40,7 +44,6 @@ function PlayGameState(gsm, scene) {
 	this.BIGPIECEP13 = 18;
 	this.generatePiecesP1();
 
-	this.piecesP2 = [];
 	this.SMALLPIECEP21 = 19;
 	this.SMALLPIECEP22 = 20;
 	this.SMALLPIECEP23 = 21;
@@ -77,59 +80,59 @@ PlayGameState.prototype.generateBoard = function() {
 };
 
 PlayGameState.prototype.generateBoard1 = function() {
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, -0.9, this.BOARDPIECE1, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, -1.8, this.BOARDPIECE2, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, -0.9, this.BOARDPIECE3, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, 0.9, this.BOARDPIECE4, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, 0.0, this.BOARDPIECE5, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, 0.9, this.BOARDPIECE6, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, 2.7, this.BOARDPIECE7, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, 1.8, this.BOARDPIECE8, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, 2.7, this.BOARDPIECE9, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, -0.9), this.BOARDPIECE1, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, -1.8), this.BOARDPIECE2, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, -0.9), this.BOARDPIECE3, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, 0.9), this.BOARDPIECE4, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, 0.0), this.BOARDPIECE5, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, 0.9), this.BOARDPIECE6, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, 2.7), this.BOARDPIECE7, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, 1.8), this.BOARDPIECE8, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, 2.7), this.BOARDPIECE9, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
 };
 
 PlayGameState.prototype.generateBoard2 = function() {
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, -0.9, this.BOARDPIECE1, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, -1.8, this.BOARDPIECE2, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, -2.7, this.BOARDPIECE3, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, 0.9, this.BOARDPIECE4, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, 0.0, this.BOARDPIECE5, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, -0.9, this.BOARDPIECE6, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(-1.55, 0.0, 2.7, this.BOARDPIECE7, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(0.0, 0.0, 1.8, this.BOARDPIECE8, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
-	this.boardPieces.push(new GamePiece(1.55, 0.0, 0.9, this.BOARDPIECE9, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, -0.9), this.BOARDPIECE1, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, -1.8), this.BOARDPIECE2, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, -2.7), this.BOARDPIECE3, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, 0.9), this.BOARDPIECE4, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, 0.0), this.BOARDPIECE5, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, -0.9), this.BOARDPIECE6, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-1.55, 0.0, 2.7), this.BOARDPIECE7, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(0.0, 0.0, 1.8), this.BOARDPIECE8, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(1.55, 0.0, 0.9), this.BOARDPIECE9, 'boardPiece', new Cylinder(this.scene, 1.0, 1.0, 0.1, 6, 1)));
 };
 
 PlayGameState.prototype.generatePiecesP1 = function() {
-	this.piecesP1.push(new GamePiece(-3.5, 0.0, 3.0, this.SMALLPIECEP11, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-4.0, 0.0, 3.0, this.SMALLPIECEP12, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-4.5, 0.0, 3.0, this.SMALLPIECEP13, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-3.5, 0.0, 3.0), this.SMALLPIECEP11, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-4.0, 0.0, 3.0), this.SMALLPIECEP12, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-4.5, 0.0, 3.0), this.SMALLPIECEP13, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
 	
-	this.piecesP1.push(new GamePiece(-3.5, 0.0, 2.2, this.MEDIUMPIECEP11, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-4.4, 0.0, 2.2, this.MEDIUMPIECEP12, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-5.3, 0.0, 2.2, this.MEDIUMPIECEP13, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-3.5, 0.0, 2.2), this.MEDIUMPIECEP11, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-4.4, 0.0, 2.2), this.MEDIUMPIECEP12, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-5.3, 0.0, 2.2), this.MEDIUMPIECEP13, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
 	
-	this.piecesP1.push(new GamePiece(-3.5, 0.0, 1.0, this.BIGPIECEP11, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-4.8, 0.0, 1.0, this.BIGPIECEP12, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
-	this.piecesP1.push(new GamePiece(-6.1, 0.0, 1.0, this.BIGPIECEP13, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-3.5, 0.0, 1.0), this.BIGPIECEP11, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-4.8, 0.0, 1.0), this.BIGPIECEP12, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(-6.1, 0.0, 1.0), this.BIGPIECEP13, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
 };
 
 PlayGameState.prototype.generatePiecesP2 = function() {
-	this.piecesP2.push(new GamePiece(3.5, 0.0, -3.0, this.SMALLPIECEP21, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(4.0, 0.0, -3.0, this.SMALLPIECEP22, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(4.5, 0.0, -3.0, this.SMALLPIECEP23, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(3.5, 0.0, -3.0), this.SMALLPIECEP21, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(4.0, 0.0, -3.0), this.SMALLPIECEP22, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(4.5, 0.0, -3.0), this.SMALLPIECEP23, 'smallPiece', new Cylinder(this.scene, 0.2, 0.2, 0.1, 100, 1)));
 	
-	this.piecesP2.push(new GamePiece(3.5, 0.0, -2.2, this.MEDIUMPIECEP21, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(4.4, 0.0, -2.2, this.MEDIUMPIECEP22, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(5.3, 0.0, -2.2, this.MEDIUMPIECEP23, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(3.5, 0.0, -2.2), this.MEDIUMPIECEP21, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(4.4, 0.0, -2.2), this.MEDIUMPIECEP22, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(5.3, 0.0, -2.2), this.MEDIUMPIECEP23, 'mediumPiece', new Cylinder(this.scene, 0.4, 0.4, 0.1, 100, 1)));
 	
-	this.piecesP2.push(new GamePiece(3.5, 0.0, -1.0, this.BIGPIECEP21, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(4.8, 0.0, -1.0, this.BIGPIECEP22, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
-	this.piecesP2.push(new GamePiece(6.1, 0.0, -1.0, this.BIGPIECEP23, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(3.5, 0.0, -1.0), this.BIGPIECEP21, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(4.8, 0.0, -1.0), this.BIGPIECEP22, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
+	this.gamePieces.push(new GamePiece(new Point3(6.1, 0.0, -1.0), this.BIGPIECEP23, 'bigPiece', new Cylinder(this.scene, 0.6, 0.6, 0.1, 100, 1)));
 };
 
 PlayGameState.prototype.update = function(deltaTime) {
-	// animacoes
+	this.TIME = deltaTime;
 };
 
 PlayGameState.prototype.display = function() {
@@ -141,12 +144,12 @@ PlayGameState.prototype.display = function() {
 PlayGameState.prototype.displayBoard = function() {
 	this.boardPieceTexture.apply();
 
-	for (var i = 0; i < this.boardPieces.length; i++) {
+	for (var i = 1; i < 10; i++) {
 		this.scene.pushMatrix();
-			this.scene.translate(this.boardPieces[i].x, this.boardPieces[i].y, this.boardPieces[i].z);
+			this.scene.translate(this.gamePieces[i].pos.x, this.gamePieces[i].pos.y, this.gamePieces[i].pos.z);
 			this.scene.rotate(-90 * this.degToRad, 1, 0, 0);
-			this.scene.registerForPick(this.boardPieces[i].id, this.boardPieces[i].primitive);
-			this.boardPieces[i].primitive.display();
+			this.scene.registerForPick(this.gamePieces[i].id, this.gamePieces[i].primitive);
+			this.gamePieces[i].primitive.display();
 		this.scene.popMatrix();
 	}
 };
@@ -154,12 +157,12 @@ PlayGameState.prototype.displayBoard = function() {
 PlayGameState.prototype.displayPiecesP1 = function() {
 	this.piecesP1Texture.apply();
 
-	for (var i = 0; i < this.piecesP1.length; i++) {
+	for (var i = 10; i < 19; i++) {
 		this.scene.pushMatrix();
-			this.scene.translate(this.piecesP1[i].x, this.piecesP1[i].y, this.piecesP1[i].z);
+			this.applyTransformations(this.gamePieces[i]);
 			this.scene.rotate(-90 * this.degToRad, 1, 0, 0);
-			this.scene.registerForPick(this.piecesP1[i].id, this.piecesP1[i].primitive);
-			this.piecesP1[i].primitive.display();
+			this.scene.registerForPick(this.gamePieces[i].id, this.gamePieces[i].primitive);
+			this.gamePieces[i].primitive.display();
 		this.scene.popMatrix();
 	}
 };
@@ -167,42 +170,90 @@ PlayGameState.prototype.displayPiecesP1 = function() {
 PlayGameState.prototype.displayPiecesP2 = function() {
 	this.piecesP2Texture.apply();
 
-	for (var i = 0; i < this.piecesP2.length; i++) {
+	for (var i = 19; i < 28; i++) {
 		this.scene.pushMatrix();
-			this.scene.translate(this.piecesP2[i].x, this.piecesP2[i].y, this.piecesP2[i].z);
+			this.applyTransformations(this.gamePieces[i]);
 			this.scene.rotate(-90 * this.degToRad, 1, 0, 0);
-			this.scene.registerForPick(this.piecesP2[i].id, this.piecesP2[i].primitive);
-			this.piecesP2[i].primitive.display();
+			this.scene.registerForPick(this.gamePieces[i].id, this.gamePieces[i].primitive);
+			this.gamePieces[i].primitive.display();
 		this.scene.popMatrix();
+	}
+};
+
+PlayGameState.prototype.applyTransformations = function(piece) {
+	if (this.animation != null && this.animationID == piece.id) {
+		if (this.animation.done == false) {
+			this.animation.applyAnimation(this.TIME);
+		} else {
+			this.animation = null;
+			this.scene.translate(piece.pos.x, piece.pos.y, piece.pos.z);
+		}
+	} else {
+		this.scene.translate(piece.pos.x, piece.pos.y, piece.pos.z);
 	}
 };
 
 PlayGameState.prototype.handleInput = function(pickResults) {
 	var ID = pickResults[0][1];
-	var currClick = this.pieceClicked(ID);
-	var lastClick = this.pieceClicked(this.LASTCLICKEDPIECE);
+	console.log(ID + ': ' + this.gamePieces[ID]);
 
-	if (this.WAITINGFORCLICK == false) {
-		this.LASTCLICKEDPIECE = ID;
-		this.WAITINGFORCLICK = true;
-	} else {
-		if (lastClick == 'pieceP1' && currClick == 'boardPiece') {
-			console.log('Placing piece');
-			this.WAITINGFORCLICK = false;
-		} else if (lastClick == 'pieceP2' && currClick == 'boardPiece') {
-			console.log('Placing piece');
-			this.WAITINGFORCLICK = false;
-		} else if (lastClick == 'pieceP1' && currClick == 'pieceP2') {
-			console.log('Moving piece');
-			this.WAITINGFORCLICK = false;
-		} else if (lastClick == 'pieceP2' && currClick == 'pieceP1') {
-			console.log('Moving piece');
-			this.WAITINGFORCLICK = false;
+	/*if (ID != null) {
+		if (this.WAITINGFORCLICK == false) {
+			this.LASTCLICKEDPIECE = ID;
+			this.WAITINGFORCLICK = true;
 		} else {
-			console.log('Do nothing!');
-			this.WAITINGFORCLICK = false;
+			if (lastClick == 'pieceP1' && currClick == 'boardPiece') {
+				console.log('Placing piece');
+
+				this.animationID = this.LASTCLICKEDPIECE;
+				this.animation = this.generateAnimation([ this.getPlayerP1Piece(this.LASTCLICKEDPIECE).x,
+														  this.getPlayerP1Piece(this.LASTCLICKEDPIECE).y,
+														  this.getPlayerP1Piece(this.LASTCLICKEDPIECE).z ],
+														[ this.getBoardPiece(ID).x,
+														  this.getBoardPiece(ID).y + 0.1,
+														  this.getBoardPiece(ID).z ]);
+
+				this.getPlayerP1Piece(this.LASTCLICKEDPIECE).x = this.getBoardPiece(ID).x;
+				this.getPlayerP1Piece(this.LASTCLICKEDPIECE).y = this.getBoardPiece(ID).y + 0.1;
+				this.getPlayerP1Piece(this.LASTCLICKEDPIECE).z = this.getBoardPiece(ID).z;
+
+				this.WAITINGFORCLICK = false;
+			} else if (lastClick == 'pieceP2' && currClick == 'boardPiece') {
+				console.log('Placing piece');
+
+				this.animationID = this.LASTCLICKEDPIECE;
+				this.animation = this.generateAnimation([ this.getPlayerP2Piece(this.LASTCLICKEDPIECE).x,
+														  this.getPlayerP2Piece(this.LASTCLICKEDPIECE).y,
+														  this.getPlayerP2Piece(this.LASTCLICKEDPIECE).z ],
+														[ this.getBoardPiece(ID).x,
+														  this.getBoardPiece(ID).y + 0.1,
+														  this.getBoardPiece(ID).z ]);
+
+				this.getPlayerP2Piece(this.LASTCLICKEDPIECE).x = this.getBoardPiece(ID).x;
+				this.getPlayerP2Piece(this.LASTCLICKEDPIECE).y = this.getBoardPiece(ID).y + 0.1;
+				this.getPlayerP2Piece(this.LASTCLICKEDPIECE).z = this.getBoardPiece(ID).z;
+
+				this.WAITINGFORCLICK = false;
+			} else if (lastClick == 'pieceP1' && currClick == 'pieceP2') {
+				console.log('Moving piece');
+				this.WAITINGFORCLICK = false;
+			} else if (lastClick == 'pieceP2' && currClick == 'pieceP1') {
+				console.log('Moving piece');
+				this.WAITINGFORCLICK = false;
+			} else {
+				console.log('Do nothing!');
+				this.WAITINGFORCLICK = false;
+			}
 		}
-	}
+	}*/
+};
+
+PlayGameState.prototype.generateAnimation = function(begin, end) {
+	var cP = [ new Point3(begin[0], begin[1], begin[2]),
+			   new Point3(begin[0], begin[1] + 1.0, begin[2]),
+			   new Point3(end[0], end[1] + 1.0, end[2]);
+			   new Point3(end[0], end[1], end[2]) ];
+	return new LinearAnimation(this.scene, 'animation', 3.0, 'linear', cP);
 };
 
 PlayGameState.prototype.pieceClicked = function(ID) {

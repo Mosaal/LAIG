@@ -31,7 +31,7 @@ XMLscene.prototype.init = function(application) {
 
 	this.setPickEnabled(true);
 	this.enableTextures(true);
-	this.setUpdatePeriod(1000 / 60);
+	this.setUpdatePeriod(1000 / 120);
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -276,8 +276,8 @@ XMLscene.prototype.display = function() {
 	this.applyViewMatrix();
 
 	// Draw axis
-	// if (this.graph.axisLength > 0)
-	this.axis.display();
+	if (this.graph.axisLength > 0)
+		this.axis.display();
 
 	this.setDefaultAppearance();
 	// this.camera.rotate([ 0, 1, 0 ], 1);

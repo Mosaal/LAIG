@@ -44,11 +44,9 @@ function Component(id, textureId) {
 	this.transformation = null;
 }
 
-function GamePiece(x, y, z, id, type, primitive) {
-	this.x = x;
-	this.y = y;
-	this.z = z;
+function GamePiece(pos, id, type, primitive) {
 	this.id = id;
+	this.pos = pos;
 	this.type = type;
 	this.primitive = primitive;
 }

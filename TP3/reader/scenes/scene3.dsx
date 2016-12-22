@@ -1,5 +1,5 @@
 <dsx>
-	<scene root="root" axis_length="2.0" />
+	<scene root="root" axis_length="0.0" />
 
 	<views default="p1View">
 		<perspective id="p1View" near="0.01" far="500.0" angle="57.3">
