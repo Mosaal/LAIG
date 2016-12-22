@@ -9,10 +9,6 @@ MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 
 	this.gui = new dat.GUI();
-
-	this.animations = this.gui.addFolder("Animations");
-	this.animations.open();
-
 	this.lights = this.gui.addFolder("Lights");
 	this.lights.open();
 
@@ -27,11 +23,6 @@ MyInterface.prototype.init = function(application) {
  */
 MyInterface.prototype.addLight = function(light, type, index) {
 	this.lights.add(light, 'enabled').name(type + " #" + index);
-};
-
-MyInterface.prototype.addLoopState = function(loop, fps) {
-	this.animations.add(loop, 'loop').name('Loop');
-	this.animations.add(fps, 'VALUE', 1, 120).name('FPS');
 };
 
 MyInterface.prototype.processKeyDown = function(event) {

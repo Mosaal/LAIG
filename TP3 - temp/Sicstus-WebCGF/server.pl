@@ -109,4 +109,6 @@ parse_input(quit, goodbye).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
-	
+
+% Tests
+parse_input(placePiece(X, P), placed) :- format('~w in pos ~w', [X, P]).

@@ -19,6 +19,9 @@ serialInclude([ '../lib/CGF.js',
 
                 'classes/GameState.js',
                 'classes/ModeGameState.js',
+                'classes/DifficultyGameState.js',
+                'classes/BoardGameState.js',
+                'classes/PlayGameState.js',
                 'classes/GameStateManager.js',
 
                 'animations/Animation.js',
@@ -36,6 +39,7 @@ serialInclude([ '../lib/CGF.js',
                 'primitives/Piramide.js',
                 'primitives/Vehicle.js',
                 'primitives/Chessboard.js',
+                'primitives/Box.js',
 
 main=function()
 {

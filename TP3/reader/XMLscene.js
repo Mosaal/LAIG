@@ -22,9 +22,6 @@ XMLscene.prototype.init = function(application) {
 
 	this.axis = new CGFaxis(this);
 
-	this.FPS = { VALUE: 120 };
-	this.loop = { loop: false };
-
 	this.currTime = 0;
 	this.viewIndex = 0;
 	this.degToRad = Math.PI / 180.0;
@@ -32,9 +29,9 @@ XMLscene.prototype.init = function(application) {
 	this.gsm = new GameStateManager(this);
 	this.gsm.setState(this.gsm.MODE);
 
-	this.enableTextures(true);
 	this.setPickEnabled(true);
-	this.setUpdatePeriod(1000 / this.FPS.VALUE);
+	this.enableTextures(true);
+	this.setUpdatePeriod(1000 / 60);
 };
 
 XMLscene.prototype.initCamera = function() {
@@ -129,7 +126,6 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
  */
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
-	this.interface.addLoopState(this.loop, this.FPS);
 
 	for (var i = 0; i < this.graph.omnis.length; i++)
 		this.interface.addLight(this.lights[i], 'Omni', i);
@@ -181,20 +177,11 @@ XMLscene.prototype.applyTransformations = function(transformations) {
 
 XMLscene.prototype.applyAnimations = function(animations) {
 	if (animations != null) {
-		var allDone = true;
-
 		for (var i = 0; i < animations.length; i++) {
 			if (animations[i].done == false) {
-				allDone = false;
 				animations[i].applyAnimation(this.currTime);
 				break;
 			}
-		}
-
-		if (allDone && this.loop.loop) {
-			for (var i = 0; i < animations.length; i++)
-				animations[i].resetAnimation();
-			animations[0].applyAnimation(this.currTime);
 		}
 	}
 };
@@ -255,27 +242,21 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 
 XMLscene.prototype.update = function(currTime) {
 	this.gsm.update(currTime);
+};
 
-	if (this.graph.loadedOk) {
-		this.currTime = currTime;
-		this.setUpdatePeriod(1000 / this.FPS.VALUE);
-	}
+XMLscene.prototype.updateLights = function() {
+	for (var i = 0; i < this.lights.length; i++)
+		this.lights[i].update();
 };
 
 XMLscene.prototype.logPicking = function() {
 	if (this.pickMode == false) {
 		if (this.pickResults != null && this.pickResults.length > 0) {
-			for (var i = 0; i < this.pickResults.length; i++) {
-				var obj = this.pickResults[i][0];
-				if (obj) {
-					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj + ", with pick id " + customId);
-				}
-			}
+			this.gsm.handleInput(this.pickResults);
 			this.pickResults.splice(0, this.pickResults.length);
 		}		
 	}
-}
+};
 
 XMLscene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
@@ -285,6 +266,7 @@ XMLscene.prototype.display = function() {
 	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+	this.gl.enable(this.gl.DEPTH_TEST);
 
 	// Initialize Model-View matrix as identity (no transformation
 	this.updateProjectionMatrix();
@@ -294,24 +276,20 @@ XMLscene.prototype.display = function() {
 	this.applyViewMatrix();
 
 	// Draw axis
-	if (this.graph.axisLength > 0)
-		this.axis.display();
-	this.setDefaultAppearance();
+	// if (this.graph.axisLength > 0)
+	this.axis.display();
 
-	this.interface.setActiveCamera(this.camera);
+	this.setDefaultAppearance();
+	// this.camera.rotate([ 0, 1, 0 ], 1);
+	// this.interface.setActiveCamera(this.camera);
 
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
-	if (this.graph.loadedOk == true) {
-		for (var i = 0; i < this.lights.length; i++)
-			this.lights[i].update();
-
+	if (this.graph.loadedOk) {
+		this.updateLights();
 		this.gsm.display();
-		// Start drawing primitives
-		// var comp = this.graph.components[this.graph.root];
-		// this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
 	}
 };

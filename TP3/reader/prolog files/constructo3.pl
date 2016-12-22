@@ -2,6 +2,7 @@
 :- use_module(library(random)).
 :- ['constructo3Interface.pl'].
 :- ['constructo3AI.pl'].
+:- ['server.pl'].
 
 :- dynamic turn/1.
 turn(pl1).

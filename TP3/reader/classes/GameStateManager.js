@@ -1,11 +1,16 @@
 function GameStateManager(scene) {
+	// GAME STATES
 	this.MODE = 0;
 	this.DIFFICULTY = 1;
 	this.BOARD = 2;
 	this.PLAY = 3;
 	this.END = 4;
+
+	// VARS
 	this.scene = scene;
 	this.gameState = null;
+	this.gameSettings = { mode: 0, difficulty: 0, board: 0 };
+	this.gameInfo = { rounds: 0, pointsP1: 0, pointsP2: 0, playsP1: 0, playsP2: 0, elapsedTime: 0 };
 }
 
 GameStateManager.prototype.setState = function(state) {
@@ -17,12 +22,16 @@ GameStateManager.prototype.setState = function(state) {
 			this.gameState = new ModeGameState(this, this.scene);
 			break;
 		case this.DIFFICULTY:
+			this.gameState = new DifficultyGameState(this, this.scene);
 			break;
 		case this.BOARD:
+			this.gameState = new BoardGameState(this, this.scene);
 			break;
 		case this.PLAY:
+			this.gameState = new PlayGameState(this, this.scene);
 			break;
 		case this.END:
+			// this.gameState = new EndGameState(this, this.scene);
 			break;
 	}
 };
@@ -33,4 +42,8 @@ GameStateManager.prototype.update = function(deltaTime) {
 
 GameStateManager.prototype.display = function() {
 	this.gameState.display();
+};
+
+GameStateManager.prototype.handleInput = function(pickResults) {
+	this.gameState.handleInput(pickResults);
 };
