@@ -1,5 +1,6 @@
 function PlayGameState(gsm, scene) {
 	GameState.call(this, gsm, scene);
+	this.gameLogic = new GameLogic();
 
 	this.gamePieces = [];
 	this.gamePieces.push(null);
@@ -7,21 +8,11 @@ function PlayGameState(gsm, scene) {
 	this.animation = null;
 	this.degToRad = Math.PI / 180.0;
 
-	this.TIME = 0;
-	this.TURN = 1;
 	this.BOARD1 = 1;
 	this.BOARD2 = 2;
 	this.PIECEID = 1;
 	this.LASTCLICKEDPIECE = 0;
 	this.WAITINGFORCLICK = false;
-
-	this.SMALLPIECESP1 = 3;
-	this.MEDIUMPIECESP1 = 3;
-	this.BIGPIECESP1 = 3;
-
-	this.SMALLPIECESP2 = 3;
-	this.MEDIUMPIECESP2 = 3;
-	this.BIGPIECESP2 = 3;
 
 	this.generateBoard();
 	this.generatePiecesP1();

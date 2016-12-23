@@ -17,6 +17,7 @@ serialInclude([ '../lib/CGF.js',
                 'MySceneGraph.js',
                 'DataStructures.js',
 
+                'classes/GameLogic.js',
                 'classes/GameState.js',
                 'classes/ModeGameState.js',
                 'classes/DifficultyGameState.js',
