@@ -24,6 +24,8 @@ XMLscene.prototype.init = function(application) {
 
 	this.currTime = 0;
 	this.viewIndex = 0;
+	this.switchTurn = false;
+	this.cameraCurrAngle = 90;
 	this.degToRad = Math.PI / 180.0;
 
 	this.gsm = new GameStateManager(this);
@@ -249,6 +251,12 @@ XMLscene.prototype.updateLights = function() {
 		this.lights[i].update();
 };
 
+XMLscene.prototype.switchView = function() {
+	var newAngle = this.cameraCurrAngle-- * this.degToRad;
+	this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
+	console.log(this.camera.position);
+};
+
 XMLscene.prototype.logPicking = function() {
 	if (this.pickMode == false) {
 		if (this.pickResults != null && this.pickResults.length > 0) {
@@ -279,17 +287,18 @@ XMLscene.prototype.display = function() {
 	if (this.graph.axisLength > 0)
 		this.axis.display();
 
-	this.setDefaultAppearance();
-	// this.camera.rotate([ 0, 1, 0 ], 1);
-	// this.interface.setActiveCamera(this.camera);
+	// Orbit camera
+	if (this.switchTurn)
+		this.switchView();
+
+	// Display current game state
+	this.gsm.display();
 
 	// ---- END Background, camera and axis setup
-
 	// it is important that things depending on the proper loading of the graph
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
 		this.updateLights();
-		this.gsm.display();
 	}
 };
