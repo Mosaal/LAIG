@@ -47,5 +47,7 @@ function Component(id, textureId) {
 function GamePiece(pos, type, primitive) {
 	this.pos = pos;
 	this.type = type;
+	this.onBoard = false;
+	this.posOnBoard = null;
 	this.primitive = primitive;
 }

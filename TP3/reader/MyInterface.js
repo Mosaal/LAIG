@@ -8,9 +8,9 @@ MyInterface.prototype.constructor = MyInterface;
 MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 
-	this.gui = new dat.GUI();
-	this.lights = this.gui.addFolder("Lights");
-	this.lights.open();
+	// this.gui = new dat.GUI();
+	// this.lights = this.gui.addFolder("Lights");
+	// this.lights.open();
 
 	return true;
 };

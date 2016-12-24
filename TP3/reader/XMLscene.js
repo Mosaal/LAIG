@@ -24,6 +24,7 @@ XMLscene.prototype.init = function(application) {
 
 	this.currTime = 0;
 	this.viewIndex = 0;
+	this.cameraRadius = 0;
 	this.switchTurnP1 = false;
 	this.switchTurnP2 = false;
 	this.cameraCurrAngle = 90;
@@ -68,6 +69,7 @@ XMLscene.prototype.initAxisOnGraphLoaded = function() {
  */
 XMLscene.prototype.initCameraOnGraphLoaded = function() {
 	this.camera = this.graph.perspectives[this.graph.defaultView];
+	this.cameraRadius = this.camera.position[2];
 
 	for (var i = 0; i < this.graph.viewsIndex.length; i++) {
 		if (this.graph.viewsIndex[i] == this.graph.defaultView) {
@@ -130,11 +132,11 @@ XMLscene.prototype.initLightsOnGraphLoaded = function() {
 XMLscene.prototype.initInterfaceOnGraphLoaded = function() {
 	this.app.setInterface(this.interface);
 
-	for (var i = 0; i < this.graph.omnis.length; i++)
-		this.interface.addLight(this.lights[i], 'Omni', i);
+	// for (var i = 0; i < this.graph.omnis.length; i++)
+		// this.interface.addLight(this.lights[i], 'Omni', i);
 
-	for (var j = 0; j < this.graph.spots.length; j++)
-		this.interface.addLight(this.lights[i + j], 'Spot', j);
+	// for (var j = 0; j < this.graph.spots.length; j++)
+		// this.interface.addLight(this.lights[i + j], 'Spot', j);
 };
 
 /**
@@ -260,18 +262,20 @@ XMLscene.prototype.switchView = function() {
 };
 
 XMLscene.prototype.switchViewP1 = function() {
-	if (this.cameraCurrAngle <= 90) {
-		var newAngle = this.cameraCurrAngle-- * this.degToRad;
-		this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
+	if (this.cameraCurrAngle < 90) {
+		var pos = this.camera.position;
+		var newAngle = ++this.cameraCurrAngle * this.degToRad;
+		this.camera.setPosition(vec3.fromValues(this.cameraRadius * Math.cos(newAngle), pos[1], this.cameraRadius * Math.sin(newAngle)));
 	} else {
 		this.switchTurnP1 = false;
 	}
 };
 
 XMLscene.prototype.switchViewP2 = function() {
-	if (this.cameraCurrAngle >= -90) {
-		var newAngle = this.cameraCurrAngle-- * this.degToRad;
-		this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
+	if (this.cameraCurrAngle > -90) {
+		var pos = this.camera.position;
+		var newAngle = --this.cameraCurrAngle * this.degToRad;
+		this.camera.setPosition(vec3.fromValues(this.cameraRadius * Math.cos(newAngle), pos[1], this.cameraRadius * Math.sin(newAngle)));
 	} else {
 		this.switchTurnP2 = false;
 	}
@@ -300,6 +304,9 @@ XMLscene.prototype.display = function() {
 	this.updateProjectionMatrix();
 	this.loadIdentity();
 
+	// Elements that are not affected by the camera (HUD)
+	this.gsm.displayHUD();
+
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
@@ -309,7 +316,6 @@ XMLscene.prototype.display = function() {
 
 	// Orbit camera
 	this.switchView();
-
 	// this.interface.setActiveCamera(this.camera);
 
 	// ---- END Background, camera and axis setup

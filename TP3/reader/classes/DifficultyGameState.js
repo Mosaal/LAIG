@@ -24,18 +24,18 @@ DifficultyGameState.prototype.constructor = DifficultyGameState;
 
 DifficultyGameState.prototype.update = function(deltaTime) {};
 
-DifficultyGameState.prototype.display = function() {
+DifficultyGameState.prototype.display = function() {};
+
+DifficultyGameState.prototype.displayHUD = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(0.0, 3.0, 3.0);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(0.0, 0.0, -4.0);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.boardTexture.apply();
 		this.backBoard.display();
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(-1.1, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(-1.1, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.textureEasy.apply();
 		this.scene.registerForPick(this.EASY, this.planeEasy);
@@ -43,8 +43,7 @@ DifficultyGameState.prototype.display = function() {
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(1.1, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(1.1, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.textureHard.apply();
 		this.scene.registerForPick(this.HARD, this.planeHard);

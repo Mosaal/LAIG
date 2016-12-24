@@ -24,18 +24,18 @@ ModeGameState.prototype.constructor = ModeGameState;
 
 ModeGameState.prototype.update = function(deltaTime) {};
 
-ModeGameState.prototype.display = function() {
+ModeGameState.prototype.display = function() {};
+
+ModeGameState.prototype.displayHUD = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(0.0, 3.0, 3.0);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(0.0, 0.0, -4.0);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.boardTexture.apply();
 		this.backBoard.display();
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(-1.1, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(-1.1, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.texturePVP.apply();
 		this.scene.registerForPick(this.PVP, this.planePVP);
@@ -43,8 +43,7 @@ ModeGameState.prototype.display = function() {
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(1.3, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(1.3, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.texturePVC.apply();
 		this.scene.registerForPick(this.PVC, this.planePVC);

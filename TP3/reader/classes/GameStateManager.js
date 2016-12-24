@@ -44,6 +44,10 @@ GameStateManager.prototype.display = function() {
 	this.gameState.display();
 };
 
+GameStateManager.prototype.displayHUD = function() {
+	this.gameState.displayHUD();
+};
+
 GameStateManager.prototype.handleInput = function(pickResults) {
 	this.gameState.handleInput(pickResults);
 };

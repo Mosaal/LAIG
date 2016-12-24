@@ -112,6 +112,21 @@ test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 
 % Answers to the requests
+parse_input(retract_everything, retracted) :-
+	retract_everything.
+
+parse_input(assert_everything, asserted) :-
+	assert_everything.
+
+parse_input(switch_turn, switched) :-
+	switch_player.
+
+parse_input(round_over, round_is_over) :-
+	round_over.
+
+parse_input(game_over, game_is_over) :-
+	game_over.
+
 parse_input(game_mode(M), game_mode_set) :-
 	retract(game_mode(_)),
 	assert(game_mode(M)).
@@ -123,3 +138,13 @@ parse_input(difficulty(D), difficulty_set) :-
 parse_input(chosen_board(B), chosen_board_set) :-
 	retract(chosen_board(_)),
 	assert(chosen_board(B)).
+
+parse_input(place_piece_mod(X,P), placed) :-
+	piece_exists(X),
+	avaiable_pos_placement(P),
+	place_piece(X,P),
+	display_info.
+
+parse_input(move_piece_mod(P1,P2), moved) :-
+	move_piece(P1,P2),
+	display_info.

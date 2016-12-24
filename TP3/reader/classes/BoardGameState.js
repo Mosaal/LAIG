@@ -29,18 +29,18 @@ BoardGameState.prototype.constructor = BoardGameState;
 
 BoardGameState.prototype.update = function(deltaTime) {};
 
-BoardGameState.prototype.display = function() {
+BoardGameState.prototype.display = function() {};
+
+BoardGameState.prototype.displayHUD = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(0.0, 3.0, 3.0);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(0.0, 0.0, -4.0);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.boardTexture.apply();
 		this.backBoard.display();
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(-1.4, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(-1.4, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.textureBoard1.apply();
 		this.scene.registerForPick(this.BOARD1, this.planeBoard1);
@@ -48,8 +48,7 @@ BoardGameState.prototype.display = function() {
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(-0.22, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(-0.22, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.textureBoard2.apply();
 		this.scene.registerForPick(this.BOARD2, this.planeBoard2);
@@ -57,8 +56,7 @@ BoardGameState.prototype.display = function() {
 	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
-		this.scene.translate(1.2, 3.0, 3.05);
-		this.scene.rotate(-45 * this.degToRad, 1, 0, 0);
+		this.scene.translate(1.2, 0.0, -3.95);
 		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
 		this.textureBoard3.apply();
 		this.scene.registerForPick(this.BOARD3, this.planeBoard3);
