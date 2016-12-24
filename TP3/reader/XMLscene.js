@@ -24,7 +24,8 @@ XMLscene.prototype.init = function(application) {
 
 	this.currTime = 0;
 	this.viewIndex = 0;
-	this.switchTurn = false;
+	this.switchTurnP1 = false;
+	this.switchTurnP2 = false;
 	this.cameraCurrAngle = 90;
 	this.degToRad = Math.PI / 180.0;
 
@@ -252,9 +253,28 @@ XMLscene.prototype.updateLights = function() {
 };
 
 XMLscene.prototype.switchView = function() {
-	var newAngle = this.cameraCurrAngle-- * this.degToRad;
-	this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
-	console.log(this.camera.position);
+	if (this.switchTurnP1)
+		this.switchViewP1();
+	if (this.switchTurnP2)
+		this.switchViewP2();
+};
+
+XMLscene.prototype.switchViewP1 = function() {
+	if (this.cameraCurrAngle <= 90) {
+		var newAngle = this.cameraCurrAngle-- * this.degToRad;
+		this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
+	} else {
+		this.switchTurnP1 = false;
+	}
+};
+
+XMLscene.prototype.switchViewP2 = function() {
+	if (this.cameraCurrAngle >= -90) {
+		var newAngle = this.cameraCurrAngle-- * this.degToRad;
+		this.camera.setPosition(vec3.fromValues(6 * Math.cos(newAngle), 6.0, 6 * Math.sin(newAngle)));
+	} else {
+		this.switchTurnP2 = false;
+	}
 };
 
 XMLscene.prototype.logPicking = function() {
@@ -288,17 +308,18 @@ XMLscene.prototype.display = function() {
 		this.axis.display();
 
 	// Orbit camera
-	if (this.switchTurn)
-		this.switchView();
+	this.switchView();
 
-	// Display current game state
-	this.gsm.display();
+	// this.interface.setActiveCamera(this.camera);
 
 	// ---- END Background, camera and axis setup
 	// it is important that things depending on the proper loading of the graph
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
+		// Update lights according to the cameras position
 		this.updateLights();
+		// Display current game state
+		this.gsm.display();
 	}
 };

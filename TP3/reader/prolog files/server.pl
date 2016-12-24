@@ -1,6 +1,7 @@
 :-use_module(library(sockets)).
 :-use_module(library(lists)).
 :-use_module(library(codesio)).
+:-set_prolog_flag(discontiguous_warnings, off).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                                        Server                                                   %%%%
@@ -111,5 +112,14 @@ test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 
 % Answers to the requests
-parse_input(movePiece, moved).
-parse_input(placePiece, placed).
+parse_input(game_mode(M), game_mode_set) :-
+	retract(game_mode(_)),
+	assert(game_mode(M)).
+
+parse_input(difficulty(D), difficulty_set) :-
+	retract(difficulty(_)),
+	assert(difficulty(D)).
+
+parse_input(chosen_board(B), chosen_board_set) :-
+	retract(chosen_board(_)),
+	assert(chosen_board(B)).
