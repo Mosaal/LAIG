@@ -3,7 +3,10 @@ function GameLogic(gameState) {
 
 	this.TIME = 0;
 	this.TURN = 1;
-	this.ROUND = 1;
+
+	this.SP = 'sp';
+	this.MP = 'mp';
+	this.BP = 'bp';
 
 	this.PVP = 1;
 	this.PVC = 2;
@@ -50,15 +53,11 @@ GameLogic.prototype.switchTurn = function() {
 };
 
 GameLogic.prototype.roundOver = function() {
-	// this.sendPrologRequest("round_over", this.gameState);
-};
-
-GameLogic.prototype.gameOver = function() {
-	// this.sendPrologRequest("game_over", this.gameState);
+	this.sendPrologRequest("round_over", this.gameState, "ROUND");
 };
 
 GameLogic.prototype.countPoints = function() {
-	this.sendPrologRequest("count_points_players");
+	// this.sendPrologRequest("count_points_players");
 };
 
 GameLogic.prototype.getPointsByPlayer = function(player) {
@@ -68,22 +67,34 @@ GameLogic.prototype.getPointsByPlayer = function(player) {
 		// this.sendPrologRequest("get_points_player");
 };
 
+GameLogic.prototype.chooseAIPlay = function() {
+	// this.sendPrologRequest("choose_move", this.gameState, "AIPLAY");
+};
+
 GameLogic.prototype.placePiece = function(piece, pos) {
 	if (!piece.onBoard) {
 		piece.onBoard = true;
 		piece.posOnBoard = pos;
-		this.sendPrologRequest("place_piece_mod(" + piece.type + "," + pos + ")", this.gameState);
+		this.sendPrologRequest("place_piece_mod(" + piece.type + "," + pos + ")", this.gameState, "PLAY");
 	}
 };
 
 GameLogic.prototype.movePiece = function(piece1, piece2) {
 	if (piece1.onBoard && piece2.onBoard) {
-		this.sendPrologRequest("move_piece_mod(" + piece1.posOnBoard + "," + piece2.posOnBoard + ")", this.gameState);
-		piece1.posOnBoard = piece2.posOnBoard;
+		if (piece1.type == this.SP && piece2.type == this.MP) {
+			this.sendPrologRequest("move_piece_mod(" + piece1.posOnBoard + "," + piece2.posOnBoard + ")", this.gameState, "PLAY");
+			piece1.posOnBoard = piece2.posOnBoard;
+		} else if (piece1.type == this.MP && piece2.type == this.BP) {
+			this.sendPrologRequest("move_piece_mod(" + piece1.posOnBoard + "," + piece2.posOnBoard + ")", this.gameState, "PLAY");
+			piece1.posOnBoard = piece2.posOnBoard;
+		} else if (piece1.type == this.BP && piece2.type == this.SP) {
+			this.sendPrologRequest("move_piece_mod(" + piece1.posOnBoard + "," + piece2.posOnBoard + ")", this.gameState, "PLAY");
+			piece1.posOnBoard = piece2.posOnBoard;
+		}
 	}
 };
 
-GameLogic.prototype.sendPrologRequest = function(requestString, gameState) {
+GameLogic.prototype.sendPrologRequest = function(requestString, gameState, condition) {
 	var requestPort = 8081;
 	var request = new XMLHttpRequest();
 	request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
@@ -91,8 +102,15 @@ GameLogic.prototype.sendPrologRequest = function(requestString, gameState) {
 	console.log("Sending ProLog Request: " + requestString);
 	
 	request.onload = function(data) {
-		if (gameState != null && data.target.response != 'Bad Request')
-			gameState.success = true;
+		if (gameState != null && data.target.response != 'Bad Request') {
+			if (condition == "PLAY") {
+				gameState.successfulPlay = true;
+			} else if (condition == "AIPLAY") {
+				// do something
+			} else if (condition == "ROUND") {
+				gameState.roundOver = true;
+			}
+		}
 		console.log("ProLog request successful. Reply: " + data.target.response);
 	};
 	request.onerror = function() {

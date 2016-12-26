@@ -1,9 +1,11 @@
 function PlayGameState(gsm, scene) {
 	GameState.call(this, gsm, scene);
 
-	this.success = false;
 	this.gameLogic = new GameLogic(this);
 	this.gameLogic.init();
+
+	this.roundOver = false;
+	this.successfulPlay = false;
 
 	this.gamePieces = [];
 	this.gamePieces.push(null);
@@ -25,11 +27,15 @@ function PlayGameState(gsm, scene) {
 	this.generatePiecesP2();
 
 	this.timerBoard = new Plane(this.scene, 2.5, 1, 50, 50);
+	this.gameOverBoard = new Plane(this.scene, 5, 3, 50, 50);
 	this.pointsP1Board = new Plane(this.scene, 2, 1, 50, 50);
 	this.pointsP2Board = new Plane(this.scene, 2, 1, 50, 50);
 
 	this.boardTexture = new CGFappearance(this.scene);
 	this.boardTexture.loadTexture("images/backBoard.png");
+
+	this.gameOverTexture = new CGFappearance(this.scene);
+	this.gameOverTexture.loadTexture("images/gameOver.png");
 
 	this.boardPieceTexture = new CGFappearance(this.scene);
 	this.boardPieceTexture.loadTexture("images/gameBoard.png");
@@ -121,9 +127,11 @@ PlayGameState.prototype.generatePiecesP2 = function() {
 PlayGameState.prototype.update = function(deltaTime) {
 	this.TIME = deltaTime;
 
-	if (this.success) {
-		this.success = false;
+	if (this.successfulPlay) {
+		this.successfulPlay = false;
 		this.gameLogic.switchTurn();
+		this.gameLogic.roundOver();
+		// count points
 		this.animationID = this.LASTCLICKEDPIECE;
 		this.generateAnimation(this.gamePieces[this.LASTCLICKEDPIECE].pos, this.gamePieces[this.CURRCLICKEDPIECE].pos, 0.1);
 		this.setNewPosition(this.gamePieces[this.LASTCLICKEDPIECE], this.gamePieces[this.CURRCLICKEDPIECE], 0.1);
@@ -176,25 +184,34 @@ PlayGameState.prototype.displayPiecesP2 = function() {
 };
 
 PlayGameState.prototype.displayHUD = function() {
-	this.boardTexture.apply();
+	if (this.roundOver && this.animation == null) {
+		this.scene.pushMatrix();
+			this.scene.translate(0.0, 0.0, -4.0);
+			this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
+			this.gameOverTexture.apply();
+			this.gameOverBoard.display();
+		this.scene.popMatrix();
+	} else {
+		this.boardTexture.apply();
 
-	this.scene.pushMatrix();
-		this.scene.translate(0.0, 2.8, -6.0);
-		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
-		this.timerBoard.display();
-	this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.scene.translate(0.0, 2.8, -6.0);
+			this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
+			this.timerBoard.display();
+		this.scene.popMatrix();
 
-	this.scene.pushMatrix();
-		this.scene.translate(-5.1, 2.8, -6.0);
-		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
-		this.pointsP1Board.display();
-	this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.scene.translate(-5.1, 2.8, -6.0);
+			this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
+			this.pointsP1Board.display();
+		this.scene.popMatrix();
 
-	this.scene.pushMatrix();
-		this.scene.translate(5.1, 2.8, -6.0);
-		this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
-		this.pointsP1Board.display();
-	this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.scene.translate(5.1, 2.8, -6.0);
+			this.scene.rotate(-180 * this.degToRad, 0, 0, 1);
+			this.pointsP1Board.display();
+		this.scene.popMatrix();
+	}
 };
 
 PlayGameState.prototype.applyTransformations = function(ID, position) {
@@ -220,7 +237,8 @@ PlayGameState.prototype.applyTransformations = function(ID, position) {
 };
 
 PlayGameState.prototype.allowInput = function() {
-	return this.CURRCLICKEDPIECE != null && this.animation == null && !this.scene.switchTurnP1 && !this.scene.switchTurnP2;
+	return this.CURRCLICKEDPIECE != null && this.animation == null
+			&& !this.roundOver && !this.scene.switchTurnP1 && !this.scene.switchTurnP2;
 };
 
 PlayGameState.prototype.handleInput = function(pickResults) {
@@ -229,23 +247,29 @@ PlayGameState.prototype.handleInput = function(pickResults) {
 	var lastClick = this.pieceClicked(this.LASTCLICKEDPIECE);
 
 	if (this.allowInput()) {
-		if (!this.WAITINGFORCLICK) {
-			this.WAITINGFORCLICK = true;
-			this.LASTCLICKEDPIECE = this.CURRCLICKEDPIECE;
-		} else {
-			this.WAITINGFORCLICK = false;
+		if (this.gsm.gameSettings.mode == this.gameLogic.PVP) {
+			if (!this.WAITINGFORCLICK) {
+				this.WAITINGFORCLICK = true;
+				this.LASTCLICKEDPIECE = this.CURRCLICKEDPIECE;
+			} else {
+				this.WAITINGFORCLICK = false;
 
-			if (this.gsm.gameSettings.mode == this.gameLogic.PVP) {
-				if (lastClick == 'pieceP1' && currClick == 'boardPiece' && this.gameLogic.TURN == 1) {
-					this.gameLogic.placePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.CURRCLICKEDPIECE);
-				} else if (lastClick == 'pieceP2' && currClick == 'boardPiece' && this.gameLogic.TURN == 2) {
-					this.gameLogic.placePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.CURRCLICKEDPIECE);
-				} else if (lastClick == 'pieceP1' && currClick == 'pieceP2' && this.gameLogic.TURN == 1) {
-					this.gameLogic.movePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.gamePieces[this.CURRCLICKEDPIECE]);
-				} else if (lastClick == 'pieceP2' && currClick == 'pieceP1' && this.gameLogic.TURN == 2) {
-					this.gameLogic.movePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.gamePieces[this.CURRCLICKEDPIECE]);
+				if (this.gameLogic.TURN == 1) {
+					if (lastClick == 'pieceP1' && currClick == 'boardPiece') {
+						this.gameLogic.placePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.CURRCLICKEDPIECE);
+					} else if (lastClick == 'pieceP1' && currClick == 'pieceP2') {
+						this.gameLogic.movePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.gamePieces[this.CURRCLICKEDPIECE]);
+					}
+				} else if (this.gameLogic.TURN == 2) {
+					if (lastClick == 'pieceP2' && currClick == 'boardPiece') {
+						this.gameLogic.placePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.CURRCLICKEDPIECE);
+					} else if (lastClick == 'pieceP2' && currClick == 'pieceP1') {
+						this.gameLogic.movePiece(this.gamePieces[this.LASTCLICKEDPIECE], this.gamePieces[this.CURRCLICKEDPIECE]);
+					}
 				}
 			}
+		} else if (this.gsm.gameSettings.mode == this.gameLogic.PVC) {
+
 		}
 	}
 };

@@ -124,8 +124,9 @@ parse_input(switch_turn, switched) :-
 parse_input(round_over, round_is_over) :-
 	round_over.
 
-parse_input(game_over, game_is_over) :-
-	game_over.
+parse_input(choose_move, move_chosen) :-
+	choose_move,
+	display_info.
 
 parse_input(game_mode(M), game_mode_set) :-
 	retract(game_mode(_)),
