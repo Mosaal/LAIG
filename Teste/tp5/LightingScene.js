@@ -120,9 +120,15 @@ LightingScene.prototype.init = function(application) {
 	// this.uranus = new MySphere(this, 1, 100, 100);
 	// this.neptune = new MySphere(this, 1, 100, 100);
 	// this.pluto = new MySphere(this, 1, 100, 100);
+
+
+	this.ring = new MyBigPiece(this, 20);
+	/*
 	this.ring = new RingPrimitive(this, 24, 0.4, 0.25);
 	this.innerbody = new Cylinder(this, 0.25, 0.25, 0.15, 24, 3);
 	this.outterbody = new Cylinder(this, 0.4, 0.4, 0.15, 24, 3);
+
+	*/
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
@@ -342,7 +348,7 @@ LightingScene.prototype.display = function() {
 	this.pushMatrix();
   
   this.rotate(-90*degToRad,1,0,0);
-  
+  /*
     this.pushMatrix();
     // this.scale(-1,1,1);
     this.innerbody.display();
@@ -356,7 +362,7 @@ LightingScene.prototype.display = function() {
     this.rotate(180*degToRad,1,0,0);
     this.translate(0,0,-0.15);
     this.ring.display();
-    this.popMatrix();
+    this.popMatrix();*/
     
     this.pushMatrix();
     this.ring.display();

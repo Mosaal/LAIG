@@ -32,6 +32,7 @@ serialInclude([
 	'GamePiece.js',
 	'GamePieceLarge.js',
 	'RingPrimitive.js',
+	'MyCurveBezier.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);
