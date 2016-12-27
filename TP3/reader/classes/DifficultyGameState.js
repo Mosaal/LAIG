@@ -61,5 +61,7 @@ DifficultyGameState.prototype.handleInput = function(pickResults) {
 			this.gsm.gameSettings.difficulty = this.HARD;
 			this.gsm.setState(this.gsm.BOARD);
 			break;
+		default:
+			console.error("The selection of this Object is ignored!");
 	}
 };

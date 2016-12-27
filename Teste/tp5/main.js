@@ -28,10 +28,10 @@ serialInclude([
 	'MyTorus.js',
 	'MyDiamond.js',
 	'MySquare.js',
-	'MyBigPiece.js',
+	'RingPrimitive.js',
+	'CylinderPrimitive.js',
 	'GamePiece.js',
 	'GamePieceLarge.js',
-	'RingPrimitive.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);

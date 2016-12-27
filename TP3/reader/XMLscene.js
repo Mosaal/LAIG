@@ -236,6 +236,7 @@ XMLscene.prototype.processGraph = function(componentID, preMaterialID, preTextur
 		}
 
 		material.apply();
+		this.registerForPick(300 + i, component.primitives[i]);
 		this.graph.primitives[component.primitives[i]].display();
 	}
 
@@ -327,5 +328,8 @@ XMLscene.prototype.display = function() {
 		this.updateLights();
 		// Display current game state
 		this.gsm.display();
+		// Display scene
+		var comp = this.graph.components[this.graph.root];
+		this.processGraph(this.graph.root, comp.materials[comp.matIndex], comp.textureId);
 	}
 };

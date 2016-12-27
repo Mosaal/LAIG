@@ -103,13 +103,47 @@ print_header_line(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Require your Prolog Files here
-
 parse_input(handshake, handshake).
 parse_input(test(C,N), Res) :- test(C,Res,N).
 parse_input(quit, goodbye).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
+
+% Modified functions
+choose_move_mod(X,P,P1,P2) :-
+	difficulty(e),
+	choose_random_move_mod(X,P,P1,P2), !;
+	difficulty(h),
+	choose_wise_move_mod(X,P,P1,P2).
+
+choose_random_move_mod(X,P,P1,P2) :-
+	random(0, 2, N),
+	(N = 0, choose_random_piece(X),
+			piece_exists(X),
+			choose_random_position(P),
+			place_piece(X, P),
+			display_chosen(X, P), !;
+	(N = 1, choose_first_possible_move(P1, P2, V1, V2),
+			check_creates_tower(V1, V2, NV),
+			create_tower(P1, P2, NV),
+			format('The PC moved a piece from position number ~w to position number ~w!\n\n', [P1, P2]), !));
+	choose_random_move.
+
+choose_wise_move_mod(X,P,P1,P2) :-
+	choose_first_possible_move(P1, P2, V1, V2),
+	check_creates_tower(V1, V2, NV),
+	create_tower(P1, P2, NV),
+	format('The PC moved a piece from position number ~w to position number ~w!\n\n', [P1, P2]), !;
+	choose_placement_board(P, V),
+	choose_piece_acordingly(V, X),
+	place_piece(X, P),
+	display_chosen(X, P), !;
+	choose_random_piece(X),
+	piece_exists(X),
+	choose_random_position(P),
+	place_piece(X, P),
+	display_chosen(X, P), !.
 
 % Answers to the requests
 parse_input(retract_everything, retracted) :-
@@ -124,8 +158,14 @@ parse_input(switch_turn, switched) :-
 parse_input(round_over, round_is_over) :-
 	round_over.
 
-parse_input(choose_move, move_chosen) :-
-	choose_move,
+parse_input(count_points_players, points(P1,P2)) :-
+	count_points_players,
+	points_player_1(P1),
+	points_player_2(P2),
+	format('P1: ~w | P2: ~w\n', [P1, P2]).
+
+parse_input(choose_move, move_chosen(X,P,P1,P2)) :-
+	choose_move_mod(X,P,P1,P2),
 	display_info.
 
 parse_input(game_mode(M), game_mode_set) :-
@@ -140,12 +180,12 @@ parse_input(chosen_board(B), chosen_board_set) :-
 	retract(chosen_board(_)),
 	assert(chosen_board(B)).
 
-parse_input(place_piece_mod(X,P), placed) :-
+parse_input(place_piece(X,P), placed) :-
 	piece_exists(X),
 	avaiable_pos_placement(P),
 	place_piece(X,P),
 	display_info.
 
-parse_input(move_piece_mod(P1,P2), moved) :-
+parse_input(move_piece(P1,P2), moved) :-
 	move_piece(P1,P2),
 	display_info.

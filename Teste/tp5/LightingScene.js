@@ -89,6 +89,9 @@ LightingScene.prototype.init = function(application) {
 	// this.minHourAppearance.loadTexture("resources/images/black.png");
 
 	// Scene elements
+	this.tex = new CGFtexture(this, "resources/images/wood.jpg");
+	this.bp = new GamePieceLarge(this, '', 0, 0, 1, this.tex, 'White');
+
 	// this.clock = new MyClock(this);
 	// this.table = new MyTable(this);
 	// this.leg = new Leg(this);
@@ -101,10 +104,6 @@ LightingScene.prototype.init = function(application) {
 	// this.cylinder = new MyCylinder(this, 10, 8);
 	// this.plane = new NewPlane(this, 4, 4, 100, 100);
 	// this.vehicle = new Vehicle(this);
-	// this.chess = new Chessboard(this, 8, 8, 2, 4, "resources/images/wood.jpg",
-	/*							[ 1.0, 1.0, 1.0, 0.0 ],
-								[ 0.0, 0.0, 0.0, 1.0 ],
-								[ 1.0, 0.0, 0.0, 1.0 ]);*/
 
 	// Scene elements - TEMP
 	// this.universe = new MySphere(this, 1, 100, 100);
@@ -120,9 +119,6 @@ LightingScene.prototype.init = function(application) {
 	// this.uranus = new MySphere(this, 1, 100, 100);
 	// this.neptune = new MySphere(this, 1, 100, 100);
 	// this.pluto = new MySphere(this, 1, 100, 100);
-	this.ring = new RingPrimitive(this, 24, 0.4, 0.25);
-	this.innerbody = new Cylinder(this, 0.25, 0.25, 0.15, 24, 3);
-	this.outterbody = new Cylinder(this, 0.4, 0.4, 0.15, 24, 3);
 
 	// Materials
 	// this.materialDefault = new CGFappearance(this);
@@ -152,28 +148,26 @@ LightingScene.prototype.init = function(application) {
 	// this.materialD.setSpecular(0.7,0.7,0.7,1);
 	// this.materialD.setShininess(120);
 
+	// this.boardAppearance = new CGFappearance(this);
+	// this.boardAppearance.loadTexture("resources/images/tabuleiro.jpg");
+	// this.boardAppearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	// this.boardAppearance.setSpecular(0.1, 0.1, 0.1, 1);
+	// this.boardAppearance.setShininess(20);
+	// this.boardAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
+	// this.p1Appearance = new CGFappearance(this);
+	// this.p1Appearance.loadTexture("resources/images/wood.jpg");
+	// this.p1Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	// this.p1Appearance.setSpecular(0.1, 0.1, 0.1, 1);
+	// this.p1Appearance.setShininess(20);
+	// this.p1Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
-	this.boardAppearance = new CGFappearance(this);
-	this.boardAppearance.loadTexture("resources/images/tabuleiro.jpg");
-	this.boardAppearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.boardAppearance.setSpecular(0.1, 0.1, 0.1, 1);
-	this.boardAppearance.setShininess(20);
-	this.boardAppearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
-
-	this.p1Appearance = new CGFappearance(this);
-	this.p1Appearance.loadTexture("resources/images/wood.jpg");
-	this.p1Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.p1Appearance.setSpecular(0.1, 0.1, 0.1, 1);
-	this.p1Appearance.setShininess(20);
-	this.p1Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
-
-	this.p2Appearance = new CGFappearance(this);
-	this.p2Appearance.loadTexture("resources/images/wood2.jpg");
-	this.p2Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
-	this.p2Appearance.setSpecular(0.1, 0.1, 0.1, 1);
-	this.p2Appearance.setShininess(20);
-	this.p2Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
+	// this.p2Appearance = new CGFappearance(this);
+	// this.p2Appearance.loadTexture("resources/images/wood2.jpg");
+	// this.p2Appearance.setDiffuse(0.8, 0.8, 0.8, 1);
+	// this.p2Appearance.setSpecular(0.1, 0.1, 0.1, 1);
+	// this.p2Appearance.setShininess(20);
+	// this.p2Appearance.setTextureWrap("CLAMP_TO_EDGE","CLAMP_TO_EDGE");
 
 	// this.slidesAppearance = new CGFappearance(this);
 	// this.slidesAppearance.loadTexture("resources/images/slides.png");
@@ -334,37 +328,14 @@ LightingScene.prototype.display = function() {
 	// Draw axis
 	this.axis.display();
 
+	this.pushMatrix();
+	this.bp.display();
+	this.popMatrix();
+
 	/*this.pushMatrix();
 		this.rotate(180*Math.PI/180,0,1,0);
 		this.ring.display();
 	this.popMatrix();*/
-
-	this.pushMatrix();
-  
-  this.rotate(-90*degToRad,1,0,0);
-  
-    this.pushMatrix();
-    // this.scale(-1,1,1);
-    this.innerbody.display();
-    this.popMatrix();
-    
-    this.pushMatrix();
-    this.outterbody.display();
-    this.popMatrix();
-    
-    this.pushMatrix();
-    this.rotate(180*degToRad,1,0,0);
-    this.translate(0,0,-0.15);
-    this.ring.display();
-    this.popMatrix();
-    
-    this.pushMatrix();
-    this.ring.display();
-    this.popMatrix();
-    
-    
-  this.popMatrix();
-
 
 	/*this.pushMatrix();
 		this.boardAppearance.apply();

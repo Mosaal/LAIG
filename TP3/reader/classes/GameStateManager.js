@@ -10,7 +10,7 @@ function GameStateManager(scene) {
 	this.scene = scene;
 	this.gameState = null;
 	this.gameSettings = { mode: 0, difficulty: 0, board: 0 };
-	this.gameInfo = { rounds: 0, pointsP1: 0, pointsP2: 0, playsP1: 0, playsP2: 0, elapsedTime: 0 };
+	this.gameInfo = { pointsP1: 0, pointsP2: 0, elapsedTime: 0 };
 }
 
 GameStateManager.prototype.setState = function(state) {
@@ -31,7 +31,7 @@ GameStateManager.prototype.setState = function(state) {
 			this.gameState = new PlayGameState(this, this.scene);
 			break;
 		case this.END:
-			// this.gameState = new EndGameState(this, this.scene);
+			this.gameState = new EndGameState(this, this.scene);
 			break;
 	}
 };

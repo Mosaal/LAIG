@@ -38,6 +38,7 @@
 
 	<textures>
 		<texture id="tableTopTex" file="images/tableTop.png" length_s="1.0" length_t="1.0" />
+		<texture id="tableLegTex" file="images/tableLeg.png" length_s="1.0" length_t="1.0" />
 	</textures>
 
 	<materials>
@@ -63,12 +64,15 @@
 		<primitive id="box">
 			<box />
 		</primitive>
+
+		<primitive id="cylinder">
+			<cylinder base="0.5" top="0.5" height="1.0" slices="50" stacks="50" />
+		</primitive>
 	</primitives>
 
 	<components>
 		<component id="root">
 			<transformation>
-				<scale x="0.0" y="0.0" z="0.0" />
 			</transformation>
 
 			<materials>
@@ -78,7 +82,130 @@
 			<texture id="none" />
 
 			<children>
+				<componentref id="table" />
+			</children>
+		</component>
+
+		<component id="table">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="none" />
+
+			<children>
+				<componentref id="tableTop" />
+				<componentref id="tableLegs" />
+			</children>
+		</component>
+
+		<component id="tableTop">
+			<transformation>
+				<translate x="0.0" y="-0.25" z="0.0" />
+				<scale x="14.0" y="0.5" z="14.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="tableTopTex" />
+
+			<children>
 				<primitiveref id="box" />
+			</children>
+		</component>
+
+		<component id="tableLegs">
+			<transformation>
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="tableLegTex" />
+
+			<children>
+				<componentref id="tableLeg1" />
+				<componentref id="tableLeg2" />
+				<componentref id="tableLeg3" />
+				<componentref id="tableLeg4" />
+			</children>
+		</component>
+
+		<component id="tableLeg1">
+			<transformation>
+				<translate x="-6.0" y="-10.5" z="6.0" />
+				<scale x="1.0" y="10.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="cylinder" />
+			</children>
+		</component>
+
+		<component id="tableLeg2">
+			<transformation>
+				<translate x="6.0" y="-10.5" z="6.0" />
+				<scale x="1.0" y="10.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="cylinder" />
+			</children>
+		</component>
+
+		<component id="tableLeg3">
+			<transformation>
+				<translate x="-6.0" y="-10.5" z="-6.0" />
+				<scale x="1.0" y="10.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="cylinder" />
+			</children>
+		</component>
+
+		<component id="tableLeg4">
+			<transformation>
+				<translate x="6.0" y="-10.5" z="-6.0" />
+				<scale x="1.0" y="10.0" z="1.0" />
+				<rotate axis="x" angle="-90.0" />
+			</transformation>
+
+			<materials>
+				<material id="inherit" />
+			</materials>
+
+			<texture id="inherit" />
+
+			<children>
+				<primitiveref id="cylinder" />
 			</children>
 		</component>
 	</components>

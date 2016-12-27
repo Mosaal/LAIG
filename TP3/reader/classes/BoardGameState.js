@@ -77,5 +77,8 @@ BoardGameState.prototype.handleInput = function(pickResults) {
 		case this.BOARD3:
 			this.gsm.gameSettings.board = this.BOARD3;
 			this.gsm.setState(this.gsm.PLAY);
+			break;
+		default:
+			console.error("The selection of this Object is ignored!");
 	}
 };

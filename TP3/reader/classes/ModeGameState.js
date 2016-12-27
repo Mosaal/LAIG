@@ -61,5 +61,7 @@ ModeGameState.prototype.handleInput = function(pickResults) {
 			this.gsm.gameSettings.mode = this.PVC;
 			this.gsm.setState(this.gsm.DIFFICULTY);
 			break;
+		default:
+			console.error("The selection of this Object is ignored!");
 	}
 };
