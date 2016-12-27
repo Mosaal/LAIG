@@ -32,6 +32,7 @@ serialInclude([
 	'CylinderPrimitive.js',
 	'GamePiece.js',
 	'GamePieceLarge.js',
+	'RingPrimitive.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);
